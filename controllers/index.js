@@ -1,8 +1,10 @@
 const axios = require("axios");
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY
+const stripePublicKey = process.env.STRIPE_PUBLIC_KEY
 
 class Controller {
 
-    static async fetchHotels (req, res, next) {
+    static async fetchHotelData (req, res, next) {
           try {
             console.log('sini dulu')
             const options = {
@@ -41,6 +43,15 @@ class Controller {
             console.log(err)
           }
 
+    }
+
+
+    static async paymentWithStripe (req, res, next) {
+      try {
+        const {stripeTokenId, items} = req.body
+      } catch (err) {
+        next(err)
+      }
     }
 
 }

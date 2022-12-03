@@ -9,16 +9,24 @@ const PORT = process.env.PORT || 8080;
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
 
-const arrayBufferToUint8Array = (message) => {
-  return new Uint8Array(message);
+const arrayBufferToUint8Array = (arrayBuffer) => {
+  return new Uint8Array(arrayBuffer);
 }
 
 const strToUint8Array = (str) => {
   return textEncoder.encode(str);
 }
 
-const Uint8ArrayToStr = (arrayBuffer) => {
+const uint8ArrayToStr = (arrayBuffer) => {
   return textDecoder.decode(arrayBuffer);
+}
+
+const arrayBufferToStr = (arrayBuffer) => {
+  return uint8ArrayToStr(arrayBufferToUint8Array(arrayBuffer));
+}
+
+const strToArrayBuffer = (str) => {
+  return strToUint8Array(str).buffer;
 }
 
 wsApp.ws('/chat', {
@@ -55,9 +63,9 @@ wsApp.ws('/chat', {
     /* You can do app.publish('sensors/home/temperature', '22C') kind of pub/sub as well */
   console.log(ws, "<<<<<<<<< ws [ws]");
   console.log(message, "<<<<<<<<< message [ws]");
-  const str = Uint8ArrayToStr(arrayBufferToUint8Array(message));
+  const str = arrayBufferToStr(message);
   console.log(str);
-  console.log(strToUint8Array(str).buffer);
+  console.log(strToArrayBuffer(str));
   console.log(isBinary, "<<<<<<<<< isBinary [ws]");
     
     /* Here we echo the message back, using compression if available */

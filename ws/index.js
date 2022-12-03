@@ -6,6 +6,21 @@ const wsApp = WebSocket.App();
 
 const PORT = process.env.PORT || 8080;
 
+const textEncoder = new TextEncoder();
+const textDecoder = new TextDecoder();
+
+const arrayBufferToUint8Array = (message) => {
+  return new Uint8Array(message);
+}
+
+const strToUint8Array = (str) => {
+  return textEncoder.encode(str);
+}
+
+const Uint8ArrayToStr = (arrayBuffer) => {
+  return textDecoder.decode(arrayBuffer);
+}
+
 wsApp.ws('/chat', {
 
   /* There are many common helper features */
@@ -15,11 +30,11 @@ wsApp.ws('/chat', {
   // compression: WebSocket.DEDICATED_COMPRESSOR_3KB,
 
   /* For brevity we skip the other events (upgrade, open, ping, pong, close) */
-  upgrade: (res, req, context) => {
-    console.log(res, "<<<<<<<<<<<< res [upgrade]");
-    console.log(req, "<<<<<<<<<<<< req [upgrade]");
-    console.log(context, "<<<<<<<<<<<< context [upgrade]");
-  },
+  // upgrade: (res, req, context) => {
+  //   console.log(res, "<<<<<<<<<<<< res [upgrade]");
+  //   console.log(req, "<<<<<<<<<<<< req [upgrade]");
+  //   console.log(context, "<<<<<<<<<<<< context [upgrade]");
+  // },
   open: (ws) => {
     console.log(ws, "<<<<<<< ws [open]");
   },
@@ -40,6 +55,9 @@ wsApp.ws('/chat', {
     /* You can do app.publish('sensors/home/temperature', '22C') kind of pub/sub as well */
   console.log(ws, "<<<<<<<<< ws [ws]");
   console.log(message, "<<<<<<<<< message [ws]");
+  const str = Uint8ArrayToStr(arrayBufferToUint8Array(message));
+  console.log(str);
+  console.log(strToUint8Array(str).buffer);
   console.log(isBinary, "<<<<<<<<< isBinary [ws]");
     
     /* Here we echo the message back, using compression if available */

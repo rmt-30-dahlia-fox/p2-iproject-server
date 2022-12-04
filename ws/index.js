@@ -2,12 +2,17 @@
 
 const WebSocket = require("uWebSockets.js");
 
-const wsApp = WebSocket.App();
+const socket = WebSocket.App();
 
 const PORT = process.env.PORT || 8080;
 
 const textEncoder = new TextEncoder();
 const textDecoder = new TextDecoder();
+
+/**
+ * @type {Map<string, WebSocket.WebSocket>}
+ */
+const userSockets = new Map();
 
 const arrayBufferToUint8Array = (arrayBuffer) => {
   return new Uint8Array(arrayBuffer);
@@ -29,7 +34,11 @@ const strToArrayBuffer = (str) => {
   return strToUint8Array(str).buffer;
 }
 
-wsApp.ws('/chat', {
+const parseMessage = (message) => {
+  return JSON.parse(arrayBufferToStr(message));
+}
+
+socket.ws('/', {
 
   /* There are many common helper features */
   // idleTimeout: 32,
@@ -54,37 +63,71 @@ wsApp.ws('/chat', {
     console.log(ws, "<<<<<<< ws [pong]");
     console.log(message, "<<<<<<< message [pong]");
   },
-  close: (pattern, behavior) => {
-    console.log(pattern, "<<<<<<< pattern [close]");
-    console.log(behavior, "<<<<<<< behavior [close]");
+  close: (ws, code, message) => {
+    try {
+      const json = parseMessage(message);
+      userSockets.delete(json.data.user_id);
+      console.log("[CLOSE]: ", json);
+    } catch (err) {
+      console.error(err, "<<<<<<<< [close]");
+    }
   },
 
   message: (ws, message, isBinary) => {
-    /* You can do app.publish('sensors/home/temperature', '22C') kind of pub/sub as well */
-  console.log(ws, "<<<<<<<<< ws [ws]");
-  console.log(message, "<<<<<<<<< message [ws]");
-  const str = arrayBufferToStr(message);
-  console.log(str);
-  console.log(strToArrayBuffer(str));
-  console.log(isBinary, "<<<<<<<<< isBinary [ws]");
-    
-    /* Here we echo the message back, using compression if available */
-    let ok = ws.send(message, isBinary, true);
-    console.log(ok, "<<<<<<<<< ok [message]");
+    try {
+      /* You can do app.publish('sensors/home/temperature', '22C') kind of pub/sub as well */
+      const json = parseMessage(message);
+
+      if (json.op === "identify") {
+	// expected properties
+	const { user_id } = json.data;
+
+	userSockets.set(user_id, ws);
+      }
+
+      if (json.op === "direct_message") {
+	const { recipient_id, content, sentAt } = json.data;
+
+	// check if recipient actually exist
+
+	// check Channel, if not exist create it
+	const channel = "find or create channel";
+
+	const topic = `dm/${channel.id}`;
+	const recipientSocket = userSockets.get(recipient_id);
+	if (recipientSocket) {
+	  // subscribe to topic, it will just return false if already subscribed
+	  recipientSocket.subscribe(topic);
+	}
+
+	// publish
+	ws.publish(topic, message, isBinary, true);
+
+	// create Message in database
+      }
+    } catch (err) {
+      console.error(err, "<<<<<<<< [message]");
+    }
   }
   
 })
-// .get('/*', (res, req) => {
-// 
-//   /* It does Http as well */
-//   res.writeStatus('200 OK').writeHeader('IsExample', 'Yes').end('Hello there!');
-//   
-// })
+.ws("/globalChat", {
+  // !TODO
+})
+.any('/*', (res, req) => {
+  console.log(res, "<<<<<<<<<<< res [any]");
+  console.log(req, "<<<<<<<<<<< req [any]");
+  res.end('Nothing to see here!');
+})
 .listen(PORT, (listenSocket) => {
-  console.log(listenSocket, "<<<<<<<<< listenSocket [listen]");
-
   if (listenSocket) {
     console.log('Listening to port', PORT);
   }
-  
+  else console.log("Failed starting socket on port", PORT);
+});
+
+process.stdin.on("data", (buf) => {
+  const str = buf.toString().slice(0, -1);
+
+  socket.send(str, false, true);
 });

@@ -39,6 +39,9 @@ module.exports = {
       freeCancelPolicy: {
         type: Sequelize.BOOLEAN
       },
+      city: {
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

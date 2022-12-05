@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 
-const {generateHash} = require('../helpers/bcryptjs')
+
 
 module.exports = (sequelize, DataTypes) => {
   class Hotel extends Model {
@@ -14,6 +14,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Hotel.hasMany(models.Wishlist)
+      Hotel.hasMany(models.Transaction)
     }
   }
   Hotel.init({
@@ -26,7 +28,8 @@ module.exports = (sequelize, DataTypes) => {
     price: DataTypes.FLOAT,
     features: DataTypes.STRING,
     roomLeft: DataTypes.INTEGER,
-    freeCancelPolicy: DataTypes.BOOLEAN
+    freeCancelPolicy: DataTypes.BOOLEAN,
+    city: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Hotel',

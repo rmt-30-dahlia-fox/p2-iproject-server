@@ -1,5 +1,13 @@
-const hotelRouter = require('./hotel-routes')
+const router = require('express').Router()
+const userRouter = require('./user-routes')
 const paymentRouter = require('./payment-routes')
+const hotelRouter = require('./hotel-routes')
 
 
-module.exports = {hotelRouter, paymentRouter}
+
+app.use('/hotels', hotelRouter)
+
+app.use('/payments', paymentRouter)
+
+
+module.exports = router

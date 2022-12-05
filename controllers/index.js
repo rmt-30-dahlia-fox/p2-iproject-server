@@ -2,9 +2,112 @@ const axios = require("axios");
 const {User, Hotel, Wishlist, Transaction, sequelize} = require('../models')
 const {verifyHash} = require('../helpers/bcryptjs')
 const {signToken} = require('../helpers/jwt')
+const { Op } = require("sequelize");
+const {OAuth2Client} = require('google-auth-library')
+const client = new OAuth2Client(process.env.CLIENT_ID)
 
 class Controller {
 
+    // User - register
+    static async register (req, res, next) {
+      try {
+          const {email, password, phoneNumber, address} = req.body
+          let username
+
+          if(email) username = req.body.username || email.slice(0,email.lastIndexOf('@'))
+
+         const newUser = await User.create({username, email, password, phoneNumber, address})
+
+         res.status(201).json({message: `User with email ${newUser.email} has just been created`})
+      } catch (err) {
+          next(err)
+      }
+    }
+
+    // User - login
+    static async login (req, res, next) {
+      try {
+          const {email, password} = req.body
+
+          const theSearchedUser = await User.findOne({where: {email}})
+          if(!theSearchedUser) throw ('Invalid email/password')
+
+          const isValidPassword = verifyHash(password, theSearchedUser.password)
+          if(!isValidPassword) throw ('Invalid email/password')
+
+          const payload = {
+              id: theSearchedUser.id
+          }
+
+          const access_token = generateToken(payload)
+
+          res.status(200).json({access_token})
+
+      } catch (err) {
+          next (err)
+      }
+    }
+
+    // User - Google sign-in
+    static async googleLogin (req, res, next) {
+      try {
+          const token = req.headers['google-oauth-token']
+
+          // verify google
+          const ticket = await client.verifyIdToken({
+              idToken: token,
+              audience: process.env.CLIENT_ID  
+          });
+
+          const {email, name} = ticket.getPayload();
+          const [user, created] = await User.findOrCreate({
+              where: { email },
+              defaults: {
+                username: name,
+                email,
+                password: 'google',
+              },
+              hooks: false
+          });
+          
+          const payload = {
+              id: user.id
+          }
+
+          const access_token = signToken(payload)
+
+          res.status(200).json({access_token, username: user.username})
+      } catch (err) {
+          next(err)
+      }
+  }
+
+    // payment - stripe
+    static async paymentWithStripe (req, res, next) {
+      try {
+        const {stripeTokenId, items} = req.body
+      } catch (err) {
+        next(err)
+      }
+    }  
+
+    // hotel - get hotel's details
+    static async getHotelById (req, res, next) {
+      try {
+        const {id} = req.params
+
+        const theSearchedHotel = await Hotel.findByPk(id)
+        if(!theSearchedHotel) throw ('Data not found')
+        
+        res.status(200).json(theSearchedHotel)
+        
+
+      } catch (err) {
+        next(err)
+      }
+    }  
+
+    // hotels - fetch hotels data
     static async fetchHotelData (req, res, next) {
           try {
 
@@ -106,13 +209,7 @@ class Controller {
     }
 
 
-    static async paymentWithStripe (req, res, next) {
-      try {
-        const {stripeTokenId, items} = req.body
-      } catch (err) {
-        next(err)
-      }
-    }
+    
 
 }
 

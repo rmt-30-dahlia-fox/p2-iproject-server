@@ -6,8 +6,7 @@ const express = require('express')
 const app = express()
 const port = 3000
 const cors = require('cors')
-
-const {hotelRouter, paymentRouter} = require('./routes')
+const routes = require('./routes')
 const Controller = require('./controllers')
 
 app.use(cors())
@@ -16,11 +15,10 @@ app.use(express.urlencoded({extended: true}))
 
 
 // endpoints 
-app.use('/hotels', hotelRouter)
+app.use(routes)
 
-app.use('/payments', paymentRouter)
-
-
+// errorHandler
+app.use(errorHandler)
 
 // do not edit
 app.listen(port, () => {

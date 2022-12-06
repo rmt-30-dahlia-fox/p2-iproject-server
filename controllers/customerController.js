@@ -244,7 +244,22 @@ class customerController{
   }
   static getPaymentData(req, res, next){
     const user = req.body;
+    if(!user.firstName){
+      throw("First name is required")
+    }
+    else if(!user.lastName){
+      throw("Last name is required")
+    }
+    else if(!user.email){
+      throw("Email is required")
+    }
+    else if(!user.phoneNumber){
+      throw("Phone number is required")
+    }
     const price = req.headers.price;
+    if(!price){
+      throw("Price is required")
+    }
     axios({
       url: "https://app.sandbox.midtrans.com/snap/v1/transactions",
       method: "post",

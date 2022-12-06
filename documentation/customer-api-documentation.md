@@ -12,6 +12,7 @@ List of Available Endpoints:
 - `POST /customers/reviews/:transactionId`
 - `PATCH /customers/transactions/:transactionsId`
 - `PUT /customers/users`
+- `POST /customers/payments`
 
 ### POST /customers/register
 #### Description
@@ -463,6 +464,34 @@ _400 - Bad Request_
     Or
     {
       "message": "Phone number is required"
+    }
+    ```
+### POST /customers/payments
+#### Description
+- Get snapToken for payment requirement
+
+#### Request
+- Headers
+    ```json
+    {
+      "access_token": String
+    }
+    ```
+- Body
+    ```json
+    {
+      "firstName": "customer2",
+      "lastName": "Example",
+      "email": "customer2@mail.com",
+      "phoneNumber": "082222222222"
+    }
+    ```
+#### Response
+_200 - OK_
+- Body
+    ```json
+    {
+      "snapToken": String
     }
     ```
 

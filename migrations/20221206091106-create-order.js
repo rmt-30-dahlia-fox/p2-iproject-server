@@ -10,27 +10,35 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       pickupLocation: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       pickupDate: {
+        allowNull: false,
         type: Sequelize.DATE
       },
       returnLocation: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       returnDate: {
+        allowNull: false,
         type: Sequelize.DATE
       },
       totalPrice: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       status: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       CustomerId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       UnitId: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       createdAt: {

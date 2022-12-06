@@ -134,6 +134,57 @@ class customerController{
       next(error);
     }
   }
+  static async getUserDetail(req, res, next){
+    try {
+      res.status(200).json(req.user);
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async getTransactionsByUser(req, res, next){
+    try {
+      const status = req.params.status;
+      let options = {
+        order: [
+          ["createdAt", "ASC"]
+        ],
+        where: {
+          UserId: req.user.id
+        },
+        include: [Car, Review, {
+          model: User,
+          attributes: ["firstName", "lastName"]
+        }]
+      };
+      if(status === "Paid"){
+        options.where = {
+          ...options.where,
+          status
+        }
+      }
+      const transactions = await Transaction.findAll(options);
+      res.status(200).json(transactions);
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async bookTransaction(req, res, next){
+    try {
+      const carId = req.params.carId;
+      const car = await Car.findByPk(carId);
+      if(!car){
+        throw("notFound")
+      }
+      const transaction = await Transaction.create({
+        UserId: req.user.id,
+        CarId: carId,
+        status: "Pending"
+      })
+      res.status(200).json(transaction)
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = customerController;

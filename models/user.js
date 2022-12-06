@@ -2,8 +2,7 @@
 const {
   Model
 } = require('sequelize');
-const { USE } = require('sequelize/types/index-hints');
-const { hashPass } = require('../helpers/bcryptjs');
+const { hashPass } = require('../helpers/bcrypt');
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -29,18 +28,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     email: {
       type: DataTypes.STRING,
-      allowNull: {
-        msg: "Email already exist"
-      },
+      allowNull: false,
       unique: true,
       validate: {
         notNull: { msg: "Email is required" },
         notEmpty: { msg: "Email is required" },
         isEmail: { msg: "Invalid email format" },
-        // async unique(value) {
-        //   const findUser = await User.findOne({ where: { email: value } });
-        //   if (findUser) throw new Error("Email already exist");
-        // },
+        async unique(value) {
+          const findUser = await User.findOne({ where: { email: value } });
+          if (findUser) throw new Error("Email already exist");
+        },
       },
     },
     password: {
@@ -59,6 +56,6 @@ module.exports = (sequelize, DataTypes) => {
   User.beforeCreate((user) => {
     user.password = hashPass(user.password);
   })
-  
+
   return User;
 };

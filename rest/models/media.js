@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       Media.hasMany(models.PostAttachment, {
 	foreignKey: "MediaId",
       });
+
+      Media.hasMany(models.MessageAttachment, {
+	foreignKey: "MediaId",
+      });
     }
   }
   Media.init({

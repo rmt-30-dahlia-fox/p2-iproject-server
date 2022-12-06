@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
       Channel.hasMany(models.ChannelUser, {
 	foreignKey: "ChannelId",
       });
+
+      Channel.hasMany(models.Message, {
+	foreignKey: "ChannelId",
+      });
     }
   }
   Channel.init({

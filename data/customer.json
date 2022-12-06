@@ -1,0 +1,14 @@
+[
+  {
+    "name": "John Doe",
+    "phoneNumber": "+1234567890",
+    "identityType": "Visa",
+    "indentityNumber": "123123123"
+  },
+  {
+    "name": "Jane Doe",
+    "phoneNumber": "+1234567890",
+    "identityType": "Visa",
+    "indentityNumber": "123123123"
+  }
+]

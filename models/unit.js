@@ -53,6 +53,18 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
+    imageUrl: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Image url is required"
+        },
+        notEmpty: {
+          msg: "Image url is required"
+        }
+      }
+    },
   }, {
     sequelize,
     modelName: 'Unit',

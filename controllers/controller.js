@@ -11,6 +11,16 @@ class Controller {
       console.log(error)
     }
   }
+
+  static async postUserDetail(req, res, next) {
+    try {
+      const { data } = await axios({
+        
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }
 }
 
 module.exports = Controller

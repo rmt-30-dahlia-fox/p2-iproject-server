@@ -1,0 +1,29 @@
+[
+    {
+        "fullName": "Dr Usman Yousaf",
+        "age": "32",
+        "gender": "male",
+        "profilePicture":"https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+        "specialization":"Medical Coat",
+        "status":"active",
+        "UserId":1
+    },
+    {
+        "fullName": "Dr Humberto Chavez",
+        "age": "35",
+        "gender": "female",
+        "profilePicture":"https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+        "specialization":"Medical Heart",
+        "status":"active",
+        "UserId":2
+    },
+    {
+        "fullName": "Dr Bruno Rodriguez",
+        "age": "30",
+        "gender": "male",
+        "profilePicture":"https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80",
+        "specialization":"Pediatric Dentist",
+        "status":"active",
+        "UserId":3
+    }
+]

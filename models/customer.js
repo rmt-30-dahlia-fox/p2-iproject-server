@@ -21,7 +21,9 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: "Name is required"
         },
-        notNull: "Name is required"
+        notNull: {
+          msg: "Name is required"
+        }
       }
     },
     email: {
@@ -32,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         msg: "Email must be unique"
       },
       validate: {
-        notNull: {
+        notNull:{
           msg: "Email is required"
         },
         notEmpty: {
@@ -50,7 +52,9 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: "Password is required"
         },
-        notNull: "Password is required"
+        notNull: {
+          msg: "Password is required"
+        }
       }
     },
     phoneNumber: {
@@ -60,7 +64,9 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: "Phone number is required"
         },
-        notNull: "Phone number is required"
+        notNull: {
+          msg: "Phone number is required"
+        }
       }
     },
     identityType: {
@@ -70,7 +76,9 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: "Identity type is required"
         },
-        notNull: "Identity type is required"
+        notNull: {
+          msg: "Identity type is required"
+        }
       }
     },
     identityNumber: {
@@ -80,7 +88,9 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: {
           msg: "Identity number is required"
         },
-        notNull: "Identity number is required"
+        notNull: {
+          msg: "Identity number is required"
+        }
       }
     },
   }, {

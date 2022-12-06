@@ -1,29 +1,58 @@
 "use strict";
 
-const { join } = require("path");
 const { Router } = require("express");
-const multer  = require('multer')
-const { User } = require("../models");
-const { verifyToken } = require("../util/jwt");
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, join(__dirname, "..", "public", "media"))
-  },
-  filename: function (req, file, cb) {
-    console.log(file, "<<<<<<<<<<< file [storage.filename]");
-    cb(null, req.upload.fileName)
-  },
-});
-
-const upload = multer({
-  storage,
-  limits: {
-    fileSize: 1024 * 1024 * 32,
-  },
-});
+const { User, Media } = require("../models");
+const { verifyToken, createToken } = require("../util/jwt");
+const { comparePass } = require("../util/crypto");
+const { upload } = require("../middlewares/upload.js");
 
 const router = Router();
+
+router.post("/register", async (req, res, next) => {
+  try {
+    const {
+      username,
+      email,
+      password,
+    } = req.body;
+
+    if (!username) {
+      throw {
+	status: 400,
+	message: "Username is required",
+      };
+    }
+
+    if (!email) {
+      throw {
+	status: 400,
+	message: "Email is required",
+      };
+    }
+    
+    if(!password) {
+      throw {
+	status: 400,
+	message: "Password is required",
+      };
+    }
+
+    const user = await User.create({ username, email, password });
+
+    res.status(201).json({
+      access_token: createToken({
+	id: user.id,
+      }),
+      user: {
+	id: user.id,
+	email: user.email,
+	username: user.username,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
+});
 
 router.post("/login", async (req, res, next) => {
   try {
@@ -38,7 +67,7 @@ router.post("/login", async (req, res, next) => {
 	message: "Email is required",
       };
     }
-    
+
     if(!password) {
       throw {
 	status: 400,
@@ -56,10 +85,14 @@ router.post("/login", async (req, res, next) => {
     }
 
     res.status(200).json({
-      access_token: signToken({
+      access_token: createToken({
 	id: user.id,
       }),
-      email: user.email,
+      user: {
+	id: user.id,
+	email: user.email,
+	username: user.username,
+      },
     });
   } catch (err) {
     next(err);
@@ -100,19 +133,62 @@ router.use(async (req, res, next) => {
   }
 });
 
-router.post("/upload", async (req, res, next) => {
+router.post('/avatars', upload.single('avatar'), async (req, res, next) => {
   try {
+    const { filename, mimetype, fieldname } = req.file;
 
+    const media = await Media.create({
+      hash: filename,
+      type: fieldname,
+      format: mimetype,
+    });
+
+    res.status(201).json(media);
   } catch (err) {
     next(err);
   }
 });
 
-router.post("/chat/global", {
+router.post('/attachments', upload.single('attachment'), async (req, res, next) => {
+  try {
+    const { filename, mimetype, fieldname } = req.file;
 
+    const media = await Media.create({
+      hash: filename,
+      type: fieldname,
+      format: mimetype,
+    });
+
+    res.status(201).json(media);
+  } catch (err) {
+    next(err);
+  }
 });
 
-router.post("/chat/:id", {
+router.post("/chat/global", (req, res, next) => {
+  try {
+    const {
+      content,
+    } = req.body;
+
+    const recv = await User.findByPk(receiverId);
+
+    if (!recv || !voucher) {
+      throw {
+	status: 404,
+	message: "Data not found",
+      };
+    }
+
+    const gift = await Gift.create({ message, amount, receiverId, sender /*: req.user.email */, voucherId: voucher.id });
+
+    res.status(201).json(gift);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/chat/:id", (req, res, next) => {
 
 });
 
@@ -124,7 +200,7 @@ router.use((err, req, res, next) => {
       return res.status(err.status).json(
       {
 	message: err.message,
-      }
+      },
     );
   } else {
     if (["SequelizeValidationError", "SequelizeUniqueConstraintError"].includes(err.name)) {

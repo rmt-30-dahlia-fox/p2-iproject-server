@@ -1,3 +1,4 @@
+rest/public/media/
 node_modules
 package-lock.json
 .env

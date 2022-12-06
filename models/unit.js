@@ -14,9 +14,45 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Unit.init({
-    model: DataTypes.STRING,
-    type: DataTypes.STRING,
-    price: DataTypes.INTEGER
+    model: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Model name is required"
+        },
+        notEmpty: {
+          msg: "Model name is required"
+        }
+      }
+    },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Model type is required"
+        },
+        notEmpty: {
+          msg: "Model type is required"
+        }
+      }
+    },
+    price: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: "Price is required"
+        },
+        notEmpty: {
+          msg: "Price is required"
+        },
+        isInt: {
+          msg: "Price must be integer"
+        }
+      }
+    },
   }, {
     sequelize,
     modelName: 'Unit',

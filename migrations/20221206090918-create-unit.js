@@ -10,12 +10,15 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       model: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       type: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       price: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       createdAt: {

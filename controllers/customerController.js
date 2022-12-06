@@ -1,4 +1,4 @@
-const { comparePassword } = require('../helpers/bcrypt');
+const { comparePassword, hashPassword } = require('../helpers/bcrypt');
 const { generateToken } = require('../helpers/jwt');
 const {User, Car, Dealer, Transaction, Review} = require('../models');
 const { Op } = require("sequelize");
@@ -181,6 +181,62 @@ class customerController{
         status: "Pending"
       })
       res.status(200).json(transaction)
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async postReview(req, res, next){
+    try {
+      const transactionId = req.params.transactionId;
+      const {message} = req.body;
+      const transaction = await Transaction.findByPk(transactionId);
+      const review = await Review.create({
+        UserId: transaction.UserId,
+        CarId: transaction.CarId,
+        message,
+        TransactionId: transaction.id
+      })
+      res.status(201).json(review);
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async updateBookStatus(req, res, next){
+    try {
+      const transactionId = req.params.transactionId;
+      const {status} = req.body;
+      await Transaction.update(
+        {
+          status
+        },
+        {
+          where: {
+            id: transactionId
+          }
+        }
+      )
+      res.status(200).json({message: "Successfully updated status"});
+    } catch (error) {
+      next(error);
+    }
+  }
+  static async updateProfile(req, res, next){
+    try {
+      const {firstName, lastName, email, password, phoneNumber} = req.body;
+      const data = { firstName, lastName, email, phoneNumber }
+      if(password){
+        data = {
+          ...data,
+          password: hashPassword(password)
+        }
+      }
+      await User.update(
+        data, {
+        where: {
+          id: req.user.id
+        }
+      });
+      res.status(200).json({message: "Successfully updated profile"})
     } catch (error) {
       next(error);
     }

@@ -112,15 +112,6 @@ class Controller {
           try {
 
             const {city, date_checkout, date_checkin, star_rating_ids, rooms_number} = req.body
-
-            const hotels = await Hotel.findAll({
-              where: {
-                city
-              }
-            })
-            
-            if(hotels.length > 10) res.status(200).json(hotels)
-            else {
             
               const optionsLocation = {
                 method: 'GET',
@@ -194,14 +185,7 @@ class Controller {
                 
               })
 
-              await sequelize.queryInterface.bulkInsert('Hotels', finalData)
-
               res.status(200).json(finalData)
-            }
-
-            
-
-
           } catch (err) {
             console.log(err)
           }

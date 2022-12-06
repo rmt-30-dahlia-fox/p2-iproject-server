@@ -1,5 +1,6 @@
 const customerController = require('../controllers/customerController');
 const authentication = require('../middlewares/authentication');
+const { transactionAuthorization } = require('../middlewares/authorization');
 const router = require('express').Router();
 
 router.post('/register', customerController.registerAccount);
@@ -11,5 +12,8 @@ router.use(authentication);
 router.get('/users', customerController.getUserDetail);
 router.get('/transactions/:status', customerController.getTransactionsByUser);
 router.post('/transactions/:carId', customerController.bookTransaction);
+router.post('/reviews/:transactionId', transactionAuthorization, customerController.postReview);
+router.patch('/transactions/:transactionId', transactionAuthorization, customerController.updateBookStatus);
+router.put('/users', customerController.updateProfile);
 
 module.exports = router;

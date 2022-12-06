@@ -16,12 +16,38 @@ module.exports = {
           model: 'Users'
         }
       },
-      HotelId: {
-        type: Sequelize.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Hotels'
-        }
+      name: {
+        type: Sequelize.STRING
+      },
+      city: {
+        type: Sequelize.STRING
+      },
+      star: {
+        type: Sequelize.FLOAT
+      },
+      address: {
+        type: Sequelize.STRING
+      },
+      imageUrl: {
+        type: Sequelize.STRING
+      },
+      rating: {
+        type: Sequelize.FLOAT
+      },
+      totalReviews: {
+        type: Sequelize.INTEGER
+      },
+      price: {
+        type: Sequelize.FLOAT
+      },
+      features: {
+        type: Sequelize.STRING
+      },
+      roomLeft: {
+        type: Sequelize.INTEGER
+      },
+      freeCancelPolicy: {
+        type: Sequelize.BOOLEAN
       },
       createdAt: {
         allowNull: false,

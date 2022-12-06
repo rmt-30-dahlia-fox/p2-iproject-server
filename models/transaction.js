@@ -11,18 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Transaction.belongsTo(models.User)
     }
   }
   Transaction.init({
     UserId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      validate: {
-        notNull: true,
-        notEmpty: true,
-      }
-    }, 
-    HotelId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
@@ -37,7 +30,48 @@ module.exports = (sequelize, DataTypes) => {
         notNull: true,
         notEmpty: true,
       }
-    }, 
+    },
+    quantity: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      validate: {
+        notNull: true,
+        notEmpty: true,
+      }
+    },
+    totalPrice: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        notNull: true,
+        notEmpty: true,
+      }
+    },
+    name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notNull: true,
+        notEmpty: true,
+      }
+    },
+    city: DataTypes.STRING,
+    star: DataTypes.FLOAT,
+    address: DataTypes.STRING,
+    imageUrl: DataTypes.STRING,
+    rating: DataTypes.FLOAT,
+    totalReviews: DataTypes.INTEGER,
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        notNull: true,
+        notEmpty: true,
+      }
+    },
+    features: DataTypes.STRING,
+    roomLeft: DataTypes.INTEGER,
+    freeCancelPolicy: DataTypes.BOOLEAN, 
   }, {
     sequelize,
     modelName: 'Transaction',

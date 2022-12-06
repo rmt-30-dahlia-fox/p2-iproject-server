@@ -131,8 +131,8 @@ class Controller {
                 params: {
                   sort_order: 'STAR',
                   location_id,
-                  date_checkout: '2022-12-16',
-                  date_checkin: '2022-12-15',
+                  date_checkout,
+                  date_checkin,
                 },
                 headers: {
                   'X-RapidAPI-Key': '9ed40945d0msh1e9f5455b127c43p106fb0jsnc9347ce3026a',
@@ -146,43 +146,27 @@ class Controller {
 
               const response =  await axios(optionsHotel) // fetch hotels
 
-
-              const finalData = response.data.hotels.map(el => { // select choosen keys to be inserted
-                if(el.hotelFeatures.hotelAmenityCodes) {
-                  return {
-                    name: el.name,
-                    star: el.starRating,
-                    address: `${el.location.address.addressLine1}, ${el.location.address.cityName}, ${el.location.address.countryName}, ${el.location.address.zip}`,
-                    imageUrl: el.thumbnailUrl,
-                    rating: el.overallGuestRating,
-                    totalReviews: el.totalReviewCount,
-                    price: el.ratesSummary.minPrice,
-                    features: el.hotelFeatures.hotelAmenityCodes.toString(),
-                    roomLeft: el.ratesSummary.roomLeft,
-                    freeCancelPolicy: el.ratesSummary.freeCancelableRateAvail,
-                    city,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                  }
-                } else {
-                  return {
-                    name: el.name,
-                    star: el.starRating,
-                    address: `${el.location.address.addressLine1}, ${el.location.address.cityName}, ${el.location.address.countryName}, ${el.location.address.zip}`,
-                    imageUrl: el.thumbnailUrl,
-                    rating: el.overallGuestRating,
-                    totalReviews: el.totalReviewCount,
-                    price: el.ratesSummary.minPrice,
-                    features: '',
-                    roomLeft: el.ratesSummary.roomLeft,
-                    freeCancelPolicy: el.ratesSummary.freeCancelableRateAvail,
-                    city,
-                    createdAt: new Date(),
-                    updatedAt: new Date()
-                  }
+              const finalData = response.data.hotels.filter(el => 
+                el.name &&
+                el.ratesSummary.minPrice &&
+                el.hotelFeatures.hotelAmenityCodes &&
+                el.totalReviewCount > 50
+              ).map(el => {
+                return {
+                  name: el.name,
+                  star: el.starRating,
+                  address: `${el.location.address.addressLine1}, ${el.location.address.cityName}, ${el.location.address.countryName}, ${el.location.address.zip}`,
+                  imageUrl: el.thumbnailUrl,
+                  rating: el.overallGuestRating,
+                  totalReviews: el.totalReviewCount,
+                  price: el.ratesSummary.minPrice,
+                  features: el.hotelFeatures.hotelAmenityCodes.toString(),
+                  roomLeft: el.ratesSummary.roomLeft,
+                  freeCancelPolicy: el.ratesSummary.freeCancelableRateAvail,
+                  city,
+                  dateCheckIn: date_checkin,
+                  dateCheckout: date_checkout
                 }
-                
-                
               })
 
               res.status(200).json(finalData)

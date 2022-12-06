@@ -11,6 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Wishlist.belongsTo(models.User)
     }
   }
   Wishlist.init({
@@ -22,14 +23,31 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       }
     }, 
-    HotelId: {
-      type: DataTypes.INTEGER,
+    name: {
+      type: DataTypes.STRING,
       allowNull: false,
       validate: {
         notNull: true,
         notEmpty: true,
       }
     }, 
+    city: DataTypes.STRING,
+    star: DataTypes.FLOAT,
+    address: DataTypes.STRING,
+    imageUrl: DataTypes.STRING,
+    rating: DataTypes.FLOAT,
+    totalReviews: DataTypes.INTEGER,
+    price: {
+      type: DataTypes.FLOAT,
+      allowNull: false,
+      validate: {
+        notNull: true,
+        notEmpty: true,
+      }
+    }, 
+    features: DataTypes.STRING,
+    roomLeft: DataTypes.INTEGER,
+    freeCancelPolicy: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'Wishlist',

@@ -244,6 +244,7 @@ class customerController{
   }
   static getPaymentData(req, res, next){
     const user = req.body;
+    const price = req.headers.price;
     axios({
       url: "https://app.sandbox.midtrans.com/snap/v1/transactions",
       method: "post",
@@ -260,7 +261,7 @@ class customerController{
         {
           transaction_details: {
             order_id: "order-csb-" + new Date().getTime(),
-            gross_amount: 5000000
+            gross_amount: +price*0.05
           },
           credit_card: {
             secure: true

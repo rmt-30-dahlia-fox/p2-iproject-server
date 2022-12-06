@@ -82,99 +82,258 @@ class Controller {
       }
   }
 
-    // payment - stripe
-    static async paymentWithStripe (req, res, next) {
-      try {
-        const {stripeTokenId, items} = req.body
-      } catch (err) {
-        next(err)
-      }
-    }  
+  // Transaction - add hotel to transaction
+  static async addTransaction (req, res, next) => {
+    try {
 
-    // hotel - get hotel's details
-    static async getHotelById (req, res, next) {
-      try {
-        const {id} = req.params
+      const {
+        name,
+        paidStatus,
+        quantity,
+        totalPrice
+        star,
+        address,
+        imageUrl,
+        rating,
+        totalReviews,
+        price,
+        features,
+        roomLeft,
+        freeCancelPolicy,
+        city,
+        dateCheckIn,
+        dateCheckout,
+      } = req.body
 
-        const theSearchedHotel = await Hotel.findByPk(id)
-        if(!theSearchedHotel) throw ('Data not found')
-        
-        res.status(200).json(theSearchedHotel)
-        
+      await Transaction.create({
+        name,
+        paidStatus,
+        quantity,
+        totalPrice
+        star,
+        address,
+        imageUrl,
+        rating,
+        totalReviews,
+        price,
+        features,
+        roomLeft,
+        freeCancelPolicy,
+        city,
+        dateCheckIn,
+        dateCheckout,
+      })
 
-      } catch (err) {
-        next(err)
-      }
-    }  
-
-    // hotels - fetch hotels data
-    static async fetchHotelData (req, res, next) {
-          try {
-
-            const {city, date_checkout, date_checkin, star_rating_ids, rooms_number} = req.body
-            
-              const optionsLocation = {
-                method: 'GET',
-                url: 'https://priceline-com-provider.p.rapidapi.com/v1/hotels/locations',
-                params: {name: city, search_type: 'CITY'},
-                headers: {
-                  'X-RapidAPI-Key': '9ed40945d0msh1e9f5455b127c43p106fb0jsnc9347ce3026a',
-                  'X-RapidAPI-Host': 'priceline-com-provider.p.rapidapi.com'
-                }
-              };            
-              const {data} = await axios(optionsLocation) // fetch location id
-              const location_id = data[0].id
-
-              const optionsHotel = {
-                method: 'GET',
-                url: 'https://priceline-com-provider.p.rapidapi.com/v1/hotels/search',
-                params: {
-                  sort_order: 'STAR',
-                  location_id,
-                  date_checkout,
-                  date_checkin,
-                },
-                headers: {
-                  'X-RapidAPI-Key': '9ed40945d0msh1e9f5455b127c43p106fb0jsnc9347ce3026a',
-                  'X-RapidAPI-Host': 'priceline-com-provider.p.rapidapi.com',
-                  'Accept-Encoding': 'application/json'
-                }
-              };
-              if(star_rating_ids) optionsHotel.params.star_rating_ids = star_rating_ids
-              if(rooms_number) optionsHotel.params.rooms_number = rooms_number
-
-
-              const response =  await axios(optionsHotel) // fetch hotels
-
-              const finalData = response.data.hotels.filter(el => 
-                el.name &&
-                el.ratesSummary.minPrice &&
-                el.hotelFeatures.hotelAmenityCodes &&
-                el.totalReviewCount > 50
-              ).map(el => {
-                return {
-                  name: el.name,
-                  star: el.starRating,
-                  address: `${el.location.address.addressLine1}, ${el.location.address.cityName}, ${el.location.address.countryName}, ${el.location.address.zip}`,
-                  imageUrl: el.thumbnailUrl,
-                  rating: el.overallGuestRating,
-                  totalReviews: el.totalReviewCount,
-                  price: el.ratesSummary.minPrice,
-                  features: el.hotelFeatures.hotelAmenityCodes.toString(),
-                  roomLeft: el.ratesSummary.roomLeft,
-                  freeCancelPolicy: el.ratesSummary.freeCancelableRateAvail,
-                  city,
-                  dateCheckIn: date_checkin,
-                  dateCheckout: date_checkout
-                }
-              })
-
-              res.status(200).json(finalData)
-          } catch (err) {
-            console.log(err)
-          }
-
+      res.status(201).json(`${name} has been added to your transaction list`)
+    } catch(err) {
+      next(err)
     }
+  }
+
+  // Transaction - delete hotel to transaction
+  static async deleteTransaction (req, res, next) => {
+    try {
+      const {transactionId} = req.params
+
+      const theSearchedTransaction = await Transaction.findByPk(transactionId)
+      if(!theSearchedTransaction) throw ('Data not found') 
+
+      await Transaction.destroy({
+        where: {
+          id: transactionId
+        }
+      })
+
+      res.status(200).json(`${theSearchedTransaction.name} has been removed from your transaction list`)
+
+    } catch(err) {
+      next(err)
+    }
+  }
+
+  // Transaction - get transactions
+  static async getTransactionsByUserId (req, res, next) => {
+    try {
+      const transactions = await Transaction.findAll({
+        where: {
+          UserId: req.userInfo.id
+        }
+      })
+
+      res.status(200).json(transactions)
+    } catch(err) {
+      next(err)
+    }
+  }
+
+  // Wishlist - add hotel to wishlist
+  static async addToWishlist (req, req, next) {
+    try {
+      const {
+        name,
+        star,
+        address,
+        imageUrl,
+        rating,
+        totalReviews,
+        price,
+        features,
+        roomLeft,
+        freeCancelPolicy,
+        city,
+        dateCheckIn,
+        dateCheckout,
+      } = req.body
+
+      await Wishlist.create({
+        name,
+        star,
+        address,
+        imageUrl,
+        rating,
+        totalReviews,
+        price,
+        features,
+        roomLeft,
+        freeCancelPolicy,
+        city,
+        dateCheckIn,
+        dateCheckout,
+      })
+
+      res.status(201).json(`${name} has been added to your wishlist`)
+    } catch(err) {
+      next(err)
+    }
+  }
+
+  // Wishlist - delete hotel from wishlist
+  static async deleteFromWishlist (req, req, next) {
+    try {
+      const {wishlistId} = req.params
+
+      const theSearchedWishlist = await Wishlist.findByPk(wishlistId)
+      if(!theSearchedWishlist) throw ('Data not found') 
+
+      await Wishlist.destroy({
+        where: {
+          id: wishlistId
+        }
+      })
+
+      res.status(200).json(`${theSearchedWishlist.name} has been removed from your transaction list`)
+
+    } catch(err) {
+      next(err)
+    }
+  }
+
+  // Wishlist - get wishlists
+  static async getWishlistsByUser (req, req, next) {
+    try {
+      const wishlists = Wishlist.findAll({
+        where: {
+          UserId: req.userInfo.id
+        }
+      })
+    } catch(err) {
+      next(err)
+    }
+  }
+
+
+  // payment - stripe
+  static async paymentWithStripe (req, res, next) {
+    try {
+      const {stripeTokenId, items} = req.body
+    } catch (err) {
+      next(err)
+    }
+  }  
+
+  // hotel - get hotel's details
+  static async getHotelById (req, res, next) {
+    try {
+      const {id} = req.params
+
+      const theSearchedHotel = await Hotel.findByPk(id)
+      if(!theSearchedHotel) throw ('Data not found')
+      
+      res.status(200).json(theSearchedHotel)
+      
+
+    } catch (err) {
+      next(err)
+    }
+  }  
+
+  // hotels - fetch hotels data
+  static async fetchHotelData (req, res, next) {
+        try {
+
+          const {city, date_checkout, date_checkin, star_rating_ids, rooms_number} = req.body
+          
+            const optionsLocation = {
+              method: 'GET',
+              url: 'https://priceline-com-provider.p.rapidapi.com/v1/hotels/locations',
+              params: {name: city, search_type: 'CITY'},
+              headers: {
+                'X-RapidAPI-Key': '9ed40945d0msh1e9f5455b127c43p106fb0jsnc9347ce3026a',
+                'X-RapidAPI-Host': 'priceline-com-provider.p.rapidapi.com'
+              }
+            };            
+            const {data} = await axios(optionsLocation) // fetch location id
+            const location_id = data[0].id
+
+            const optionsHotel = {
+              method: 'GET',
+              url: 'https://priceline-com-provider.p.rapidapi.com/v1/hotels/search',
+              params: {
+                sort_order: 'STAR',
+                location_id,
+                date_checkout,
+                date_checkin,
+              },
+              headers: {
+                'X-RapidAPI-Key': '9ed40945d0msh1e9f5455b127c43p106fb0jsnc9347ce3026a',
+                'X-RapidAPI-Host': 'priceline-com-provider.p.rapidapi.com',
+                'Accept-Encoding': 'application/json'
+              }
+            };
+            if(star_rating_ids) optionsHotel.params.star_rating_ids = star_rating_ids
+            if(rooms_number) optionsHotel.params.rooms_number = rooms_number
+
+
+            const response =  await axios(optionsHotel) // fetch hotels
+
+            const finalData = response.data.hotels.filter(el => 
+              el.name &&
+              el.ratesSummary.minPrice &&
+              el.hotelFeatures.hotelAmenityCodes &&
+              el.totalReviewCount > 50
+            ).map(el => {
+              return {
+                name: el.name,
+                star: el.starRating,
+                address: `${el.location.address.addressLine1}, ${el.location.address.cityName}, ${el.location.address.countryName}, ${el.location.address.zip}`,
+                imageUrl: el.thumbnailUrl,
+                rating: el.overallGuestRating,
+                totalReviews: el.totalReviewCount,
+                price: el.ratesSummary.minPrice,
+                features: el.hotelFeatures.hotelAmenityCodes.toString(),
+                roomLeft: el.ratesSummary.roomLeft,
+                freeCancelPolicy: el.ratesSummary.freeCancelableRateAvail,
+                city,
+                dateCheckIn: date_checkin,
+                dateCheckout: date_checkout
+              }
+            })
+
+            res.status(200).json(finalData)
+        } catch (err) {
+          console.log(err)
+        }
+  }
 
 
     

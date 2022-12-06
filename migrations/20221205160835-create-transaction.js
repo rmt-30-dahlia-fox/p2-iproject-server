@@ -29,6 +29,12 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
+      dateCheckIn: {
+        type: Sequelize.STRING
+      },
+      dateCheckOut: {
+        type: Sequelize.STRING
+      },
       city: {
         type: Sequelize.STRING
       },

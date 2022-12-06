@@ -30,7 +30,9 @@ module.exports = (sequelize, DataTypes) => {
         notNull: true,
         notEmpty: true,
       }
-    }, 
+    },
+    dateCheckIn: DataTypes.STRING,
+    dateCheckOut: DataTypes.STRING, 
     city: DataTypes.STRING,
     star: DataTypes.FLOAT,
     address: DataTypes.STRING,

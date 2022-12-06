@@ -17,6 +17,16 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(models.Media, {
 	foreignKey: "AvatarId",
       });
+
+      User.hasMany(models.UserFriend, {
+	foreignKey: "UserId",
+	as: "users",
+      });
+
+      User.hasMany(models.UserFriend, {
+	foreignKey: "FriendId",
+	as: "friends",
+      });
     }
   }
   User.init({

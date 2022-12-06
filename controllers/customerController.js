@@ -223,7 +223,7 @@ class customerController{
   static async updateProfile(req, res, next){
     try {
       const {firstName, lastName, email, password, phoneNumber} = req.body;
-      const data = { firstName, lastName, email, phoneNumber }
+      let data = { firstName, lastName, email, phoneNumber }
       if(password){
         data = {
           ...data,

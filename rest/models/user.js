@@ -18,6 +18,10 @@ module.exports = (sequelize, DataTypes) => {
 	foreignKey: "AvatarId",
       });
 
+      User.hasMany(models.Post, {
+	foreignKey: "UserId",
+      });
+
       User.hasMany(models.UserFriend, {
 	foreignKey: "UserId",
 	as: "users",

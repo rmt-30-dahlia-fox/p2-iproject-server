@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Media extends Model {
+  class PostAttachment extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,43 +11,35 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Media.belongsTo(models.User, {
-	foreignKey: "AvatarId",
+      PostAttachment.belongsTo(models.Post, {
+	foreignKey: "PostId",
       });
 
-      Media.hasMany(models.PostAttachment, {
+      PostAttachment.belongsTo(models.Media, {
 	foreignKey: "MediaId",
       });
     }
   }
-  Media.init({
-    hash: {
-      type: DataTypes.STRING,
+  PostAttachment.init({
+    PostId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      validate: {
-	notNull: true,
-	notEmpty: true,
+      references: {
+	model: "Posts",
+	key: "id",
       },
     },
-    format: {
-      type: DataTypes.STRING,
+    MediaId: {
+      type: DataTypes.INTEGER,
       allowNull: false,
-      validate: {
-	notNull: true,
-	notEmpty: true,
-      },
-    },
-    type: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-	notNull: true,
-	notEmpty: true,
+      references: {
+	model: "Media",
+	key: "id",
       },
     },
   }, {
     sequelize,
-    modelName: 'Media',
+    modelName: 'PostAttachment',
   });
-  return Media;
+  return PostAttachment;
 };

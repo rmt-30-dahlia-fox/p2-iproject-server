@@ -2,6 +2,7 @@ const { comparePassword, hashPassword } = require('../helpers/bcrypt');
 const { generateToken } = require('../helpers/jwt');
 const {User, Car, Dealer, Transaction, Review} = require('../models');
 const { Op } = require("sequelize");
+const axios = require('axios');
 
 class customerController{
   static async registerAccount(req, res, next){
@@ -240,6 +241,55 @@ class customerController{
     } catch (error) {
       next(error);
     }
+  }
+  static getPaymentData(req, res, next){
+    const user = req.body;
+    if(!user.firstName){
+      throw("First name is required")
+    }
+    else if(!user.lastName){
+      throw("Last name is required")
+    }
+    else if(!user.email){
+      throw("Email is required")
+    }
+    else if(!user.phoneNumber){
+      throw("Phone number is required")
+    }
+    const price = req.headers.price;
+    if(!price){
+      throw("Price is required")
+    }
+    axios({
+      url: "https://app.sandbox.midtrans.com/snap/v1/transactions",
+      method: "post",
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+        Authorization:
+          "Basic " +
+          Buffer.from("SB-Mid-server-GwUP_WGbJPXsDzsNEBRs8IYA").toString("base64")
+        // Above is API server key for the Midtrans account, encoded to base64
+      },
+      data:
+        // Below is the HTTP request body in JSON
+        {
+          transaction_details: {
+            order_id: "order-csb-" + new Date().getTime(),
+            gross_amount: +price*0.05
+          },
+          credit_card: {
+            secure: true
+          },
+          customer_details: user
+        }
+    }).then( snapResponse => { 
+        let snapToken = snapResponse.data.token;
+        res.status(200).json({snapToken})
+      })
+      .catch(err=>{
+        next(err);
+      })
   }
 }
 

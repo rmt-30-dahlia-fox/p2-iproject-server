@@ -15,5 +15,6 @@ router.post('/transactions/:carId', customerController.bookTransaction);
 router.post('/reviews/:transactionId', transactionAuthorization, customerController.postReview);
 router.patch('/transactions/:transactionId', transactionAuthorization, customerController.updateBookStatus);
 router.put('/users', customerController.updateProfile);
+router.post('/payments', customerController.getPaymentData);
 
 module.exports = router;

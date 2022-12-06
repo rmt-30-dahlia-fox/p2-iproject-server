@@ -29,6 +29,10 @@ function errorHandler (err, req, res, next) {
     code = 403;
     message = "Access denied!";
   }
+  else if(err === "First name is required" || err === "Last name is required" || err === "Email is required" || err === "Phone number is required" || err === "Price is required"){
+    code = 400;
+    message = err;
+  }
   res.status(code).json({message});
 }
 

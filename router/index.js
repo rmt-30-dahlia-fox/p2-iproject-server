@@ -1,8 +1,8 @@
 const express = require("express");
 const { verifyPassword } = require("../helpers/bycript");
-const { generateToken, verifyToken } = require("../helpers/jwt");
+const { generateToken } = require("../helpers/jwt");
 const router = express.Router();
-const { User, Medicine, Doctor, Receipt } = require("../models");
+const { User } = require("../models");
 
 // admin
 router.post("/login", async (req, res, next) => {

@@ -1,3 +1,5 @@
+const { comparePw } = require("../helpers/bcrypt");
+const { signToken } = require("../helpers/jwt");
 const { Admin } = require("../models");
 
 class AdminController {
@@ -11,7 +13,23 @@ class AdminController {
     }
   }
 
-  static async login(req, res, next) {}
+  static async login(req, res, next) {
+    try {
+      const { email, password } = req.body;
+
+      if (!email) throw { name: "email_required" };
+      if (!password) throw { name: "password_required" };
+
+      const admin = await Admin.findOne({ where: { email } });
+      if (!admin) throw { name: "invalid_login" };
+      if (comparePw(admin.password) === false) throw { name: "invalid_login" };
+
+      const access_token = signToken({ id: admin.id });
+      res.status(200).json({ access_token });
+    } catch (error) {
+      next(err);
+    }
+  }
 }
 
 module.exports = AdminController;

@@ -14,8 +14,37 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Admin.init({
-    email: DataTypes.STRING,
-    password: DataTypes.STRING
+    email: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: {
+        args: true,
+        msg: "Email must be unique"
+      },
+      validate: {
+        notNull: {
+          msg: "Email is required"
+        },
+        notEmpty: {
+          msg: "Email is required"
+        },
+        isEmail: {
+          msg: "Invalid email format"
+        }
+      }
+    },
+    password: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          msg: "Password is required"
+        },
+        notNull: {
+          msg: "Password is required"
+        }
+      }
+    }
   }, {
     sequelize,
     modelName: 'Admin',

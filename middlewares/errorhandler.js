@@ -28,6 +28,9 @@ const errorHandler = (err, req, res, next) => {
     } else if (err.name == "required") {
         code = 400;
         message = err.message
+    } else if(err.response.status==404){
+        code = 404
+        message = 'Manga is not found'
     }
 
     res.status(code).json({ message })

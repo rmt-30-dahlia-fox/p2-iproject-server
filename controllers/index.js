@@ -63,6 +63,22 @@ class Controllers {
         }
     }
 
+    static async showMangaDetail(req, res, next) {
+        try {
+            const{id} = req.params
+            const {data} = await axios({
+                method: 'get',
+                url: `https://api.myanimelist.net/v2/manga/${id}`,
+                headers: {
+                    "X-MAL-CLIENT-ID": "aad45b6564954e88533f9ad51291a312"
+                }
+            })           
+
+            res.status(200).json(data)
+        } catch (error) {
+            next(error)
+        }
+    }
 
 }
 

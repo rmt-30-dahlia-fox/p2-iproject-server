@@ -1,0 +1,27 @@
+{
+  "name": "p2-iproject-server-1",
+  "version": "1.0.0",
+  "description": "Individual Project - Server",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ekadk/p2-iproject-server-1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ekadk/p2-iproject-server-1/issues"
+  },
+  "homepage": "https://github.com/ekadk/p2-iproject-server-1#readme",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.8.0",
+    "sequelize": "^6.26.0"
+  }
+}

@@ -55,6 +55,8 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       }
     },
+    dateCheckIn: DataTypes.STRING,
+    dateCheckOut: DataTypes.STRING,
     city: DataTypes.STRING,
     star: DataTypes.FLOAT,
     address: DataTypes.STRING,

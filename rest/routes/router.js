@@ -1,10 +1,11 @@
 "use strict";
 
 const { Router } = require("express");
-const { User, Media } = require("../models");
+const { User, Media, Message } = require("../models");
 const { verifyToken, createToken } = require("../util/jwt");
 const { comparePass } = require("../util/crypto");
 const { upload } = require("../middlewares/upload.js");
+const {sendGlobal} = require("../util/ws");
 
 const router = Router();
 
@@ -165,24 +166,26 @@ router.post('/attachments', upload.single('attachment'), async (req, res, next) 
   }
 });
 
-router.post("/chat/global", (req, res, next) => {
+router.post("/chat/global", async (req, res, next) => {
   try {
     const {
       content,
     } = req.body;
 
-    const recv = await User.findByPk(receiverId);
+    const data = {
+      content,
+      UserId: req.user.id,
+      ChannelId: 1,
+    };
 
-    if (!recv || !voucher) {
-      throw {
-	status: 404,
-	message: "Data not found",
-      };
-    }
+    data.createdAt = data.updatedAt = new Date();
 
-    const gift = await Gift.create({ message, amount, receiverId, sender /*: req.user.email */, voucherId: voucher.id });
+    // post ws
+    const res = await sendGlobal(data);
 
-    res.status(201).json(gift);
+    const message = await Message.create(data);
+
+    res.status(201).json(message);
   } catch (err) {
     next(err);
   }
@@ -190,6 +193,9 @@ router.post("/chat/global", (req, res, next) => {
 
 router.post("/chat/:id", (req, res, next) => {
 
+if (err.response.data.message === "Unknown/offline recipient") {
+  return res.status(200).json(message);
+}
 });
 
 // error handler
@@ -197,7 +203,7 @@ router.use((err, req, res, next) => {
   console.error(err); // remove this later
 
   if (Object.keys(err).length === 2 && err.status && err.message) {
-      return res.status(err.status).json(
+    return res.status(err.status).json(
       {
 	message: err.message,
       },

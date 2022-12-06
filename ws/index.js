@@ -5,10 +5,13 @@ const WebSocket = require("uWebSockets.js");
 const {comparePass} = require("./utils/crypto");
 const {verifyToken, createToken} = require("./utils/jwt");
 
-const socket = WebSocket.App();
+const wsApp = WebSocket.App();
 
 const PORT = process.env.PORT || 8080;
 const TOPIC_GLOBAL = "global";
+
+// unimportant
+let allow = true;
 
 // utils ////////////////////////////////////
 const textEncoder = new TextEncoder();
@@ -57,13 +60,17 @@ const postHandler = (res, req, login) => {
   let status = 500;
   let writeStatus;
   let data = "";
+  let body;
+  let abort;
   res.onData((chunk, isLast) => {
     try {
       data += arrayBufferToStr(chunk);
 
       if (isLast) {
 	// process data
+	console.log(data);
 	const json = JSON.parse(data);
+	// console.log(json);
 
 	if (login) {
 	  const { pass } = json;
@@ -78,8 +85,8 @@ const postHandler = (res, req, login) => {
 	  const access_token = createToken({
 	    server: "server",
 	  });
-	  res.writeStatus(getWriteStatus(200)).end(JSON.stringify({
-	    access_token,
+	  if (!abort) res.writeStatus(getWriteStatus(200)).end(JSON.stringify({
+	    "access-token": access_token,
 	  }), true);
 	}
 	else {
@@ -87,15 +94,33 @@ const postHandler = (res, req, login) => {
 	    for (const [id, socket] of userSockets) {
 	      socket.send(JSON.stringify(json.data));
 	    }
-	    res.writeStatus(getWriteStatus(200)).end(undefined, true);
+	    if (!abort) res.writeStatus(getWriteStatus(200)).end(undefined, true);
 	  }
 	  else if (json.op === "single") {
 	    const { recipient_id } = json.data;
+
+	    if (!recipient_id) {
+	      throw {
+		status: 400,
+		message: "recipient_id is required",
+	      };
+	    }
 
 	    const userSocket = userSockets.get(recipient_id);
 	    if (!userSocket) {
 	      throw { status: 404, message: "Unknown/offline recipient" };
 	    }
+
+	    const code = userSocket.send(JSON.stringify(json.data), false, true);
+	    // console.log(code, "<<<<<<<<< code [single sock.send]");
+	    if (code !== 1) {
+	      throw {
+		status: 500,
+		message: "Unexpected socket return code",
+		code,
+	      };
+	    }
+	    if (!abort) res.writeStatus(getWriteStatus(200)).end(undefined, true);
 	  }
 	  else {
 	    throw { status: 400, message: "Invalid op" };
@@ -109,44 +134,60 @@ const postHandler = (res, req, login) => {
       console.error(err);
       console.error("[STATUS]", writeStatus);
 
-      const body = {
+      body = {
 	message: err.message || "Internal Server Error",
+	code: err.code,
       };
 
-      res.writeStatus(writeStatus).end(JSON.stringify(body), true);
+      if (!abort) res.writeStatus(writeStatus).end(JSON.stringify(body), true);
     }
   });
 
   res.onAborted(() => {
-    writeStatus = getWriteStatus(status);
-    res.writeStatus(writeStatus).end(typeof body === "object" ? JSON.stringify(body) : body, true);
+    console.log("Request aborted");
   });
 
   if (!login) {
-    const access_token = req.getHeader("access_token");
+    const access_token = req.getHeader("access-token");
 
-    if (!access_token) {
-      status = 401;
-      body = {
-	message: "Unauthorized",
+    try {
+      if (!access_token) {
+	status = 401;
+	body = {
+	  message: "Unauthorized",
+	}
+	throw null;
       }
-      return res.close();
-    }
 
-    const payload = verifyToken(access_token);
-    if (payload?.server !== "server") {
-      status = 401;
-      body = {
-	message: "Unauthorized",
+      const payload = verifyToken(access_token);
+      // console.log(payload)
+      if (payload?.server !== "server") {
+	status = 401;
+	body = {
+	  message: "Unauthorized",
+	}
+	throw null;
       }
-      return res.close();
+    } catch (err) {
+      console.error(err, "<<<<<<<<<< auth [ERROR]");
+      if (err?.name === "JsonWebTokenError") {
+	status = 401;
+	body = {
+	  message: "Unauthorized",
+	}
+      }
+
+      if (status === 500) console.error("[WARN] STATUS 500 UNHANDLED ERROR");
+      writeStatus = getWriteStatus(status);
+      abort = true;
+      res.writeStatus(writeStatus).end(typeof body === "object" ? JSON.stringify(body) : body, true);
     }
   }
 }
 
 // utils end ////////////////////////////////
 
-socket.ws('/', {
+wsApp.ws('/', {
 
   /* There are many common helper features */
   // idleTimeout: 32,
@@ -160,24 +201,25 @@ socket.ws('/', {
   //   console.log(req, "<<<<<<<<<<<< req [upgrade]");
   //   console.log(context, "<<<<<<<<<<<< context [upgrade]");
   // },
-  open: (ws) => {
-    console.log(ws, "<<<<<<< ws [open]");
-  },
-  ping: (ws, message) => {
-    console.log(ws, "<<<<<<< ws [ping]");
-    console.log(message, "<<<<<<< message [ping]");
-  },
-  pong: (ws, message) => {
-    console.log(ws, "<<<<<<< ws [pong]");
-    console.log(message, "<<<<<<< message [pong]");
-  },
+  // open: (ws) => {
+  //   console.log(arrayBufferToStr(ws.getRemoteAddressAsText()), "<<<<<<< ws [open]");
+  // },
+  // ping: (ws, message) => {
+  //   console.log(ws, "<<<<<<< ws [ping]");
+  //   console.log(message, "<<<<<<< message [ping]");
+  // },
+  // pong: (ws, message) => {
+  //   // emitted every once in a while to check for client activity
+  //   console.log(ws, "<<<<<<< ws [pong]");
+  //   console.log(message, "<<<<<<< message [pong]");
+  // },
   close: (ws, code, message) => {
     try {
       const json = parseMessage(message);
       userSockets.delete(json.data.user_id);
       console.log("[CLOSE]: ", code, json);
     } catch (err) {
-      console.error(err, "<<<<<<<< [close]");
+      console.error(err, "<<<<<<<< err [close]");
     }
   },
 
@@ -195,56 +237,25 @@ socket.ws('/', {
 	ws.subscribe(TOPIC_GLOBAL);
 	userSockets.set(user_id, ws);
       }
-
-      if (json.op === "direct_message") {
-	const { recipient_id, content, sentAt } = json.data;
-
-	// check if recipient actually exist
-
-	// check Channel, if not exist create it
-	const channel = "find or create channel";
-
-	const topic = `dm/${channel.id}`;
-	const recipientSocket = userSockets.get(recipient_id);
-	if (recipientSocket) {
-	  // subscribe to topic, it will just return false if already subscribed
-	  recipientSocket.subscribe(topic);
-	}
-
-	// publish
-	ws.publish(topic, message, isBinary, true);
-
-	// create Message in database
-      }
-
-      if (json.op === "global_message") {
-	const { content, sentAt } = json.data;
-
-	// check if recipient actually exist
-
-	// check Channel, if not exist create it
-	const channel = "find or create channel";
-
-	// publish
-	ws.publish(TOPIC_GLOBAL, message, isBinary, true);
-
-	// create Message in database
-      }
+      else console.log(json, "<<<<<<<< json [message]");
     } catch (err) {
-      console.error(err, "<<<<<<<< [message]");
+      console.error(err, "<<<<<<<< err [message]");
+      console.error(arrayBufferToStr(message));
     }
   }
 })
 .any('/*', (res, req) => {
-  console.log(res, "<<<<<<<<<<< res [any]");
-  console.log(req, "<<<<<<<<<<< req [any]");
-  res.end('Nothing to see here!');
+  // tiny shenanigan
+  if (!allow) {
+    return res.close();
+  }
+  res.end('Hello how are you i am under the wather');
+  allow = false;
+  setTimeout(() => {
+    allow = true;
+  }, 5000);
 })
-// user dm
-.post("/dm", (res, req) => {
-  postHandler(res, req);
-})
-// global chat
+// any chat
 .post("/chat", (res, req) => {
   postHandler(res, req);
 })
@@ -265,5 +276,8 @@ socket.ws('/', {
 process.stdin.on("data", (buf) => {
   const str = buf.toString().slice(0, -1);
 
-  socket.send(str, false, true);
+  for (const [uid, sock] of userSockets) {
+    console.log(uid);
+    sock.send(str, false, true);
+  }
 });

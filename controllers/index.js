@@ -17,7 +17,7 @@ class Controller {
 
       const access_token = createToken({ id: user.id })
 
-      res.status(201).json({ access_token })
+      res.status(201).json({ access_token, userId: user.id })
     } catch (error) {
       next(error)
     }

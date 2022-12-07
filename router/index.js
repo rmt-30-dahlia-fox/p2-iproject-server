@@ -18,4 +18,7 @@ router.put('/users/:userId', Authorization.authUser, Controller.updateUser)
 
 router.get('/exercises', Controller.showExercises)
 
+router.get('/types', Controller.showTypes)
+router.get('/difficulties', Controller.showDifficulties)
+
 module.exports = router

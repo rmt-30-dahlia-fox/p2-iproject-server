@@ -153,10 +153,21 @@ class Controller {
     }
   }
 
-  static async nama(req, res, next) {
+  static async showTypes(req, res, next) {
     try {
-      
-      res.status(200).json("ok")
+      const types = await Type.findAll()
+
+      res.status(200).json({ data: types })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async showDifficulties(req, res, next) {
+    try {
+      const difficulties = await Difficulty.findAll()
+
+      res.status(200).json({ data: difficulties })
     } catch (error) {
       next(error)
     }

@@ -1,5 +1,6 @@
 const midtransClient = require("midtrans-client");
 const { User } = require("../models");
+const nodemailer = require("nodemailer");
 
 class Controller {
   static async paymentGetway(req, res, next) {
@@ -36,6 +37,29 @@ class Controller {
 
       const transaction = await snap.createTransaction(parameter);
       const transactionToken = transaction.token;
+
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        host: 'smtp.gmail.com',
+        port: 486,
+        auth: {
+          user: 'bobby.notokoesoemo@gmail.com',
+          pass: 'utxpsiqfnqtxsgeo',
+        },
+      });
+
+      const mailOptions = {
+        from: "bobby.notokoesoemo@gmail.com",
+        to: findUser.email,
+        subject: "Transaction notification",
+        text: `Hello, ${findUser.username}. You have made a donation to Movie Library. Thank you!`,
+      };
+
+      transporter.sendMail(mailOptions, (err) => {
+        if (err) {
+          return res.status(500).json({ message: "error sending mail" });
+        }
+      });
 
       res.status(200).json({ transactionToken });
     } catch (error) {

@@ -62,7 +62,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    phoneNum: DataTypes.INTEGER,
+    phoneNum: DataTypes.STRING,
     address: DataTypes.STRING,
     account: DataTypes.STRING
   }, {

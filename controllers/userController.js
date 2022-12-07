@@ -16,7 +16,7 @@ class userControllers {
       const payload = { id: user.id }
       const access_token = encodeToken(payload)
 
-      res.status(200).json({ access_token })
+      res.status(200).json({ access_token, id: user.id })
     } catch (error) {
       // console.log(error);
       next(error)
@@ -25,8 +25,8 @@ class userControllers {
 
   static async register(req, res, next) {
     try {
-      const { username, email, password, phoneNumber, address } = req.body
-      const newUser = await User.create({ username, email, password, role: "Admin", phoneNumber, address })
+      const { username, email, password, phoneNum, address } = req.body
+      const newUser = await User.create({ username, email, password, role: "Admin", phoneNum, address })
       res.status(201).json({ id: newUser.id, email: newUser.email }) //success create statusnya 201
     } catch (error) {
       // console.log(error);

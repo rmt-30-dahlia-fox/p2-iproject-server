@@ -10,9 +10,9 @@ router.use(authentication)
 
 router.get('/activities', Controller.showActivities)
 router.get('/activities/:activityId', Controller.showActivity)
-router.get('/activities/:userId/users', Controller.showActivitiesPerUser)
+router.get('/activities/:userId/users', Authorization.authUser, Controller.showActivitiesPerUser)
 
 router.get('/users', Controller.showUsers)
-router.put('/users/:userId', Authorization.updateUser, Controller.updateUser)
+router.put('/users/:userId', Authorization.authUser, Controller.updateUser)
 
 module.exports = router

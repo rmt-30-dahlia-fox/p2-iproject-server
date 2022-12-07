@@ -88,7 +88,7 @@ _200 - OK_
 - Body
     ```json
     {
-    "access_token": String
+      "access_token": String
     }
     ```
 _400 - Bad Request_
@@ -104,6 +104,26 @@ _400 - Bad Request_
     Or
     {
       "message": "Invalid email or password"
+    }
+    ```
+
+### POST /customers/login
+#### Description
+- Login to customer account using google oauth
+
+#### Request
+- Headers
+    ```json
+    {
+      "google_token": String
+    }
+    ```
+#### Response
+_200 - OK_
+- Body
+    ```json
+    {
+      "access_token": String
     }
     ```
 

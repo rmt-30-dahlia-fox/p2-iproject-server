@@ -14,6 +14,12 @@ class Controllers {
     static async login(req, res, next) {
         try {
             const { email, password } = req.body
+            if(!email){
+                throw {name : 'required', message : "Email is  required" }
+            }
+            if(!password){
+                throw {name : 'required', message : "Password is  required" }
+            }
             const user = await User.findOne({ where: { email } })
             if (!user) throw { name: 'data not found', message: 'invalid email or password' }
             const validPassword = comparePassword(password, user.password)
@@ -182,6 +188,9 @@ class Controllers {
                     UserId: req.user.id
                 }
             })
+            if(!list){
+                throw {name : "400status", message : "There is no manga in your want to read list"}
+            }
 
             let sendList = "";
             list.forEach(el=>{sendList += el.title + ", "})
@@ -210,7 +219,7 @@ class Controllers {
                 }
             });
 
-            res.status(200).json(sendList)
+            res.status(200).json({message : "An email with the wanttoread list in it has been sent to you"})
 
         } catch (error) {
             next(error)
@@ -269,7 +278,7 @@ class Controllers {
             const { id } = req.params
             const { statusRead } = req.body
             if (statusRead != "Finished" && statusRead != "Unfinished") {
-                throw { name: "403status", message: "status can only be Finished or Unfinished" }
+                throw { name: "400status", message: "status can only be Finished or Unfinished" }
             }
             const list = await WantToRead.findByPk( id)
             const old = list.statusRead

@@ -3,10 +3,7 @@ const errorHandler = (err, req, res, next) => {
     let code = 500;
     let message = "Internal Server Error";
 
-    if(err.name=='403status'){
-        code = 403
-        message = err.message
-    }else if (err.name === "SequelizeValidationError" || err.name == "SequelizeUniqueConstraintError") {
+    if (err.name === "SequelizeValidationError" || err.name == "SequelizeUniqueConstraintError") {
         code = 400;
         message = err.errors[0].message;
     } else if (err.name == "invalid token" || err.name == "JsonWebTokenError") {
@@ -24,10 +21,10 @@ const errorHandler = (err, req, res, next) => {
     } else if (err.name == 'SequelizeDatabaseError') {
         code = 401;
         message = err.parent.error
-    } else if (err.name == "required") {
+    } else if (err.name == "required" || err.name == '400status') {
         code = 400;
         message = err.message
-    } 
+    }
 
     res.status(code).json({ message })
 }

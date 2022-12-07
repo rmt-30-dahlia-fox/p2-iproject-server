@@ -20,10 +20,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull : false,
       validate : {
         notEmpty :{
-          msg : "Email is required"
+          msg : "email is required"
         },
         notNull :{
-          msg : "Email is required"
+          msg : "email is required"
         },
         isEmail : {
           msg : "Invalid email format"
@@ -35,10 +35,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull : false,
       validate : {
         notEmpty :{
-          msg : "Password is required"
+          msg : "password is required"
         },
         notNull :{
-          msg : "Password is required"
+          msg : "password is required"
         }
       }
     }

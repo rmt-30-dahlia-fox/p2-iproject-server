@@ -14,6 +14,10 @@ const errorHandler = (err, req, res, next) => {
         code = 401;
         message = "Invalid Token/Authentication Failed";
     }
+    if (err.name == 'FailedRegisterAuthorization') {
+        code = 403;
+        message = "Only Admin Can Register New User";
+    }
     
     console.log(err);
     res.status(code).json({message})

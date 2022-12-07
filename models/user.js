@@ -1,5 +1,6 @@
 "use strict"
 const { Model } = require("sequelize")
+const { hashPassword } = require("../helpers/bcyrpt")
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**
@@ -25,7 +26,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       password: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
         validate: {
           notNull: { msg: "Password is required" },
@@ -38,5 +38,9 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "User",
     }
   )
+
+  User.beforeCreate((instance, options) => {
+    instance.password = hashPassword.instance.password
+  })
   return User
 }

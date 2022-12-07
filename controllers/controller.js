@@ -5,12 +5,12 @@ const { User, Favorite } = require("../models")
 
 /* Register & Login */
 class Controller {
-  static async userRegsiter(req, res, next) {
+  static async userRegister(req, res, next) {
     try {
       const { email, password } = req.body
-      const User = await User.create({ email, password })
-
-      res.status(201).json(User)
+      const user = await User.create({ email, password })
+      console.log(user, "INI EMAIL PASSWORD")
+      res.status(201).json(user)
     } catch (error) {
       next(error)
     }

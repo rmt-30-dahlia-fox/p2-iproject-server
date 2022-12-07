@@ -1,11 +1,15 @@
 const Controller = require("../controllers/controller")
-
+const { userConsent } = require("../middlewares/authentication")
 const router = require("express").Router()
 
-router.post("/register", Controller.register)
-router.post("/login", Controller.login)
-
 router.get("/covid-data", Controller.getCovidData)
-router.post("/userDetail", Controller.postUserDetail)
+router.post("/register", Controller.userRegsiter)
+router.post("/login", Controller.userLogin)
+
+router.use(userConsent)
+
+router.post("/favorites", Controller.addFavorites)
+router.get("/favorites", Controller.findFavorites)
+router.delete("/favorites", Controller.deleteFavorites)
 
 module.exports = router

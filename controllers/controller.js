@@ -1,56 +1,63 @@
 const axios = require("axios")
-const { User, Favorites } = require("../models")
+const { comparePassword } = require("../helpers/bcyrpt")
+const { signToken } = require("../helpers/jwt")
+const { User, Favorite } = require("../models")
 
+/* Register & Login */
 class Controller {
-  static async register(req, res, next) {
+  static async userRegsiter(req, res, next) {
     try {
       const { email, password } = req.body
-      const user = await User.create({ email, password })
+      const User = await User.create({ email, password })
 
-      res
-        .status(200)
-        .json({ message: `Successfully created new User with email : ${email}` })
+      res.status(201).json(User)
     } catch (error) {
       next(error)
     }
   }
 
-  static async login(req, res, next) {
+  static async userLogin(req, res, next) {
     try {
       const { email, password } = req.body
-      if (!email || !password) throw { name: "invalid Login" }
-      const user = await User.findOne({
-        where: { email },
+      if (!email || !password) throw { name: "invalidLogin" }
+
+      const findUser = await User.findOne({ where: { email } })
+
+      if (!findUser) throw { name: "invalidLogin" }
+
+      const validPassword = comparePassword(password, findUser.password)
+      if (!validPassword) throw { name: "invalidLogin" }
+
+      const payload = { id: findUser.id }
+
+      const access_token = signToken(payload)
+
+      res.status(200).json({ access_token, message: `Logged in as ${email}` })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  /* Add Favorites */
+  static async addFavorites(req, res, next) {
+    try {
+      const { title, description, urlToImage } = req.body
+      const UserId = req.user.id
+      const addFavorites = await Favorite.create({
+        title,
+        description,
+        urlToImage,
+        UserId,
       })
 
-      if (user && user.role !== "Customer") throw { name: "Forbidden" }
-
-      if (!user) throw { name: "invalid Login" }
-      const validPassword = Bcyrpt.comparePassword(password, user.password)
-      if (!validPassword) throw { name: "invalid Login" }
-      const payload = {
-        id: user.id,
-      }
-
-      const access_token = generateToken(payload)
-
-      res.status(200).json({ access_token, message: `Logged in as : ${email}` })
+      res
+        .status(201)
+        .json({ message: `Success add Favorite to list ${addFavorites.title}` })
     } catch (error) {
       next(error)
     }
   }
 
-  static async findUserById(req, res, next) {
-    const { id } = req.user
-    try {
-      const findUser = await User.findByPk(id)
-      res.status(200).json({ message: "find User : ", findUser })
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  /* Add Edit Delete Favorites */
   static async findFavorites(req, res, next) {
     try {
       const { id } = req.user
@@ -72,43 +79,11 @@ class Controller {
       next(error)
     }
   }
-
-  static async createFavorites(req, res, next) {
+ static async deleteFavorites(req, res, next) {
     try {
-      const { foodId } = req.params
-      const { id } = req.user
-      const findFood = await Food.findByPk(foodId)
-      if (!findFood) {
-        throw { name: "Data not found", table: "Food" }
-      }
+      const { id } = req.params.id
 
-      const options = {
-        where: {
-          UserId: id,
-          FoodId: foodId,
-        },
-      }
-      const [foodData, created] = await Favorites.findOrCreate(options)
-
-      if (!created) {
-        throw { name: "alreadyExist" }
-      }
-
-      res.status(201).json({
-        Favorites: `Food with name ${findFood.name} successfully added to Favorites`,
-      })
-    } catch (error) {
-      next(error)
-    }
-  }
-
-  static async deleteFavorites(req, res, next) {
-    try {
-      const { foodId } = req.params
-
-      const deleteFavorites = await Favorites.destroy({
-        where: { FoodId: foodId },
-      })
+      const deleteFavorites = await Favorites.destroy({ where: { id: id } })
 
       if (deleteFavorites === 0) throw { name: "Data not found", table: "Favorites" }
 
@@ -118,7 +93,8 @@ class Controller {
     }
   }
 
-  /* API's */
+  /* Get Data from database */
+
   static async getCovidData(req, res, next) {
     try {
       const { data } = await axios({
@@ -131,7 +107,6 @@ class Controller {
     }
   }
 }
-
-/* milih sandbox, development. */
+/* UserDetail */
 
 module.exports = Controller

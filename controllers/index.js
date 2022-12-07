@@ -2,7 +2,6 @@ const { compareHash, hashPass } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 const { User, Activity, Type, Difficulty, Like, Badge } = require("../models");
 const axios = require("axios");
-const FileReader = require('filereader')
 const rapidApiKey = process.env["X-RapidAPI-Key"];
 const rapidApiHost = process.env["X-RapidAPI-Host"];
 
@@ -42,7 +41,6 @@ class Controller {
   static async addActivity(req, res, next) {
     try {
       const { caption, name, UserId, TypeId, DifficultyId } = req.body
-      console.log('caption', caption);
 
       const difficulty = await Difficulty.findByPk(DifficultyId)
       const star = difficulty.star
@@ -132,8 +130,7 @@ class Controller {
   static async updateUser(req, res, next) {
     try {
       const { userId } = req.params;
-      const { email, password, fullName, dateOfBirth, city, imageProfile } =
-        req.body;
+      const { email, password, fullName, dateOfBirth, city } = req.body;
 
       const data = {};
       if (email) data.email = email;
@@ -141,7 +138,9 @@ class Controller {
       if (fullName) data.fullName = fullName;
       if (dateOfBirth) data.dateOfBirth = dateOfBirth;
       if (city) data.city = city;
-      if (imageProfile) data.imageProfile = imageProfile;
+      if (req.file) {
+        data.imageProfile = `data:image/png;base64,${req.file.buffer.toString('base64')}`
+      }
 
       await User.update(data, { where: { id: userId } });
 

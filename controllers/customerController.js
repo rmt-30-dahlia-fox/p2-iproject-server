@@ -3,6 +3,9 @@ const { generateToken } = require('../helpers/jwt');
 const {User, Car, Dealer, Transaction, Review} = require('../models');
 const { Op } = require("sequelize");
 const axios = require('axios');
+const { OAuth2Client } = require('google-auth-library');
+const CLIENT_ID = process.env.CLIENT_ID;
+const client = new OAuth2Client(CLIENT_ID);
 
 class customerController{
   static async registerAccount(req, res, next){
@@ -290,6 +293,31 @@ class customerController{
       .catch(err=>{
         next(err);
       })
+  }
+  static async customerGoogleSignIn(req, res, next){
+    try {
+      const googleToken = req.headers.google_token;
+      const ticket = await client.verifyIdToken({
+        idToken: googleToken,
+        audience: CLIENT_ID
+      });
+      const payload = ticket.getPayload();
+      const firstName = payload.given_name;
+      const lastName = payload.family_name;
+      const email = payload.email;
+      const password = payload.email;
+      const phoneNumber = "000000000000";
+      const [user, created] = await User.findOrCreate({
+        where: { email },
+        defaults: {firstName, lastName, email, password, phoneNumber},
+        hooks: false
+      });
+      res.status(200).json({
+        "access_token": generateToken({id: user.id})
+      })
+    } catch (error) {
+      next(error)
+    }
   }
 }
 

@@ -9,7 +9,7 @@ class Controller {
     try {
       const { email, password } = req.body
       const user = await User.create({ email, password })
-      console.log(user, "INI EMAIL PASSWORD")
+
       res.status(201).json(user)
     } catch (error) {
       next(error)
@@ -48,6 +48,7 @@ class Controller {
         title,
         description,
         urlToImage,
+        url,
         UserId,
       })
       console.log(addFavorites)

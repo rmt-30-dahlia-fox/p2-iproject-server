@@ -135,7 +135,28 @@ class Controller{
 
     static async addMyPlayer(req, res, next){
         try {
-            
+            const {playerId} = req.params
+
+            const myteam = await MyTeam.findOne({where: {
+                ManagerId: req.user.id
+            }})
+
+            const player = await Player.findByPk(playerId)
+
+            const myPlayer = await MyPlayer.create({
+                TeamId: myteam.id,
+                PlayerId: playerId
+            })
+
+            let leftWealth;
+
+            if(myPlayer){
+                leftWealth = myteam.wealth - player.proposedMarketValue
+            }
+
+            await MyTeam.update({wealth: leftWealth}, {where: {ManagerId: req.user.id}})
+
+            res.status(201).json(myPlayer)
         } catch (err) {
             next(err)
         }
@@ -143,7 +164,20 @@ class Controller{
 
     static async getMyPlayers(req, res, next){
         try {
-            
+            const myteam = await MyTeam.findOne({where: {
+                ManagerId: req.user.id
+            }})
+
+            const myPlayers = await MyPlayer.findAll({
+                where: {TeamId: myteam.id},
+                attributes: ['id', 'status'],
+                include: [
+                    {model: MyTeam, attributes: ['id', 'name', 'logo'], as: 'Team'},
+                    {model: Player}
+                ]
+            })
+
+            res.status(200).json(myPlayers)
         } catch (err) {
             next(err)
         }
@@ -151,7 +185,18 @@ class Controller{
 
     static async getMyPlayerById(req, res, next){
         try {
-            
+            const {myplayerId} = req.params
+            const myPlayer = await MyPlayer.findByPk(myplayerId, {
+                attributes: ['id', 'status'],
+                include: [
+                    {model: MyTeam, as: 'Team'},
+                    {model: Player}
+                ]
+            })
+            if(!myPlayer){
+                throw {name: "InvalidId"}
+            }
+            res.status(200).json(myPlayer)
         } catch (err) {
             next(err)
         }
@@ -159,7 +204,35 @@ class Controller{
 
     static async deleteMyPlayer(req, res, next){
         try {
-            
+            const {myplayerId} = req.params
+            const myteam = await MyTeam.findOne({where: {
+                ManagerId: req.user.id
+            }})
+
+            const myPlayer = await MyPlayer.findByPk(myplayerId)
+            if(!myPlayer){
+                throw {name: "InvalidId"}
+            }
+            if(myPlayer.TeamId !== myteam.id){
+                throw {name: 'Forbidden'}
+            }
+
+            console.log(myteam.wealth);
+
+            const player = await Player.findByPk(myPlayer.PlayerId)
+
+            console.log(player.proposedMarketValue);
+
+            let normalWealth;
+            if(player){
+                normalWealth = myteam.wealth + player.proposedMarketValue
+            }
+        
+            await MyPlayer.destroy({where: {id: myplayerId}})
+
+            await MyTeam.update({wealth: normalWealth}, {where: {ManagerId: req.user.id}})
+
+            res.status(200).json({message: "Player has ben successfully released"})
         } catch (err) {
             next(err)
         }

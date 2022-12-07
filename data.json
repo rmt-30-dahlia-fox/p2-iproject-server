@@ -1,0 +1,403 @@
+{
+    "Users": [
+        {
+            "userName": "admin",
+            "fullName": "Admin",
+            "photo": "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+            "role": "Admin",
+            "password": "admin",
+            "email": "marqofy@gmail.com"
+        },
+        {
+            "userName": "marqo",
+            "fullName": "Nur Qomarudin",
+            "photo": "https://randomuser.me/api/portraits/men/62.jpg",
+            "role": "Staff",
+            "password": "marqo",
+            "email": "nurqomarudin009@gmail.com"
+        }
+    ], 
+    "Members": [
+        {
+            "name": "Marq",
+            "gender": "Male",
+            "email": "marqomarqo@yopmail.com",
+            "phone": "000123456789",
+            "point": 5,
+            "cashierId": 2
+        },
+        {
+            "name": "dummy1",
+            "gender": "Male",
+            "email": "dummyone@yopmail.com",
+            "phone": "000123456789",
+            "point": 0,
+            "cashierId": 2
+        }
+    ],
+    "Categories": [
+        {
+            "name": "Meds"
+        },
+        {
+            "name": "Candy"
+        },
+        {
+            "name": "Snack"
+        },
+        {
+            "name": "Beverages"
+        },
+        {
+            "name": "Seasoning"
+            
+        },
+        {
+            "name": "Frozen Food"
+        },
+        {
+            "name": "Instant Food"
+        },
+        {
+            "name": "Stationary"
+        },
+        {
+            "name": "Body Product"
+        },
+        {
+            "name": "Perfume Product"
+        },
+        {
+            "name": "Hair Product"
+        },
+        {
+            "name": "Mouth Product"
+        },
+        {
+            "name": "Pets Product"
+        }
+    ],
+    "Products": [
+        {
+            "name": "Sosro Teh Botol Original 350mL",
+            "image": "https://assets.klikindomaret.com/products/20072249/20072249_1.jpg",
+            "stock": 100,
+            "sales": 0,
+            "price": 3900,
+            "vendor": "PT. Sinar Sosro, Tbk",
+            "status": "Active",
+            "categoryId": 4
+        },
+        {
+            "name": "Sosro Teh Botol (Kotak) Original 250mL",
+            "image": "https://assets.klikindomaret.com/products/10005128/10005128_1.jpg",
+            "stock": 100,
+            "sales": 0,
+            "price": 3400,
+            "vendor": "PT. Sinar Sosro, Tbk",
+            "status": "Active",
+            "categoryId": 4
+        },
+        {
+            "name": "Sosro Teh Botol Less Sugar 350mL",
+            "image": "https://assets.klikindomaret.com/products/20122278/20122278_1.jpg",
+            "stock": 50,
+            "sales": 0,
+            "price": 3900,
+            "vendor": "PT. Sinar Sosro, Tbk",
+            "status": "Active",
+            "categoryId": 4
+        },
+        {
+            "name": "Sosro Teh Botol (Kotak) Original 1L",
+            "image": "https://assets.klikindomaret.com/products/20019631/20019631_1.jpg",
+            "stock": 50,
+            "sales": 0,
+            "price": 10500,
+            "vendor": "PT. Sinar Sosro, Tbk",
+            "status": "Active",
+            "categoryId": 4
+        },
+        {
+            "name": "Sosro Teh Botol Original 450mL",
+            "image": "https://assets.klikindomaret.com/products/20036157/20036157_1.jpg",
+            "stock": 75,
+            "sales": 0,
+            "price": 5500,
+            "vendor": "PT. Sinar Sosro, Tbk",
+            "status": "Active",
+            "categoryId": 4
+        },
+        {
+            "name": "Indomie Mie Instant Jumbo Goreng 129gr",
+            "image": "https://www.indomie.com/uploads/product/indomie-mi-goreng-special-jumbo_thumb_172357814.png",
+            "stock": 100,
+            "sales": 0,
+            "price": 4000,
+            "vendor": "PT. Indofood CBP Sukses Makmur, Tbk",
+            "status": "Active",
+            "categoryId": 7
+        },
+        {
+            "name": "Indomie Mie Instant Jumbo Goreng Barbeque 129gr",
+            "image": "https://www.indomie.com/uploads/product/indomie-goreng-barbeque-chicken-flavour-jumbo_thumb_172456282.png",
+            "stock": 75,
+            "sales": 0,
+            "price": 4000,
+            "vendor": "PT. Indofood CBP Sukses Makmur, Tbk",
+            "status": "Active",
+            "categoryId": 7
+        },
+        {
+            "name": "Indomie Mie Instant Rendang 80gr",
+            "image": "https://www.indomie.com/uploads/product/indomie-mi-goreng-rendang-flavour_thumb_170333176.png",
+            "stock": 50,
+            "sales": 0,
+            "price": 3000,
+            "vendor": "PT. Indofood CBP Sukses Makmur, Tbk",
+            "status": "Active",
+            "categoryId": 7
+        },
+        {
+            "name": "Indomilk Susu Cair Uht Korean Banana 180mL",
+            "image": "https://assets.klikindomaret.com/products/20125062/20125062_1.jpg",
+            "stock": 35,
+            "sales": 0,
+            "price": 4500,
+            "vendor": "PT. Indofood CBP Sukses Makmur, Tbk",
+            "status": "Active",
+            "categoryId": 4
+        },
+        {
+            "name": "Indomilk Susu Cair Uht Belgian Choco 180mL",
+            "image": "https://assets.klikindomaret.com/products/20125060/20125060_1.jpg",
+            "stock": 35,
+            "sales": 0,
+            "price": 4500,
+            "vendor": "PT. Indofood CBP Sukses Makmur, Tbk",
+            "status": "Active",
+            "categoryId": 4
+        },
+        {
+            "name": "Belfoods Chicken Nugget 500g",
+            "image": "https://belfoods.com/wp-content/uploads/2019/07/05Favorite-Chicken-Nugget-500g.png",
+            "stock": 55,
+            "sales": 0,
+            "price": 35000,
+            "vendor": "PT. Sreeya Sweu Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 6
+        },
+        {
+            "name": "Belfoods Chicken Stick 500g",
+            "image": "https://belfoods.com/wp-content/uploads/2019/07/06Favorite-Chicken-Stick-500g.png",
+            "stock": 55,
+            "sales": 0,
+            "price": 35000,
+            "vendor": "PT. Sreeya Sweu Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 6
+        },
+        {
+            "name": "Belfoods Chicken Nugget Number 450g",
+            "image": "https://belfoods.com/wp-content/uploads/2019/07/03Favorite-Number-DI-372x412.png",
+            "stock": 40,
+            "sales": 0,
+            "price": 43000,
+            "vendor": "PT. Sreeya Sweu Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 6
+        },
+        {
+            "name": "Belfoods Chicken Nugget Safari 450g",
+            "image": "https://belfoods.com/wp-content/uploads/2019/07/04Favorite-Safari-450g.png",
+            "stock": 40,
+            "sales": 0,
+            "price": 43000,
+            "vendor": "PT. Sreeya Sweu Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 6
+        },
+        {
+            "name": "Belfoods Chicken Nugget Ceria 450g",
+            "image": "https://belfoods.com/wp-content/uploads/2019/07/01Favorite-Nugget-Ceria-500g.png",
+            "stock": 40,
+            "sales": 0,
+            "price": 43000,
+            "vendor": "PT. Sreeya Sweu Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 6
+        },
+        {
+            "name": "Bango Kecap Refill 735mL",
+            "image": "https://www.bango.co.id/gfx/product/temp_thumb-1634533575.png",
+            "stock": 40,
+            "sales": 0,
+            "price": 30000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 5
+        },
+        {
+            "name": "Bango Kecap manis Botol 135mL",
+            "image": "https://www.bango.co.id/gfx/product/temp_thumb-1625539833.png",
+            "stock": 30,
+            "sales": 0,
+            "price": 10000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 5
+        },
+        {
+            "name": "Bango Kecap manis Botol 275mL",
+            "image": "https://www.bango.co.id/gfx/product/temp_thumb-1625539787.png",
+            "stock": 50,
+            "sales": 0,
+            "price": 20000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 5
+        },
+        {
+            "name": "Pepsodent Mouthwash Active Defense 300mL",
+            "image": "https://www.tanyapepsodent.com/sk-eu/content/dam/brands/smile/indonesia/32578108-barrier-packshot-hd-idn-2-copy.jpg.rendition.520.520.jpg",
+            "stock": 40,
+            "sales": 0,
+            "price": 20000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 12
+        },
+        {
+            "name": "Pepsodent Action 123 Sikat Gigi Medium Multipack Isi 3",
+            "image": "https://www.tanyapepsodent.com/sk-eu/content/dam/brands/smile/indonesia/64928115-sikat-gigi-pepsodent-action-123-medium-multipack-isi-3.jpg.rendition.520.520.jpg",
+            "stock": 30,
+            "sales": 0,
+            "price": 13000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 12
+        },
+        {
+            "name": "Pasta Gigi Pepsodent Action 123 Complete 190gr",
+            "image": "https://www.tanyapepsodent.com/sk-eu/content/dam/brands/smile/specified_clusterscountries/1704222-pepsodent-complete-fop-190g.png.rendition.520.520.png",
+            "stock": 30,
+            "sales": 0,
+            "price": 15000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 12
+        },
+        {
+            "name": "Dove Sampo Untuk Perawatan Rambut Rusak 290mL",
+            "image": "https://asset-apac.unileversolutions.com/content/dam/unilever/dove/indonesia/pack_shot/8999999573133.01-32686443-png.png.ulenscale.490x490.png",
+            "stock": 35,
+            "sales": 0,
+            "price": 38000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 11
+        },
+        {
+            "name": "Dove Sampo Untuk Perawatan Rambut Berkilau 290mL",
+            "image": "https://www.dove.com/content/dam/unilever/dove/indonesia/pack_shot/8999999573140.01-32686707-png.png.ulenscale.490x490.png",
+            "stock": 40,
+            "sales": 0,
+            "price": 40000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 11
+        },
+        {
+            "name": "Dove Sampo Untuk Perawatan Anti Ketombe 290mL",
+            "image": "https://asset-apac.unileversolutions.com/content/dam/unilever/dove/indonesia/pack_shot/8999999573102.01-32687836-png.png.ulenscale.490x490.png",
+            "stock": 40,
+            "sales": 0,
+            "price": 42000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 11
+        },
+        {
+            "name": "Biore GUARD Body Foam Lively Refresh Refill 450mL",
+            "image": "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-com/id/id/products/biore/bio_body_refresh_02.jpg?wid=640",
+            "stock": 40,
+            "sales": 0,
+            "price": 22000,
+            "vendor": "PT. Kao Indonesia",
+            "status": "Active",
+            "categoryId": 9
+        },
+        {
+            "name": "Biore GUARD Body Foam Caring Protect Refill 450mL",
+            "image": "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-com/id/id/products/biore/bio_body_protect_01.jpg?wid=640",
+            "stock": 40,
+            "sales": 0,
+            "price": 23000,
+            "vendor": "PT. Kao Indonesia",
+            "status": "Active",
+            "categoryId": 9
+        },
+        {
+            "name": "Biore GUARD Body Foam Active Antibacterial Refill 450mL",
+            "image": "https://kao-h.assetsadobe3.com/is/image/content/dam/sites/kao/www-kao-com/id/id/products/biore/bio_body_antiseptic_03.jpg?wid=640",
+            "stock": 40,
+            "sales": 0,
+            "price": 23000,
+            "vendor": "PT. Kao Indonesia",
+            "status": "Active",
+            "categoryId": 9
+        },
+        {
+            "name": "Axe Dark Temptation Deo BodySpray 135mL",
+            "image": "https://www.axe.com/content/dam/unilever/axe/vietnam/pack_shot/8999999572709.01-31529913-png.png.ulenscale.263x350.png",
+            "stock": 30,
+            "sales": 0,
+            "price": 32000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 10
+        },
+        {
+            "name": "Axe Ice Chill Deo BodySpray 135mL",
+            "image": "https://www.axe.com/content/dam/unilever/axe/vietnam/pack_shot/8999999572730.01-31485726-png.png.ulenscale.263x350.png",
+            "stock": 30,
+            "sales": 0,
+            "price": 33000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 10
+        },
+        {
+            "name": "Axe Gold Temptation Deo BodySpray 135mL",
+            "image": "https://www.axe.com/content/dam/unilever/axe/vietnam/pack_shot/8999999572716.01-31530398-png.png.ulenscale.263x350.png",
+            "stock": 30,
+            "sales": 0,
+            "price": 32000,
+            "vendor": "PT. Unilever Indonesia, Tbk",
+            "status": "Active",
+            "categoryId": 10
+        },
+        {
+            "name": "Good Day Avocado Delight 250 ml",
+            "image": "https://img13.jd.id/Indonesia/s880x0_/amZzL3Q4Mi8yNjIvNTIwODgwNzM1Ni80Nzg0MzkvZWQ5MTExY2MvNjA3N2I3YzZONTUxNDQyZDU.png.webp",
+            "stock": 50,
+            "sales": 0,
+            "price": 7000,
+            "vendor": "PT. Santos Jaya Abadi",
+            "status": "Active",
+            "categoryId": 4
+        },
+        {
+            "name": "Good Day Original Cappucino 250 ml",
+            "image": "https://www.static-src.com/wcsstore/Indraprastha/images/catalog/full//91/MTA-10807244/good-day_good-day-cappuccino-coffee-250ml_full01.jpg",
+            "stock": 50,
+            "sales": 0,
+            "price": 7000,
+            "vendor": "PT. Santos Jaya Abadi",
+            "status": "Active",
+            "categoryId": 4
+        }
+        
+    ]
+}

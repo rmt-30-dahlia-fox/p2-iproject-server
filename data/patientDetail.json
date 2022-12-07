@@ -8,7 +8,7 @@
     "weight": 52,
     "eyeColor": "Maroon",
     "address": "74 Annamark Avenue",
-    "patientId": 1
+    "PatientId": 1
   },
   {
     "fullName": "Carleton Lumb",
@@ -19,7 +19,7 @@
     "weight": 68,
     "eyeColor": "Aquamarine",
     "address": "7254 Basil Alley",
-    "patientId": 2
+    "PatientId": 2
   },
   {
     "fullName": "Haven Kender",
@@ -30,7 +30,7 @@
     "weight": 63,
     "eyeColor": "Puce",
     "address": "008 Eliot Way",
-    "patientId": 3
+    "PatientId": 3
   },
   {
     "fullName": "Josh Kupec",
@@ -41,7 +41,7 @@
     "weight": 78,
     "eyeColor": "Teal",
     "address": "933 Pennsylvania Avenue",
-    "patientId": 4
+    "PatientId": 4
   },
   {
     "fullName": "Skye Fairlem",
@@ -52,6 +52,6 @@
     "weight": 81,
     "eyeColor": "Fuscia",
     "address": "7298 Dunning Lane",
-    "patientId": 5
+    "PatientId": 5
   }
 ]

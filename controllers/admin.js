@@ -163,7 +163,7 @@ class AdminController {
       res
         .status(200)
         .json({ message: `Order with id ${id} deleted successfully` });
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }

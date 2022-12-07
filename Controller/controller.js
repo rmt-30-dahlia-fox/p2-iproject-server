@@ -1,6 +1,6 @@
 const { hashPassword, verifyPassword } = require("../helpers/bycript");
 const { generateToken, verifyToken } = require("../helpers/jwt");
-const { User, Doctor, Medicine, Prescriptions } = require("../models");
+const { User, Doctor, Medicine, Prescription } = require("../models");
 
 class Controller {
   static async login(req, res, next) {
@@ -110,6 +110,14 @@ class Controller {
     try {
       const showMedicines = await Medicine.findAll();
       res.status(200).json(showMedicines);
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async showAllPrescription(req, res, next) {
+    try {
+      const showPrescription = await Prescription.findAll();
+      res.status(200).json(showPrescription);
     } catch (err) {
       next(err);
     }

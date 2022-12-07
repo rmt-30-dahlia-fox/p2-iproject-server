@@ -2,6 +2,8 @@ const { compareHash, hashPass } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 const { User, Activity, Type, Difficulty, Like, Badge } = require("../models");
 const axios = require("axios");
+const nodemailer = require('nodemailer')
+const { transporter } = require("../helpers/nodemailer");
 const rapidApiKey = process.env["X-RapidAPI-Key"];
 const rapidApiHost = process.env["X-RapidAPI-Host"];
 
@@ -63,6 +65,15 @@ class Controller {
         TypeId,
         DifficultyId
       })
+
+      let mailDetails = {
+        from: "hackfit@yopmail.com",
+        to: "tinycalicocat1208@gmail.com",
+        subject: "You are success to add an activity!",
+        text: `You are being active today with ${name} activities. Keep going! - HackFit -`
+      }
+
+      let info = await transporter.sendMail(mailDetails)
 
       res.status(200).json({ message: "Activity created", activity });
     } catch (error) {

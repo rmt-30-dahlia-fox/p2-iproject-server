@@ -1,5 +1,5 @@
 const { default: axios } = require('axios')
-const { comparePassword, signToken } = require('../helpers')
+const { comparePassword, signToken, hashPassword } = require('../helpers')
 const { User, Manga, WantToRead } = require('../models')
 
 
@@ -28,8 +28,11 @@ class Controllers {
 
     static async register(req, res, next) {
         try {
-            const { email, password } = req.body
-
+            let { email, password } = req.body
+            if(!password){
+                throw {name:'data not found', message:"Password is required"}
+            }
+            password = hashPassword(password)
             const newUser = await User.create({ email, password })
 
             const payload = {

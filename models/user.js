@@ -9,36 +9,27 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasMany(models.UserDetail)
+      User.hasMany(models.Favorite, { foreignKey: "UserId" })
     }
   }
   User.init(
     {
       email: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
+        unique: true,
         validate: {
-          notNull: { msg: "Email is required" },
           notEmpty: { msg: "Email is required" },
+          notNull: { msg: "Email is required" },
+          isEmail: { msg: "Input type must be an Email" },
         },
       },
       password: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
         validate: {
-          notNull: { msg: "Password is required" },
           notEmpty: { msg: "Password is required" },
-        },
-      },
-      role: {
-        type: DataTypes.STRING,
-        unique: true,
-        allowNull: false,
-        validate: {
-          notNull: { msg: "Role is required" },
-          notEmpty: { msg: "Role is required" },
+          notNull: { msg: "Password is required" },
         },
       },
     },

@@ -53,9 +53,20 @@ class Controllers {
 
     static async showMangaList(req, res, next) {
         try {
+            let { type, page } = req.query
+            let offset
+            if (!type) {
+                type = 'all'
+            }
+            if (!page) {
+                offset = 0
+            } else {
+                offset = page *10 - 10
+            }
+
             const { data } = await axios({
                 method: 'get',
-                url: 'https://api.myanimelist.net/v2/manga/ranking?ranking_type=all&limit=40',
+                url: `https://api.myanimelist.net/v2/manga/ranking?ranking_type=${type}&limit=10&offset=${offset}`,
                 headers: {
                     "X-MAL-CLIENT-ID": XMAL_CLIENT_ID
                 }
@@ -86,6 +97,32 @@ class Controllers {
         }
     }
 
+    static async findManga(req, res, next) {
+        try {
+            const { search } = req.body
+            const { page } = req.query
+            let offset;
+            if (!page) {
+                offset = 0
+            } else {
+                offset = page *10 - 10
+            }
+
+            const { id } = req.params
+            const { data } = await axios({
+                method: 'get',
+                url: `https://api.myanimelist.net/v2/manga?q=${search}&limit=10&offset=${offset}`,
+                headers: {
+                    "X-MAL-CLIENT-ID": XMAL_CLIENT_ID
+                }
+            })
+
+            res.status(200).json(data)
+        } catch (error) {
+            next(error)
+        }
+    }
+
     static async showWantToRead(req, res, next) {
         try {
             const list = await WantToRead.findAll({
@@ -103,58 +140,59 @@ class Controllers {
     static async createWantToRead(req, res, next) {
         try {
             const { MangaId, mainPicture, title } = req.body
-            if(!MangaId){
-                throw {name: "required", message : "MangaId is required" }
+            if (!MangaId) {
+                throw { name: "required", message: "MangaId is required" }
             }
-            if(!mainPicture){
-                throw {name: "required", message : "Main Picture is required" }
+            if (!mainPicture) {
+                throw { name: "required", message: "Main Picture is required" }
             }
-            if(!title){
-                throw {name: "required", message : "Title is required" }
+            if (!title) {
+                throw { name: "required", message: "Title is required" }
             }
             const [newList, created] = await WantToRead.findOrCreate({
                 where: {
                     UserId: req.user.id, MangaId
                 }
-            , defaults: { MangaId, UserId: req.user.id, mainPicture, title ,status:false}})
+                , defaults: { MangaId, UserId: req.user.id, mainPicture, title, status: false }
+            })
 
-        if (!created) {
-            throw { name: "required", message: "The manga is already on the want to read list" }
+            if (!created) {
+                throw { name: "required", message: "The manga is already on the want to read list" }
+            }
+
+            res.status(201).json(newList)
+
+        } catch (error) {
+            next(error)
         }
-
-        res.status(201).json(newList)
-
-    } catch(error) {
-        next(error)
     }
-}
 
     static async deleteWantToRead(req, res, next) {
-    try {
-        const { id } = req.params
-        const list = await WantToRead.findByPk(id)
-        const old = list
-        await list.destroy()
-        res.status(200).json({ message: `Succeed at deleting manga ${old.title} from want to read list` })
-    } catch (error) {
-        next(error)
-    }
-}
-
-    static async updateStatusWantToRead(req, res, next){
-    try {
-        const { id } = req.params
-        const { status } = req.body
-        if (status != "true" || status != "false") {
-            throw { name: "403status", message: "status can only be true or false" }
+        try {
+            const { id } = req.params
+            const list = await WantToRead.findByPk(id)
+            const old = list
+            await list.destroy()
+            res.status(200).json({ message: `Succeed at deleting manga ${old.title} from want to read list` })
+        } catch (error) {
+            next(error)
         }
-        const list = await WantToRead.update({ where: { id } }, { status })
-
-        res.status(200).json({ message: `Succeed at updating status manga ${list.title}` })
-    } catch (error) {
-        next(error)
     }
-}
+
+    static async updateStatusWantToRead(req, res, next) {
+        try {
+            const { id } = req.params
+            const { status } = req.body
+            if (status != "true" || status != "false") {
+                throw { name: "403status", message: "status can only be true or false" }
+            }
+            const list = await WantToRead.update({ where: { id } }, { status })
+
+            res.status(200).json({ message: `Succeed at updating status manga ${list.title}` })
+        } catch (error) {
+            next(error)
+        }
+    }
 
 
 }

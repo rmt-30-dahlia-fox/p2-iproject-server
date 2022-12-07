@@ -12,6 +12,8 @@ router.put("/units/:id", AdminController.updateUnitById);
 router.delete("/units/:id", AdminController.deleteUnitById);
 
 router.get("/orders", AdminController.getAllOrders);
-router.patch("/order/:id", AdminController.updateOrderStatus);
+router.get("/orders/:id", AdminController.getOrderById)
+router.patch("/orders/:id", AdminController.updateOrderStatus);
+router.delete("/orders/:id", AdminController.deleteOrderById)
 
 module.exports = router;

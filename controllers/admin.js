@@ -1,6 +1,6 @@
 const { comparePw } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
-const { Admin, Unit } = require("../models");
+const { Admin, Unit, Order } = require("../models");
 
 class AdminController {
   static async register(req, res, next) {
@@ -98,6 +98,43 @@ class AdminController {
 
   static async getAllOrders(req, res, next) {
     try {
+      const orders = await Order.findAll({
+        attributes: [
+          "id",
+          "pickupLocation",
+          "pickupDate",
+          "returnLocation",
+          "returnDate",
+          "totalPrice",
+          "status",
+          "CustomerId",
+          "UnitId",
+        ],
+      });
+      res.status(200).json({ orders });
+    } catch (err) {
+      next(err);
+    }
+  }
+
+  static async getOrderById(req, res, next) {
+    try {
+      const id = req.params.id;
+      const order = await Order.findByPk(id, {
+        attributes: [
+          "id",
+          "pickupLocation",
+          "pickupDate",
+          "returnLocation",
+          "returnDate",
+          "totalPrice",
+          "status",
+          "CustomerId",
+          "UnitId",
+        ],
+      });
+      if (!order) throw { name: "order_not_found", unitId: id };
+      res.status(200).json({ order });
     } catch (err) {
       next(err);
     }
@@ -105,7 +142,28 @@ class AdminController {
 
   static async updateOrderStatus(req, res, next) {
     try {
+      const id = req.params.id;
+      const newStatus = req.body;
+      const order = await Order.findByPk(id);
+      if (!order) throw { name: "order_not_found", orderId: id };
+      await Order.update({ status: newStatus }, { where: { id } });
+      res.status(200).json({ message: `Order with id ${id} updated!` });
     } catch (err) {
+      next(err);
+    }
+  }
+
+  static async deleteOrderById(req, res, next) {
+    try {
+      const id = req.params.id;
+      const order = await Order.findByPk(id);
+      if (!order) throw { name: "order_not_found", orderId: id };
+
+      await Order.destroy({ where: { id } });
+      res
+        .status(200)
+        .json({ message: `Order with id ${id} deleted successfully` });
+    } catch (error) {
       next(err);
     }
   }

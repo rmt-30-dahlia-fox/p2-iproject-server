@@ -1,14 +1,18 @@
 [
   {
     "name": "John Doe",
+    "email": "johndoe@mail.com",
+    "password": "johndoe",
     "phoneNumber": "+1234567890",
     "identityType": "Visa",
-    "indentityNumber": "123123123"
+    "identityNumber": "123123123"
   },
   {
     "name": "Jane Doe",
+    "email": "janedoe@mail.com",
+    "password": "janedoe",
     "phoneNumber": "+1234567890",
     "identityType": "Visa",
-    "indentityNumber": "123123123"
+    "identityNumber": "123123123"
   }
 ]

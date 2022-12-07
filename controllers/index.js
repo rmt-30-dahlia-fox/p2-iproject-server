@@ -24,7 +24,9 @@ class Controller {
         imageProfile: 'https://images.unsplash.com/photo-1602233158242-3ba0ac4d2167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=436&q=80'
       })
 
-      res.status(201).json({ message: `User ${user.email} success to register` })
+      const access_token = createToken({ id: user.id }) 
+
+      res.status(201).json({ message: `User ${user.email} success to register`, access_token, userId: user.id })
     } catch (error) {
       next(error)
     }

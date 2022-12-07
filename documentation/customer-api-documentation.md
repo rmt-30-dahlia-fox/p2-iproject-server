@@ -3,6 +3,7 @@
 List of Available Endpoints:
 - `POST /customers/register`
 - `POST /customers/login`
+- `POST /customers/google/login`
 - `GET /customers/products`
 - `GET /customers/dealers`
 - `GET /customers/products/:carId`
@@ -107,7 +108,7 @@ _400 - Bad Request_
     }
     ```
 
-### POST /customers/login
+### POST /customers/google/login
 #### Description
 - Login to customer account using google oauth
 

@@ -4,6 +4,7 @@ const {User, Car, Dealer, Transaction, Review} = require('../models');
 const { Op } = require("sequelize");
 const axios = require('axios');
 const { OAuth2Client } = require('google-auth-library');
+const { transporter, email } = require('../helpers/nodemailer');
 const CLIENT_ID = process.env.CLIENT_ID;
 const client = new OAuth2Client(CLIENT_ID);
 
@@ -220,6 +221,37 @@ class customerController{
         }
       )
       res.status(200).json({message: "Successfully updated status"});
+      if(status === "Paid"){
+        const transaction = await Transaction.findOne({
+          where: {
+            id: transactionId
+          },
+          include: [Car]
+        })
+        transporter.sendMail(
+          {...email,
+            text: `Payment received for transaction #${transactionId}
+
+Car brand: ${transaction.Car.brand}
+Car name: ${transaction.Car.name}
+Subtotal: ${+transaction.Car.price * 0.05}
+
+Payment Time: ${new Date(transaction.updatedAt).toLocaleString('en-GB', { timeZone: 'UTC' })}
+
+Please visit our dealer to finish this transaction.
+
+Thank you,
+
+Carstore
+            `,
+            to: req.user.email
+          }, function(err, info){
+          if(err){
+            return console.log(err);
+          }
+          console.log("Sent", info.response);
+        })
+      }
     } catch (error) {
       next(error);
     }

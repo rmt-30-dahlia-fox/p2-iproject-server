@@ -78,7 +78,7 @@ class Controller {
             let {page, filter, search} = req.query
             if (!page) page = 1
 
-            let limit = 8;
+            let limit = 6;
             let offset = (page - 1) * limit;
 
             let pagedFilteredProducts;

@@ -15,14 +15,56 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Product.init({
-    name: DataTypes.STRING,
-    image: DataTypes.STRING,
+    name: {
+      allowNull: false,
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {msg: "Product Name Cannot Be Empty"}, 
+        notNull: {msg: "Product Name Must Be Filled"}
+      }
+    },
+    image: {
+      allowNull: false,
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {msg: "Product Image Cannot Be Empty"}, 
+        notNull: {msg: "Product Image Must Be Filled"}
+      }
+    },
     stock: DataTypes.INTEGER,
     sales: DataTypes.INTEGER,
-    price: DataTypes.INTEGER,
-    vendor: DataTypes.STRING,
-    status: DataTypes.STRING,
-    categoryId: DataTypes.INTEGER
+    price: {
+      allowNull: false,
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {msg: "Product Price Cannot Be Empty"}, 
+        notNull: {msg: "Product Price Must Be Filled"}
+      }
+    },
+    vendor: {
+      allowNull: false,
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {msg: "Product Vendor Cannot Be Empty"}, 
+        notNull: {msg: "Product Vendor Must Be Filled"}
+      }
+    },
+    status: {
+      allowNull: false,
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {msg: "Product Status Cannot Be Empty"}, 
+        notNull: {msg: "Product Status Must Be Filled"}
+      }
+    },
+    categoryId: {
+      allowNull: false,
+      type: DataTypes.STRING,
+      validate: {
+        notEmpty: {msg: "Product Category Cannot Be Empty"}, 
+        notNull: {msg: "Product Category Must Be Filled"}
+      }
+    }
   }, {
     sequelize,
     modelName: 'Product',

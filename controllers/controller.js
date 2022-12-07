@@ -63,7 +63,6 @@ class Controller {
   static async findFavorites(req, res, next) {
     try {
       const { id } = req.user
-
       const options = {}
 
       options.where = {

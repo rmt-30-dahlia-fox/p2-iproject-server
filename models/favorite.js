@@ -1,13 +1,7 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict"
+const { Model } = require("sequelize")
 module.exports = (sequelize, DataTypes) => {
-<<<<<<<< HEAD:models/favorite.js
   class Favorite extends Model {
-========
-  class Favorites extends Model {
->>>>>>>> 9ce13e7fec5f2170bb4572fa516c5717e58e90a9:models/favorites.js
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -15,26 +9,54 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Favorite.belongsTo(models.User, { foreignKey: "UserId" })
     }
   }
-<<<<<<<< HEAD:models/favorite.js
-  Favorite.init({
-========
-  Favorites.init({
->>>>>>>> 9ce13e7fec5f2170bb4572fa516c5717e58e90a9:models/favorites.js
-    title: DataTypes.STRING,
-    description: DataTypes.TEXT,
-    urlToImage: DataTypes.TEXT,
-    UserId: DataTypes.INTEGER
-  }, {
-    sequelize,
-<<<<<<<< HEAD:models/favorite.js
-    modelName: 'Favorite',
-  });
-  return Favorite;
-========
-    modelName: 'Favorites',
-  });
-  return Favorites;
->>>>>>>> 9ce13e7fec5f2170bb4572fa516c5717e58e90a9:models/favorites.js
-};
+
+  Favorite.init(
+    {
+      title: {
+        type: DataTypes.STRING,
+        unique: true,
+        allowNull: false,
+        validate: {
+          notEmpty: { msg: "Title is required" },
+          notNull: { msg: "Title is required" },
+        },
+      },
+      description: {
+        type: DataTypes.TEXT,
+
+        allowNull: false,
+        validate: {
+          notNull: { msg: "Description is required" },
+          notEmpty: { msg: "Description is required" },
+        },
+      },
+      urlToImage: {
+        type: DataTypes.TEXT,
+
+        allowNull: false,
+        validate: {
+          notNull: { msg: "urlToImage is required" },
+          notEmpty: { msg: "urlToImage is required" },
+        },
+      },
+      UserId: {
+        type: DataTypes.INTEGER,
+
+        allowNull: false,
+        validate: {
+          notNull: { msg: "UserId is required" },
+          notEmpty: { msg: "UserId is required" },
+        },
+      },
+    },
+    {
+      sequelize,
+
+      modelName: "Favorite",
+    }
+  )
+  return Favorite
+}

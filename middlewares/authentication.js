@@ -8,14 +8,18 @@ async function authentication(req, res, next) {
         throw { name: "Login required" };
     }
 
-    const id = verifyToken(access_token);
-    const findUser = await User.findByPk(id);
+    const payload = verifyToken(access_token);
 
+    if (!payload) {
+      throw { name: "Invalid Token" };
+    }
+
+    const findUser = await User.findByPk(payload.id);
     if (!findUser) {
         throw { name: "Invalid Token" };
     }
 
-    req.user = { id };
+    req.user = { id: findUser.id };
 
     next();
   } catch (error) {

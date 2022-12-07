@@ -44,13 +44,14 @@ class Controller {
         port: 486,
         auth: {
           user: 'bobby.notokoesoemo@gmail.com',
-          pass: 'utxpsiqfnqtxsgeo',
+          pass: process.env.NODEMAILER_PASS,
         },
       });
 
       const mailOptions = {
         from: "bobby.notokoesoemo@gmail.com",
         to: findUser.email,
+        // to: "bobby.notokoesoemo@gmail.com",
         subject: "Transaction notification",
         text: `Hello, ${findUser.username}. You have made a donation to Movie Library. Thank you!`,
       };

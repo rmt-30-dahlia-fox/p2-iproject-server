@@ -1,5 +1,5 @@
 const errorHandler = async (err, req, res, next) => {
-    // console.log(err);
+    // console.log(err, '<=== error');
     function errTemplate(status, msg) {
       res.status(status).json({ message: msg });
     }

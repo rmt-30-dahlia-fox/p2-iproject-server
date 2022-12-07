@@ -17,6 +17,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
+      pickupTime: {
+        allowNull: false,
+        type: Sequelize.TIME
+      },
       returnLocation: {
         allowNull: false,
         type: Sequelize.STRING
@@ -24,6 +28,10 @@ module.exports = {
       returnDate: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      returnTime: {
+        allowNull: false,
+        type: Sequelize.TIME
       },
       totalPrice: {
         allowNull: false,

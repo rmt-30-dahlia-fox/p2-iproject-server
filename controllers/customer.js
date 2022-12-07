@@ -127,36 +127,42 @@ class CustomerController {
     try {
       const CustomerId = req.user.id;
       const status = "Pending";
-      const UnitId = req.params.id;
+      const UnitId = req.params.unitId;
 
       const unit = await Unit.findByPk(UnitId);
-      // if(!unit) throw
+      if (!unit) throw { name: "unit_not_found", unitId: id };
 
-      const { pickupLocation, pickupDate, returnLocation, returnDate } =
-        req.body;
-
-      // const order = await Order.create({
-      //   pickupLocation,
-      //   pickupDate,
-      //   returnLocation,
-      //   returnDate,
-      //   totalPrice,
-      //   status,
-      //   UnitId,
-      //   CustomerId
-      // });
-      // const totalPrice = (returnDate - pickupDate) * ;
-
-      res.status(200).json({
+      const {
         pickupLocation,
         pickupDate,
+        pickupTime,
         returnLocation,
         returnDate,
+        returnTime,
+      } = req.body;
+
+      // let dateDifference = new Date(returnDate) - new Date(pickupDate);
+
+      const date1 = new Date(pickupDate);
+      const date2 = new Date(returnDate);
+      const diffTime = Math.abs(date2 - date1);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      const totalPrice = unit.price * diffDays;
+
+      const order = await Order.create({
+        pickupLocation,
+        pickupDate,
+        pickupTime,
+        returnLocation,
+        returnDate,
+        returnTime,
         totalPrice,
         status,
         UnitId,
-        CustomerId,
+        CustomerId
       });
+
+      res.status(200).json({ order });
     } catch (err) {
       next(err);
     }

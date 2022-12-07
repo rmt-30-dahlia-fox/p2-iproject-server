@@ -28,15 +28,18 @@ module.exports = (sequelize, DataTypes) => {
     imageProfile: DataTypes.TEXT,
     status: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 'Regular'
     },
     star: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0
     },
     BadgeId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 1
     }
   }, {
     sequelize,

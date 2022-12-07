@@ -97,25 +97,37 @@ const postHandler = (res, req, login) => {
 	    if (!abort) res.writeStatus(getWriteStatus(200)).end(undefined, true);
 	  }
 	  else if (json.op === "single") {
-	    const { recipient_id } = json.data;
+	    const { RecipientId, UserId } = json.data;
 
-	    if (!recipient_id) {
+	    if (!UserId) {
 	      throw {
 		status: 400,
-		message: "recipient_id is required",
+		message: "UserId is required",
 	      };
 	    }
 
-	    const userSocket = userSockets.get(recipient_id);
+	    if (!RecipientId) {
+	      throw {
+		status: 400,
+		message: "RecipientId is required",
+	      };
+	    }
+
+	    const senderSocket = userSockets.get(Number(UserId));
+	    if (senderSocket) {
+	      senderSocket.send(JSON.stringify(json.data), false, true);
+	    }
+
+	    const userSocket = userSockets.get(Number(RecipientId));
 	    if (!userSocket) {
-	      throw { status: 404, message: "Unknown/offline recipient" };
+	      throw { status: 200, message: "Unknown/offline recipient" };
 	    }
 
 	    const code = userSocket.send(JSON.stringify(json.data), false, true);
 	    // console.log(code, "<<<<<<<<< code [single sock.send]");
 	    if (code !== 1) {
 	      throw {
-		status: 500,
+		status: 200,
 		message: "Unexpected socket return code",
 		code,
 	      };
@@ -227,6 +239,7 @@ wsApp.ws('/', {
   message: (ws, message, isBinary) => {
     try {
       /* You can do app.publish('sensors/home/temperature', '22C') kind of pub/sub as well */
+      console.log(arrayBufferToStr(message));
       const json = parseMessage(message);
 
       if (json.op === "identify") {
@@ -235,8 +248,7 @@ wsApp.ws('/', {
 
 	// check if user actually exist
 	
-	ws.subscribe(TOPIC_GLOBAL);
-	userSockets.set(user_id, ws);
+	userSockets.set(Number(user_id), ws);
       }
       else console.log(json, "<<<<<<<< json [message]");
     } catch (err) {

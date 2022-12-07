@@ -156,6 +156,11 @@ router.use(async (req, res, next) => {
 router.get("/users", async (req, res, next) => {
   try {
     res.status(200).json(await User.findAll({
+      where: {
+	[Op.not]: {
+	  id: req.user.id,
+	},
+      },
       include: [
 	{
 	  model: Media,
@@ -179,11 +184,22 @@ router.get("/messages/:id", async (req, res, next) => {
   try {
     res.status(200).json(await Message.findAll({
       where: {
-	[Op.and]: [
-	  { RecipientId: req.params.id, },
-	  { UserId: req.user.id },
+	[Op.or]: [
+	  {
+	    [Op.and]: [
+	      { RecipientId: req.params.id, },
+	      { UserId: req.user.id },
+	    ],
+	  },
+	  {
+	    [Op.and]: [
+	      { RecipientId: req.user.id, },
+	      { UserId: req.params.id },
+	    ],
+	  },
 	],
       },
+      order: [["createdAt", "ASC"]],
       include: [
 	{
 	  model: MessageAttachment,
@@ -195,6 +211,7 @@ router.get("/messages/:id", async (req, res, next) => {
 	},
 	{
 	  model: User,
+	  as: "users",
 	  attributes: [
 	    "id",
 	    "email",
@@ -202,7 +219,13 @@ router.get("/messages/:id", async (req, res, next) => {
 	    "AvatarId",
 	    "username",
 	  ],
-	}
+	  include: [
+	    {
+	      model: Media,
+	      as: "Avatar",
+	    }
+	  ]
+	},
       ],
     }));
   } catch (err) {
@@ -279,17 +302,31 @@ router.post("/chat/global", upload.single('attachment'), async (req, res, next) 
 	type: fieldname,
 	format: mimetype,
       });
-
-      data.AttachmentId = media.id;
     }
 
     const message = await Message.create(data);
+    if (media) {
+      await MessageAttachment.create({
+	MessageId: message.id,
+	MediaId: media.id,
+      });
+    }
 
-    if (media) data.Attachment = media;
+    if (media) data.MessageAttachments = [{
+      Medium: media,
+    }];
     // post ws
-    const res = await sendGlobal(data);
+    data.users = {
+	id: req.user.id,
+	email: req.user.email,
+	bio: req.user.bio,
+	AvatarId: req.user.AvatarId,
+	Avatar: req.user.Avatar,
+	username: req.user.username,
+    };
+    const result = await sendGlobal(data);
 
-    res.status(201).json(message);
+    res.status(201).json(data);
   } catch (err) {
     next(err);
   }
@@ -317,7 +354,7 @@ router.post("/chat/:id", upload.single('attachment'), async (req, res, next) => 
       content,
       UserId: req.user.id,
       RecipientId: id,
-      type: "global",
+      type: "dm",
     };
 
     if (req.file) {
@@ -328,17 +365,31 @@ router.post("/chat/:id", upload.single('attachment'), async (req, res, next) => 
 	type: fieldname,
 	format: mimetype,
       });
-
-      data.AttachmentId = media.id;
     }
 
     const message = await Message.create(data);
+    if (media) {
+      await MessageAttachment.create({
+	MessageId: message.id,
+	MediaId: media.id,
+      });
+    }
 
-    if (media) data.Attachment = media;
+    if (media) data.MessageAttachments = [{
+      Medium: media,
+    }];
     // post ws
-    const res = await sendDm(data);
+    data.users = {
+	id: req.user.id,
+	email: req.user.email,
+	bio: req.user.bio,
+	AvatarId: req.user.AvatarId,
+	Avatar: req.user.Avatar,
+	username: req.user.username,
+    };
+    const result = await sendDm(data);
 
-    res.status(201).json(message);
+    res.status(201).json(data);
   } catch (err) {
     next(err);
   }

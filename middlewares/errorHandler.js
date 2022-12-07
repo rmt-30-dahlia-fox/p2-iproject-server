@@ -19,6 +19,9 @@ function errorHandler(err, req, res, next) {
   } else if (err.name === 'invalid_login') {
     code = 401
     message = "Invalid email/password"
+  } else if (err.name === 'unit_not_found') {
+    code = 404
+    message = `Unit with id ${err.unitId} not found!`
   }
 
   res.status(code).json({ message });

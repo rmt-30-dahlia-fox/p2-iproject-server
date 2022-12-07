@@ -33,10 +33,6 @@ module.exports = {
       el.password = hashPass(el.password)
       return el
     })
-    console.log(difficulties);
-    console.log(types);
-    console.log(badges);
-    console.log(users);
 
     await queryInterface.bulkInsert('Difficulties', difficulties, {})
     await queryInterface.bulkInsert('Types', types, {})

@@ -1,11 +1,6 @@
+const Controller = require('../controllers')
 const router = require('express').Router()
 
-router.get('/', async (req, res, next) => {
-  try {
-    res.status(200).json('ok')
-  } catch (error) {
-    next(error)
-  }
-})
+router.post('/login', Controller.userLogin)
 
 module.exports = router

@@ -18,16 +18,15 @@ class Controller {
 
             let access_token = Token.generate({id: calledUser.id, role: calledUser.role})
 
-            let {id, userName, email, role} = calledUser
+            let {id, userName, fullName, photo, email, role} = calledUser
             req.user = {id, userName, email, role}
 
-            let logHistory = await History.create({
+            await History.create({
                 type: 'Login',
                 description: `${role} ${userName} has logged in`,
                 userId: id
             })
-
-            res.status(200).json({access_token})
+            res.status(200).json({access_token, id, userName, fullName, photo, email, role})
         } catch (error) {
             next(error)
         }
@@ -40,9 +39,9 @@ class Controller {
                 photo = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
             }
 
-            let newUser = await User.create({ userName,fullName,photo,role,password,email })
+            await User.create({ userName,fullName,photo,role,password,email })
 
-            let regHistory = await History.create({
+            await History.create({
                 type: 'Register',
                 description: `${fullName} has been added as ${role} ${userName}`,
                 userId: req.user.id
@@ -59,9 +58,9 @@ class Controller {
             let { name,gender,email,phone,point } = req.body
             if (!point) point = 0;
 
-            let newMember = await Member.create({ name,gender,email,phone,point,cashierId: req.user.id })
+            await Member.create({ name,gender,email,phone,point,cashierId: req.user.id })
 
-            let memberHistory = await History.create({
+            await History.create({
                 type: 'Member',
                 description: `${name} has been added as member`,
                 userId: req.user.id

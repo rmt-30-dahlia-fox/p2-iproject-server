@@ -1,7 +1,7 @@
 const { comparePw } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const { Customer, Unit, Order } = require("../models");
-const CUSTOMER_JWT_SECRET = process.env.CUSTOMER_JWT_SECRET
+const CUSTOMER_JWT_SECRET = process.env.CUSTOMER_JWT_SECRET;
 
 class CustomerController {
   static async register(req, res, next) {
@@ -50,6 +50,10 @@ class CustomerController {
 
   static async getAllUnits(req, res, next) {
     try {
+      const units = await Unit.findAll({
+        attributes: ["id", "model", "type", "price", "imageUrl"],
+      });
+      res.status(200).json({ units });
     } catch (err) {
       next(err);
     }
@@ -57,6 +61,11 @@ class CustomerController {
 
   static async getUnitById(req, res, next) {
     try {
+      const id = req.params.id;
+      const unit = await Unit.findByPk(id, {
+        attributes: ["id", "model", "type", "price", "imageUrl"],
+      });
+      res.status(200).json({ unit });
     } catch (err) {
       next(err);
     }

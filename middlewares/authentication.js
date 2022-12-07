@@ -1,5 +1,5 @@
 const { decodeToken } = require("../helpers/jwt");
-const { Admin } = require("../models");
+const { Admin, Customer } = require("../models");
 const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET
 const CUSTOMER_JWT_SECRET = process.env.CUSTOMER_JWT_SECRET
 

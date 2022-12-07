@@ -53,7 +53,6 @@ module.exports = (sequelize, DataTypes) => {
     },
     RecipientId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
       references: {
 	model: "Users",
 	key: "id",

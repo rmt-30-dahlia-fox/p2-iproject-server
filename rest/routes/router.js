@@ -169,7 +169,7 @@ router.post("/chat/global", async (req, res, next) => {
     const data = {
       content,
       UserId: req.user.id,
-      ChannelId: 1,
+      type: "global",
     };
 
     if (req.file) {

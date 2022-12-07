@@ -12,8 +12,8 @@ const nodeMailer = async (email) => {
     host: 'smtp.gmail.com',
     secure: false, // true for 465, false for other ports
     auth: {
-      user: 'tigjum.abc@gmail.com', // generated ethereal user
-      pass: 'cqmzcdpvykvenjsv', // generated ethereal pas	sword
+      user: 'akunhacktiv8@gmail.com', // generated ethereal user
+      pass: 'debhoostpdarlioh', // generated ethereal pas	sword
     },
   });
 

@@ -8,6 +8,7 @@ router.post("/login", Controller.login);
 router.post("/register", Controller.register);
 router.use(authentication);
 router.get("/doctors", Controller.showDoctors);
+router.post("/doctors", Controller.createDoctor);
 
 router.use(errorHandler);
 module.exports = router;

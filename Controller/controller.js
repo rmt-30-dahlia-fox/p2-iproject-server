@@ -39,6 +39,25 @@ class Controller {
       next(err);
     }
   }
+  static async createDoctor(req, res, next) {
+    try {
+      const { name, sip_number, gender, photoUrl, specialization, status } =
+        req.body;
+      const UserId = req.user.id;
+      const newDoctor = await Doctor.create({
+        name,
+        sip_number,
+        gender,
+        photoUrl,
+        specialization,
+        status: "active",
+        UserId,
+      });
+      res.status(201).json(newDoctor);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;

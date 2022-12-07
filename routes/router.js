@@ -10,6 +10,6 @@ router.use(userConsent)
 
 router.post("/favorites", Controller.addFavorites)
 router.get("/favorites", Controller.findFavorites)
-router.delete("/favorites", Controller.deleteFavorites)
+router.delete("/favorites/:id", Controller.deleteFavorites)
 
 module.exports = router

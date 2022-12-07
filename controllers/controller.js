@@ -43,13 +43,14 @@ class Controller {
     try {
       const { title, description, urlToImage } = req.body
       const UserId = req.user.id
+      console.log(UserId, "USER ID USER")
       const addFavorites = await Favorite.create({
         title,
         description,
         urlToImage,
         UserId,
       })
-
+      console.log(addFavorites)
       res
         .status(201)
         .json({ message: `Success add Favorite to list ${addFavorites.title}` })
@@ -67,23 +68,18 @@ class Controller {
       options.where = {
         UserId: id,
       }
-      options.include = [
-        {
-          model: Food,
-        },
-      ]
 
-      const FavoritesList = await Favorites.findAll(options)
+      const FavoritesList = await Favorite.findAll(options)
       res.status(200).json({ FavoritesList: FavoritesList })
     } catch (error) {
       next(error)
     }
   }
- static async deleteFavorites(req, res, next) {
+  static async deleteFavorites(req, res, next) {
     try {
-      const { id } = req.params.id
+      const { id } = req.params
 
-      const deleteFavorites = await Favorites.destroy({ where: { id: id } })
+      const deleteFavorites = await Favorite.destroy({ where: { id: id } })
 
       if (deleteFavorites === 0) throw { name: "Data not found", table: "Favorites" }
 

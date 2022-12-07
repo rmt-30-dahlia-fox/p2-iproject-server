@@ -1,6 +1,6 @@
 const { hashPassword, verifyPassword } = require("../helpers/bycript");
 const { generateToken, verifyToken } = require("../helpers/jwt");
-const { User, Doctor } = require("../models");
+const { User, Doctor, Medicine, Prescriptions } = require("../models");
 
 class Controller {
   static async login(req, res, next) {
@@ -88,6 +88,20 @@ class Controller {
         { where: { id } }
       );
       res.status(200).json({ message: "Succes updated doctor" });
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async addMedicine(req, res, next) {
+    try {
+      const { name, amount, dose, photoUrl } = req.body;
+      const newMedicine = await Medicine.create({
+        name,
+        amount,
+        dose,
+        photoUrl,
+      });
+      res.status(201).json(newMedicine);
     } catch (err) {
       next(err);
     }

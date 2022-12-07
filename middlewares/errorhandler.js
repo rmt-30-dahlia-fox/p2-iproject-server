@@ -3,7 +3,7 @@ const errorHandler = (err, req, res, next) => {
     let code = 500;
     let message = "Internal Server Error";
 
-    if (err.name === "SequelizeValidationError") {
+    if (err.name === "SequelizeValidationError" || err.name == "SequelizeUniqueConstraintError") {
         code = 400;
         message = err.errors[0].message;
     } else if (err.name == "invalid token" || err.name == "JsonWebTokenError") {
@@ -15,11 +15,7 @@ const errorHandler = (err, req, res, next) => {
     } else if (err.name == "404data not found") {
         code = 404
         message = err.message
-    } else if (err.name == "SequelizeUniqueConstraintError") {
-        code = 400
-        message = err.errors[0].message
-    }
-    else if (err.name == 'forbidden') {
+    } else if (err.name == 'forbidden') {
         code = 403;
         message = "forbidden"
     } else if (err.name == 'SequelizeDatabaseError') {
@@ -28,9 +24,12 @@ const errorHandler = (err, req, res, next) => {
     } else if (err.name == "required") {
         code = 400;
         message = err.message
-    } else if(err.response.status==404){
+    } else if (err.response.status == 404) {
         code = 404
         message = 'Manga is not found'
+    } else if(err.name == "403status"){
+        code = 403
+        message = err.message
     }
 
     res.status(code).json({ message })

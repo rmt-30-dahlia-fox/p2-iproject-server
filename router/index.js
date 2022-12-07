@@ -16,7 +16,7 @@ router.get('/activities/:userId/users', Authorization.authUser, Controller.showA
 
 router.get('/users', Controller.showUsers)
 router.get('/users/:userId', Authorization.authUser, Controller.showUser)
-router.put('/users/:userId', Authorization.authUser, Controller.updateUser)
+router.put('/users/:userId', Authorization.authUser, upload.single("imageProfile"), Controller.updateUser)
 
 router.get('/exercises', Controller.showExercises)
 

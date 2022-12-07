@@ -1,0 +1,74 @@
+{
+  "difficulties": [
+    {
+      "name": "beginner",
+      "star": 10
+    },
+    {
+      "name": "intermediate",
+      "star": 25
+    },
+    {
+      "name": "expert",
+      "star": 50
+    }
+  ],
+  "types": [
+    {
+      "name": "cardio"
+    },
+    {
+      "name": "olympic_weightlifting"
+    },
+    {
+      "name": "plyometrics"
+    },
+    {
+      "name": "powerlifting"
+    },
+    {
+      "name": "strength"
+    },
+    {
+      "name": "stretching"
+    },
+    {
+      "name": "strongman"
+    }
+  ],
+  "badges": [
+    {
+      "name": "Warrior"
+    },
+    {
+      "name": "Elite"
+    },
+    {
+      "name": "Master"
+    }
+  ],
+  "users": [
+    {
+      "email": "user1@mail.com",
+      "password": "11111",
+      "fullName": "user1",
+      "dateOfBirth": "12-08-2000",
+      "city": "Surabaya",
+      "imageProfile": "https://img.freepik.com/free-photo/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair_285396-896.jpg",
+      "status": "Regular",
+      "star": 0,
+      "BadgeId": 1
+    },
+    {
+      "email": "user2@mail.com",
+      "password": "22222",
+      "fullName": "user2",
+      "dateOfBirth": "13-08-2000",
+      "city": "Bali",
+      "imageProfile": "https://img.freepik.com/free-photo/young-beautiful-woman-pink-warm-sweater-natural-look-smiling-portrait-isolated-long-hair_285396-896.jpg",
+      "status": "Regular",
+      "star": 0,
+      "BadgeId": 1
+    }
+  ]
+}

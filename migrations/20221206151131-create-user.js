@@ -44,12 +44,10 @@ module.exports = {
         type: Sequelize.TEXT
       },
       status: {
-        type: Sequelize.STRING,
-        default: 'Regular'
+        type: Sequelize.STRING
       },
       star: {
-        type: Sequelize.INTEGER,
-        default: 0
+        type: Sequelize.INTEGER
       },
       BadgeId: {
         type: Sequelize.INTEGER,

@@ -127,7 +127,7 @@ OR
 ## 3. GET /mangas
 
 Description:
-- Get all mangas from 3rd party API
+- Get top ranking mangas from 3rd party API
 
 Request:
 - query: 

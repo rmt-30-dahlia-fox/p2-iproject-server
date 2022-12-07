@@ -4,6 +4,7 @@ const Authentication = require('../middlewares/authentication')
 const Authorization = require('../middlewares/authorization')
 
 router.post('/login', Controller.postLogin)
+router.get('/products', Controller.filterPaginatedProducts)
 
 router.use(Authentication)
 router.post('/register', Authorization.register, Controller.postRegister)

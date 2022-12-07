@@ -1,6 +1,7 @@
 const { Cart, Category, History, Member, Order, Product, Report, Transaction, User } = require('../models')
 const Password = require('../helpers/bcrypt')
 const Token = require('../helpers/jwt')
+const { Op } = require('sequelize')
 
 class Controller {
     static async postLogin (req, res, next){
@@ -68,6 +69,32 @@ class Controller {
 
             res.status(201).json({message: `${name} has been added as member`})
         } catch (error) {
+            next(error)
+        }
+    }
+
+    static async filterPaginatedProducts(req, res, next){
+        try {
+            let {page, filter, search} = req.query
+            if (!page) page = 1
+
+            let limit = 8;
+            let offset = (page - 1) * limit;
+
+            let pagedFilteredProducts;
+            if (!filter && !search){
+                pagedFilteredProducts = await Product.findAndCountAll({where: {status: 'Active'}, limit, offset, include: [Category]});
+            } else if (!filter && search) {
+                pagedFilteredProducts = await Product.findAndCountAll({where: {status: 'Active', name: {[Op.iLike]: `%${search}%`}}, limit, offset, include: [Category]});
+            } else if (filter && !search) {
+                pagedFilteredProducts = await Product.findAndCountAll({where: {status: 'Active', categoryId: filter}, limit, offset, include: [Category]});
+            } else if (filter && search) {
+                pagedFilteredProducts = await Product.findAndCountAll({where: {status: 'Active', categoryId: filter, name: {[Op.iLike]: `%${search}%`}}, limit, offset, include: [Category]});
+            }
+
+            res.status(200).json(pagedFilteredProducts)
+        } catch (error) {
+            console.log(error)
             next(error)
         }
     }

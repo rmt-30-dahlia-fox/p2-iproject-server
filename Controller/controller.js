@@ -1,6 +1,6 @@
 const { hashPassword, verifyPassword } = require("../helpers/bycript");
 const { generateToken, verifyToken } = require("../helpers/jwt");
-const { User, Doctor, Medicine, Prescriptions } = require("../models");
+const { User, Doctor, Medicine, Prescription } = require("../models");
 
 class Controller {
   static async login(req, res, next) {
@@ -110,6 +110,48 @@ class Controller {
     try {
       const showMedicines = await Medicine.findAll();
       res.status(200).json(showMedicines);
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async showAllPrescription(req, res, next) {
+    try {
+      const showPrescription = await Prescription.findAll();
+      res.status(200).json(showPrescription);
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async addPrescription(req, res, next) {
+    try {
+      const { medicineId } = req.params;
+      const {
+        patient_name,
+        patient_age,
+        patient_address,
+        use_description,
+        amount,
+        dose,
+      } = req.body;
+      const UserId = req.user.id;
+      const findMedicine = await Medicine.findOne({
+        where: { id: medicineId, dose },
+      });
+      if (!findMedicine) throw { name: "Medicine not found" };
+      if (findMedicine.amount - amount < 0) {
+        throw { name: "Medicine is not enough" };
+      }
+      if (!amount) throw { name: "Amount is required" };
+      await Medicine.decrement({ amount }, { where: { id: medicineId } });
+      const newPrescription = await Prescription.create({
+        patient_name,
+        patient_age,
+        patient_address,
+        use_description,
+        MedicineId: medicineId,
+        UserId,
+      });
+      res.status(201).json(newPrescription);
     } catch (err) {
       next(err);
     }

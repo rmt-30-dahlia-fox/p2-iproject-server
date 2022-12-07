@@ -58,6 +58,26 @@ class Controller {
       next(err);
     }
   }
+  static async getDoctorById(req, res, next) {
+    try {
+      const { id } = req.params;
+      const findDoctor = await Doctor.findByPk(id);
+      if (!findDoctor) throw { name: "Doctor not found" };
+      res.status(200).json(findDoctor);
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async changeDoctorStatus(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      await Doctor.update({ status }, { where: { id } });
+      res.status(200).json({ message: "Succes updated status" });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;

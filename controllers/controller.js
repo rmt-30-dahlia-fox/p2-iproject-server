@@ -98,6 +98,16 @@ class Controller {
             next(error)
         }
     }
+
+    static async getCategories(req, res, next){
+        try {
+           let calledCategories = await Category.findAll()
+
+           res.status(200).json(calledCategories)
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 module.exports = Controller

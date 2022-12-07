@@ -30,9 +30,7 @@ class Controller {
         },
         customer_details: {
           first_name: findUser.username,
-          // last_name: "pratama",
           email: findUser.email,
-          // phone: "08111222333",
         },
       };
 

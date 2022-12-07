@@ -19,10 +19,10 @@ const nodeMailer = async (email) => {
 
   // send mail with defined transport object
   let info = await transporter.sendMail({
-    from: '"Hacktiv Shop" <hacktiv@shop.com>', // sender address
+    from: '"My Diet" <my_diet@gmail.com>', // sender address
     to: email, // list of receivers
     subject: "Thank You ✔", // Subject line
-    text: "Thank You! Your Purchase is confirmed", // plain text body
+    text: "Thanks for your purchase", // plain text body
     html: "<b>You are now subscribed into My Diet web app as a premium user</b>", // html body
   });
 

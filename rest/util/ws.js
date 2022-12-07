@@ -67,26 +67,8 @@ const sendTimeline = async (data) => {
   return res;
 }
 
-login().then(() => {
-
-sendGlobal({
-  content: "conteteniadjfliugwsrfuyweraaw",
-  ChannelId: 1,
-  UserId: 1,
-}).then(() => {
-  sendDm({
-  content: "wslufgo4w7glawruyfbwa",
-  ChannelId: 69,
-  UserId: 1,
-  recipient_id: 69,
-}).then(() => {
-process.exit()
-
-  })
-});
-});
-
 module.exports = {
   login,
   sendGlobal,
+  sendDm,
 }

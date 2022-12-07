@@ -11,8 +11,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Media.belongsTo(models.User, {
+      Media.hasOne(models.User, {
 	foreignKey: "AvatarId",
+	as: "Avatar"
       });
 
       Media.hasMany(models.PostAttachment, {

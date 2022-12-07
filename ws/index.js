@@ -214,10 +214,11 @@ wsApp.ws('/', {
   //   console.log(message, "<<<<<<< message [pong]");
   // },
   close: (ws, code, message) => {
+    if (code === 1001) return;
     try {
+      console.log("[CLOSE]: ", code, arrayBufferToStr(message));
       const json = parseMessage(message);
-      userSockets.delete(json.data.user_id);
-      console.log("[CLOSE]: ", code, json);
+      userSockets.delete(json.user_id);
     } catch (err) {
       console.error(err, "<<<<<<<< err [close]");
     }

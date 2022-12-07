@@ -1,11 +1,12 @@
 "use strict";
 
 const { Router } = require("express");
-const { User, Media, Message } = require("../models");
+const { User, Media, MessageAttachment, Message } = require("../models");
 const { verifyToken, createToken } = require("../util/jwt");
 const { comparePass } = require("../util/crypto");
 const { upload } = require("../middlewares/upload.js");
-const {sendGlobal} = require("../util/ws");
+const { sendGlobal, sendDm } = require("../util/ws");
+const { Op } = require("sequelize");
 
 const router = Router();
 
@@ -76,7 +77,15 @@ router.post("/login", async (req, res, next) => {
       };
     }
 
-    const user = await User.findOne({ where: { email }});
+    const user = await User.findOne({
+      where: { email },
+      include: [
+	{
+	  model: Media,
+	  as: "Avatar",
+	},
+      ]
+    });
 
     if (!user || !comparePass(password, user.password)) {
       throw {
@@ -92,6 +101,9 @@ router.post("/login", async (req, res, next) => {
       user: {
 	id: user.id,
 	email: user.email,
+	bio: user.bio,
+	AvatarId: user.AvatarId,
+	Avatar: user.Avatar,
 	username: user.username,
       },
     });
@@ -119,7 +131,14 @@ router.use(async (req, res, next) => {
       };
     }
 
-    const user = await User.findByPk(payload.id);
+    const user = await User.findByPk(payload.id, {
+      include: [
+	{
+	  model: Media,
+	  as: "Avatar",
+	},
+      ]
+    });
     if (!user) {
       throw {
 	status: 401,
@@ -134,32 +153,112 @@ router.use(async (req, res, next) => {
   }
 });
 
-router.post('/avatars', upload.single('avatar'), async (req, res, next) => {
+router.get("/users", async (req, res, next) => {
   try {
-    const { filename, mimetype, fieldname } = req.file;
+    res.status(200).json(await User.findAll({
+      include: [
+	{
+	  model: Media,
+	  as: "Avatar",
+	},
+      ],
+      attributes: [
+	"id",
+	"email",
+	"bio",
+	"AvatarId",
+	"username",
+      ],
+    }));
+  } catch (err) {
+    next(err);
+  }
+});
 
-    const media = await Media.create({
-      hash: filename,
-      type: fieldname,
-      format: mimetype,
+router.get("/messages/:id", async (req, res, next) => {
+  try {
+    res.status(200).json(await Message.findAll({
+      where: {
+	[Op.and]: [
+	  { RecipientId: req.params.id, },
+	  { UserId: req.user.id },
+	],
+      },
+      include: [
+	{
+	  model: MessageAttachment,
+	  include: [
+	    {
+	      model: Media,
+	    },
+	  ],
+	},
+	{
+	  model: User,
+	  attributes: [
+	    "id",
+	    "email",
+	    "bio",
+	    "AvatarId",
+	    "username",
+	  ],
+	}
+      ],
+    }));
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.put('/profile', upload.single('avatar'), async (req, res, next) => {
+  try {
+    const {
+      username,
+      bio,
+      password
+    } = req.body;
+
+    if (!comparePass(password, req.user.password)) {
+      throw {
+	status: 401,
+	message: "Invalid password",
+      };
+    }
+
+    let media;
+
+    if (req.file) {
+      const { filename, mimetype, fieldname } = req.file;
+
+      media = await Media.create({
+	hash: filename,
+	type: fieldname,
+	format: mimetype,
+      });
+    }
+
+    const user = await User.findByPk(req.user.id);
+
+    if (media) user.AvatarId = media.id;
+    user.username = username;
+    user.bio = bio;
+
+    await user.save();
+
+    res.status(200).json({
+	id: user.id,
+	email: user.email,
+	bio: user.bio,
+	AvatarId: user.AvatarId,
+	Avatar: media,
+	username: user.username,
     });
-
-    res.status(201).json(media);
   } catch (err) {
     next(err);
   }
 });
 
-router.post('/attachments', upload.single('attachment'), async (req, res, next) => {
-  try {
-
-    res.status(201).json(media);
-  } catch (err) {
-    next(err);
-  }
-});
-
-router.post("/chat/global", async (req, res, next) => {
+router.post("/chat/global", upload.single('attachment'), async (req, res, next) => {
   try {
     const {
       content,
@@ -196,33 +295,51 @@ router.post("/chat/global", async (req, res, next) => {
   }
 });
 
-router.post("/chat/:id", async (req, res, next) => {
-  let data;
+router.post("/chat/:id", upload.single('attachment'), async (req, res, next) => {
   try {
     const {
       content,
     } = req.body;
 
-    data = {
+    let { id } = req.params;
+
+    id = Number(id);
+
+    if (isNaN(id)) {
+      throw {
+	status: 400,
+	message: "Invalid user",
+      };
+    }
+
+    let media;
+    const data = {
       content,
       UserId: req.user.id,
+      RecipientId: id,
+      type: "global",
     };
 
-    data.createdAt = data.updatedAt = new Date();
+    if (req.file) {
+      const { filename, mimetype, fieldname } = req.file;
 
-    // post ws
-    const res = await sendGlobal(data);
+      media = await Media.create({
+	hash: filename,
+	type: fieldname,
+	format: mimetype,
+      });
+
+      data.AttachmentId = media.id;
+    }
 
     const message = await Message.create(data);
 
+    if (media) data.Attachment = media;
+    // post ws
+    const res = await sendDm(data);
+
     res.status(201).json(message);
   } catch (err) {
-    if (err.response.data.message === "Unknown/offline recipient") {
-      const message = await Message.create(data);
-
-      res.status(201).json(message);
-      return res.status(201).json(message);
-    }
     next(err);
   }
 });

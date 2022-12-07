@@ -3,7 +3,7 @@ const errorHandler = (err, req, res, next) => {
   let message = 'Internal Server Error'
   console.log(err);
 
-  if (err.message == 'Email is required' || err.message == 'Password is required') {
+  if (err.message == 'FullName is required' || err.message == 'Email is required' || err.message == 'Password is required' || err.message == 'Caption is required') {
     code = 400
     message = err.message
   } else if (err.message == 'Invalid email/password' || err.message == 'Invalid token') {
@@ -18,6 +18,9 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.message == 'You are not authorized') {
     code = 403
     message = err.message
+  } else if (err.name == 'SequelizeValidationError') {
+    code = 400
+    message = err.errors[0].message
   }
 
   res.status(code).json({ message })

@@ -5,6 +5,7 @@ const { upload } = require('../helpers/multer')
 
 const router = require('express').Router()
 
+router.post('/register', Controller.register)
 router.post('/login', Controller.userLogin)
 
 router.use(authentication)

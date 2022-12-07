@@ -2,12 +2,36 @@ const { compareHash, hashPass } = require("../helpers/bcrypt");
 const { createToken } = require("../helpers/jwt");
 const { User, Activity, Type, Difficulty, Like, Badge } = require("../models");
 const axios = require("axios");
-const nodemailer = require('nodemailer')
 const { transporter } = require("../helpers/nodemailer");
 const rapidApiKey = process.env["X-RapidAPI-Key"];
 const rapidApiHost = process.env["X-RapidAPI-Host"];
 
 class Controller {
+  static async register(req, res, next) {
+    try {
+      const { fullName, email, password } = req.body
+      if (!fullName) throw { message: "FullName is required" };
+      if (!email) throw { message: "Email is required" };
+      if (!password) throw { message: "Password is required" };
+
+      const user = await User.create({
+        fullName,
+        email,
+        password: hashPass(password),
+        status: 'Regular',
+        star: 0,
+        BadgeId: 1,
+        imageProfile: 'https://images.unsplash.com/photo-1602233158242-3ba0ac4d2167?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=436&q=80'
+      })
+
+      const access_token = createToken({ id: user.id }) 
+
+      res.status(201).json({ message: `User ${user.email} success to register`, access_token, userId: user.id })
+    } catch (error) {
+      next(error)
+    }
+  }
+
   static async userLogin(req, res, next) {
     try {
       const { email, password } = req.body;
@@ -22,7 +46,7 @@ class Controller {
 
       const access_token = createToken({ id: user.id });
 
-      res.status(201).json({ access_token, userId: user.id });
+      res.status(200).json({ access_token, userId: user.id });
     } catch (error) {
       next(error);
     }
@@ -31,6 +55,7 @@ class Controller {
   static async showActivities(req, res, next) {
     try {
       const activities = await Activity.findAll({
+        order: [["createdAt", 'DESC']],
         include: [User, Type, Difficulty, Like],
       });
 
@@ -43,6 +68,7 @@ class Controller {
   static async addActivity(req, res, next) {
     try {
       const { caption, name, UserId, TypeId, DifficultyId } = req.body
+      if(!caption) throw { message: 'Caption is required' }
 
       const difficulty = await Difficulty.findByPk(DifficultyId)
       const star = difficulty.star
@@ -54,7 +80,12 @@ class Controller {
         where: { id: UserId }
       })
 
-      const imageActivity = `data:image/png;base64,${req.file.buffer.toString('base64')}`
+      let imageActivity
+      if(!req.file) {
+        imageActivity = 'https://images.unsplash.com/photo-1486218119243-13883505764c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=872&q=80'
+      } else {
+        imageActivity = `data:image/png;base64,${req.file.buffer.toString('base64')}`
+      }
 
       const activity = await Activity.create({
         UserId,

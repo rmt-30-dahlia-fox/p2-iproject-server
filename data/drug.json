@@ -1,0 +1,102 @@
+[
+  {
+    "name": "Acetaminophen, Chlorpheniramine maleate, Pseudoephedrine HCl",
+    "pharma": "WALGREEN CO.",
+    "price": 27.61
+  },
+  {
+    "name": "Miconazole nitrate",
+    "pharma": "Topco Associates LLC",
+    "price": 93.64
+  },
+  {
+    "name": "Mupirocin",
+    "pharma": "Teva Pharmaceuticals USA Inc",
+    "price": 79.36
+  },
+  {
+    "name": "Phenylephrine HCl",
+    "pharma": "H E B",
+    "price": 74.73
+  },
+  {
+    "name": "OXYGEN",
+    "pharma": "O.E. Meyer Company",
+    "price": 44.54
+  },
+  {
+    "name": "Butalbital, Acetaminophen, and Caffeine",
+    "pharma": "STAT Rx USA LLC",
+    "price": 66.51
+  },
+  {
+    "name": "Prednisone",
+    "pharma": "Unit Dose Services",
+    "price": 89.08
+  },
+  {
+    "name": "CEFACLOR",
+    "pharma": "West-ward Pharmaceutical Corp",
+    "price": 70.21
+  },
+  {
+    "name": "TITANIUM DIOXIDE",
+    "pharma": "3LAB, Inc.",
+    "price": 56.49
+  },
+  {
+    "name": "Mirtazapine",
+    "pharma": "Physicians Total Care, Inc.",
+    "price": 21.94
+  },
+  {
+    "name": "Rhodotorula mucilaginosa",
+    "pharma": "Nelco Laboratories, Inc.",
+    "price": 42.37
+  },
+  {
+    "name": "amoxicillin",
+    "pharma": "Clinical Solutions Wholesale",
+    "price": 21.96
+  },
+  {
+    "name": "Calcium carbonate",
+    "pharma": "7-Eleven",
+    "price": 66.15
+  },
+  {
+    "name": "Sarsaparilla, Solidago Virgaurea, Uva Ursi, Apis Mellifica, Arsenicum Album, Cantharis",
+    "pharma": "BioActive Nutritional, Inc.",
+    "price": 19.31
+  },
+  {
+    "name": "Moexipril Hydrochloride and Hydrochlorothiazide",
+    "pharma": "Teva Pharmaceuticals USA Inc",
+    "price": 57.91
+  },
+  {
+    "name": "DOCUSATE SODIUM",
+    "pharma": "CVS Pharmacy",
+    "price": 27.94
+  },
+  {
+    "name": "Loratadine",
+    "pharma": "Valu Merchandisers Company",
+    "price": 31.80
+  },
+  {
+    "name": "HYDROQUINONE",
+    "pharma": "CEN BEAUTY LLC",
+    "price": 27.23
+  },
+  {
+    "name": "Meloxicam",
+    "pharma": "AvPAK",
+    "price": 91.05
+  },
+  {
+    "name": "dl-alpha-tocoheryl acetate and ascorbic acid and cholecalciferol and cyanocobalamin and niacinamide and pyridoxine hydrochloride and riboflavin and fluoride and thiamin hydrochloride and vitamin A palmitate",
+    "pharma": "A-S Medication Solutions LLC",
+    "price": 29.14
+  }
+]

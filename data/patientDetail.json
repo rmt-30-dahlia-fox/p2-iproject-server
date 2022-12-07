@@ -1,0 +1,57 @@
+[
+  {
+    "fullName": "Maire Thebeau",
+    "gender": "Female",
+    "birthday": "1992-12-24 09:05:20",
+    "telephone": 245216699055,
+    "height": 159,
+    "weight": 52,
+    "eyeColor": "Maroon",
+    "address": "74 Annamark Avenue",
+    "PatientId": 1
+  },
+  {
+    "fullName": "Carleton Lumb",
+    "gender": "Male",
+    "birthday": "2001-12-05 12:14:35",
+    "telephone": 429566646450,
+    "height": 156,
+    "weight": 68,
+    "eyeColor": "Aquamarine",
+    "address": "7254 Basil Alley",
+    "PatientId": 2
+  },
+  {
+    "fullName": "Haven Kender",
+    "gender": "Male",
+    "birthday": "1997-03-18 05:56:06",
+    "telephone": 544850556434,
+    "height": 189,
+    "weight": 63,
+    "eyeColor": "Puce",
+    "address": "008 Eliot Way",
+    "PatientId": 3
+  },
+  {
+    "fullName": "Josh Kupec",
+    "gender": "Male",
+    "birthday": "1990-11-15 23:53:41",
+    "telephone": 739441650909,
+    "height": 180,
+    "weight": 78,
+    "eyeColor": "Teal",
+    "address": "933 Pennsylvania Avenue",
+    "PatientId": 4
+  },
+  {
+    "fullName": "Skye Fairlem",
+    "gender": "Male",
+    "birthday": "1996-05-19 07:24:26",
+    "telephone": 247449862040,
+    "height": 180,
+    "weight": 81,
+    "eyeColor": "Fuscia",
+    "address": "7298 Dunning Lane",
+    "PatientId": 5
+  }
+]

@@ -72,14 +72,52 @@ class CustomerController {
   }
 
   static async getAllOrders(req, res, next) {
+    const CustomerId = req.user.id;
     try {
+      const orders = await Order.findAll({
+        where: {
+          CustomerId,
+        },
+        attributes: [
+          "id",
+          "pickupLocation",
+          "pickupDate",
+          "returnLocation",
+          "returnDate",
+          "totalPrice",
+          "status",
+          "CustomerId",
+          "UnitId",
+        ],
+      });
+      res.status(200).json({ orders });
     } catch (err) {
       next(err);
     }
   }
 
   static async getOrderById(req, res, next) {
+    const id = req.params.id;
+    const CustomerId = req.user.id;
     try {
+      const order = await Order.findAll({
+        where: {
+          CustomerId,
+          id,
+        },
+        attributes: [
+          "id",
+          "pickupLocation",
+          "pickupDate",
+          "returnLocation",
+          "returnDate",
+          "totalPrice",
+          "status",
+          "CustomerId",
+          "UnitId",
+        ],
+      });
+      res.status(200).json({ order });
     } catch (err) {
       next(err);
     }
@@ -87,6 +125,35 @@ class CustomerController {
 
   static async postOrder(req, res, next) {
     try {
+      const CustomerId = req.user.id;
+      const status = "Pending";
+      const UnitId = req.params.id;
+
+      const { pickupLocation, pickupDate, returnLocation, returnDate } =
+        req.body;
+
+      // const order = await Order.create({
+      //   pickupLocation,
+      //   pickupDate,
+      //   returnLocation,
+      //   returnDate,
+      //   totalPrice,
+      //   status,
+      //   UnitId,
+      //   CustomerId
+      // });
+      const totalPrice = returnDate - pickupDate;
+      
+      res.status(200).json({
+        pickupLocation,
+        pickupDate,
+        returnLocation,
+        returnDate,
+        totalPrice,
+        status,
+        UnitId,
+        CustomerId,
+      });
     } catch (err) {
       next(err);
     }

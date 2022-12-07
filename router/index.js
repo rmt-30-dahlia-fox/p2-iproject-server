@@ -7,6 +7,7 @@ router.get("/", (req, res) => {
 });
 
 router.post("/login", Controller.login);
+router.post("/register", Controller.register);
 
 router.use((err, req, res, next) => {
   let code = 500;

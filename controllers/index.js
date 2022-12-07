@@ -1,5 +1,5 @@
 const axios = require("axios");
-const {User, Hotel, Wishlist, Transaction, sequelize} = require('../models')
+const {User, Hotel, Wishlist, Transaction, sequelize, City} = require('../models')
 const {verifyHash} = require('../helpers/bcryptjs')
 const {signToken} = require('../helpers/jwt')
 const { Op } = require("sequelize");
@@ -83,14 +83,14 @@ class Controller {
   }
 
   // Transaction - add hotel to transaction
-  static async addTransaction (req, res, next) => {
+  static async addTransaction (req, res, next) {
     try {
 
       const {
         name,
         paidStatus,
         quantity,
-        totalPrice
+        totalPrice,
         star,
         address,
         imageUrl,
@@ -109,7 +109,7 @@ class Controller {
         name,
         paidStatus,
         quantity,
-        totalPrice
+        totalPrice,
         star,
         address,
         imageUrl,
@@ -131,7 +131,7 @@ class Controller {
   }
 
   // Transaction - delete hotel to transaction
-  static async deleteTransaction (req, res, next) => {
+  static async deleteTransaction (req, res, next) {
     try {
       const {transactionId} = req.params
 
@@ -152,7 +152,7 @@ class Controller {
   }
 
   // Transaction - get transactions
-  static async getTransactionsByUserId (req, res, next) => {
+  static async getTransactionsByUserId (req, res, next) {
     try {
       const transactions = await Transaction.findAll({
         where: {
@@ -167,7 +167,7 @@ class Controller {
   }
 
   // Wishlist - add hotel to wishlist
-  static async addToWishlist (req, req, next) {
+  static async addToWishlist (req, res, next) {
     try {
       const {
         name,
@@ -208,7 +208,7 @@ class Controller {
   }
 
   // Wishlist - delete hotel from wishlist
-  static async deleteFromWishlist (req, req, next) {
+  static async deleteFromWishlist (req, res, next) {
     try {
       const {wishlistId} = req.params
 
@@ -229,7 +229,7 @@ class Controller {
   }
 
   // Wishlist - get wishlists
-  static async getWishlistsByUser (req, req, next) {
+  static async getWishlistsByUser (req, res, next) {
     try {
       const wishlists = Wishlist.findAll({
         where: {
@@ -249,7 +249,23 @@ class Controller {
     } catch (err) {
       next(err)
     }
-  }  
+  } 
+  
+  // city - get cities
+  static async fetchCitiesData (req, res, next) {
+    try {
+
+
+      const cities = await City.findAll({
+        order: [['name']]
+      })
+      
+      res.status(200).json(cities)
+    
+    } catch (err) {
+      next(err)
+    }
+  } 
 
   // hotel - get hotel's details
   static async getHotelById (req, res, next) {
@@ -271,8 +287,8 @@ class Controller {
   static async fetchHotelData (req, res, next) {
         try {
 
-          const {city, date_checkout, date_checkin, star_rating_ids, rooms_number} = req.body
-          
+          const {page, city, date_checkout, date_checkin, star_rating_ids, rooms_number} = req.query
+
             const optionsLocation = {
               method: 'GET',
               url: 'https://priceline-com-provider.p.rapidapi.com/v1/hotels/locations',
@@ -283,6 +299,7 @@ class Controller {
               }
             };            
             const {data} = await axios(optionsLocation) // fetch location id
+            if(data.length === 0) throw ('Data not found')
             const location_id = data[0].id
 
             const optionsHotel = {
@@ -305,31 +322,38 @@ class Controller {
 
 
             const response =  await axios(optionsHotel) // fetch hotels
+            
+            if(response.data.hotels.length > 0) {
+              const processedData = response.data.hotels.filter(el => 
+                el.name &&
+                el.ratesSummary.minPrice &&
+                el.hotelFeatures.hotelAmenityCodes &&
+                el.totalReviewCount > 50
+              ).map(el => {
+                return {
+                  name: el.name,
+                  star: el.starRating,
+                  address: `${el.location.address.addressLine1}, ${el.location.address.cityName}, ${el.location.address.countryName}, ${el.location.address.zip}`,
+                  imageUrl: el.thumbnailUrl,
+                  rating: el.overallGuestRating,
+                  totalReviews: el.totalReviewCount,
+                  price: el.ratesSummary.minPrice,
+                  features: el.hotelFeatures.hotelAmenityCodes.toString(),
+                  roomLeft: el.ratesSummary.roomLeft,
+                  freeCancelPolicy: el.ratesSummary.freeCancelableRateAvail,
+                  city,
+                  dateCheckIn: date_checkin,
+                  dateCheckout: date_checkout
+                }
+              })
+              console.log(page, processedData.length)
+              const finalData = processedData.slice(page*10-10, page*10)
 
-            const finalData = response.data.hotels.filter(el => 
-              el.name &&
-              el.ratesSummary.minPrice &&
-              el.hotelFeatures.hotelAmenityCodes &&
-              el.totalReviewCount > 50
-            ).map(el => {
-              return {
-                name: el.name,
-                star: el.starRating,
-                address: `${el.location.address.addressLine1}, ${el.location.address.cityName}, ${el.location.address.countryName}, ${el.location.address.zip}`,
-                imageUrl: el.thumbnailUrl,
-                rating: el.overallGuestRating,
-                totalReviews: el.totalReviewCount,
-                price: el.ratesSummary.minPrice,
-                features: el.hotelFeatures.hotelAmenityCodes.toString(),
-                roomLeft: el.ratesSummary.roomLeft,
-                freeCancelPolicy: el.ratesSummary.freeCancelableRateAvail,
-                city,
-                dateCheckIn: date_checkin,
-                dateCheckout: date_checkout
-              }
-            })
-
-            res.status(200).json(finalData)
+              res.status(200).json({finalData, length: processedData.length})
+            } else {
+              throw('Data not found')
+            }
+            
         } catch (err) {
           console.log(err)
         }

@@ -1,102 +1,102 @@
 [
   {
-    "drugName": "Acetaminophen, Chlorpheniramine maleate, Pseudoephedrine HCl",
+    "name": "Acetaminophen, Chlorpheniramine maleate, Pseudoephedrine HCl",
     "pharma": "WALGREEN CO.",
-    "price": "£27.61"
+    "price": 27.61
   },
   {
-    "drugName": "Miconazole nitrate",
+    "name": "Miconazole nitrate",
     "pharma": "Topco Associates LLC",
-    "price": "£93.64"
+    "price": 93.64
   },
   {
-    "drugName": "Mupirocin",
+    "name": "Mupirocin",
     "pharma": "Teva Pharmaceuticals USA Inc",
-    "price": "£79.36"
+    "price": 79.36
   },
   {
-    "drugName": "Phenylephrine HCl",
+    "name": "Phenylephrine HCl",
     "pharma": "H E B",
-    "price": "£74.73"
+    "price": 74.73
   },
   {
-    "drugName": "OXYGEN",
+    "name": "OXYGEN",
     "pharma": "O.E. Meyer Company",
-    "price": "£44.54"
+    "price": 44.54
   },
   {
-    "drugName": "Butalbital, Acetaminophen, and Caffeine",
+    "name": "Butalbital, Acetaminophen, and Caffeine",
     "pharma": "STAT Rx USA LLC",
-    "price": "£66.51"
+    "price": 66.51
   },
   {
-    "drugName": "Prednisone",
+    "name": "Prednisone",
     "pharma": "Unit Dose Services",
-    "price": "£89.08"
+    "price": 89.08
   },
   {
-    "drugName": "CEFACLOR",
+    "name": "CEFACLOR",
     "pharma": "West-ward Pharmaceutical Corp",
-    "price": "£70.21"
+    "price": 70.21
   },
   {
-    "drugName": "TITANIUM DIOXIDE",
+    "name": "TITANIUM DIOXIDE",
     "pharma": "3LAB, Inc.",
-    "price": "£56.49"
+    "price": 56.49
   },
   {
-    "drugName": "Mirtazapine",
+    "name": "Mirtazapine",
     "pharma": "Physicians Total Care, Inc.",
-    "price": "£21.94"
+    "price": 21.94
   },
   {
-    "drugName": "Rhodotorula mucilaginosa",
+    "name": "Rhodotorula mucilaginosa",
     "pharma": "Nelco Laboratories, Inc.",
-    "price": "£42.37"
+    "price": 42.37
   },
   {
-    "drugName": "amoxicillin",
+    "name": "amoxicillin",
     "pharma": "Clinical Solutions Wholesale",
-    "price": "£21.96"
+    "price": 21.96
   },
   {
-    "drugName": "Calcium carbonate",
+    "name": "Calcium carbonate",
     "pharma": "7-Eleven",
-    "price": "£66.15"
+    "price": 66.15
   },
   {
-    "drugName": "Sarsaparilla, Solidago Virgaurea, Uva Ursi, Apis Mellifica, Arsenicum Album, Cantharis",
+    "name": "Sarsaparilla, Solidago Virgaurea, Uva Ursi, Apis Mellifica, Arsenicum Album, Cantharis",
     "pharma": "BioActive Nutritional, Inc.",
-    "price": "£19.31"
+    "price": 19.31
   },
   {
-    "drugName": "Moexipril Hydrochloride and Hydrochlorothiazide",
+    "name": "Moexipril Hydrochloride and Hydrochlorothiazide",
     "pharma": "Teva Pharmaceuticals USA Inc",
-    "price": "£57.91"
+    "price": 57.91
   },
   {
-    "drugName": "DOCUSATE SODIUM",
+    "name": "DOCUSATE SODIUM",
     "pharma": "CVS Pharmacy",
-    "price": "£27.94"
+    "price": 27.94
   },
   {
-    "drugName": "Loratadine",
+    "name": "Loratadine",
     "pharma": "Valu Merchandisers Company",
-    "price": "£31.80"
+    "price": 31.80
   },
   {
-    "drugName": "HYDROQUINONE",
+    "name": "HYDROQUINONE",
     "pharma": "CEN BEAUTY LLC",
-    "price": "£27.23"
+    "price": 27.23
   },
   {
-    "drugName": "Meloxicam",
+    "name": "Meloxicam",
     "pharma": "AvPAK",
-    "price": "£91.05"
+    "price": 91.05
   },
   {
-    "drugName": "dl-alpha-tocoheryl acetate and ascorbic acid and cholecalciferol and cyanocobalamin and niacinamide and pyridoxine hydrochloride and riboflavin and fluoride and thiamin hydrochloride and vitamin A palmitate",
+    "name": "dl-alpha-tocoheryl acetate and ascorbic acid and cholecalciferol and cyanocobalamin and niacinamide and pyridoxine hydrochloride and riboflavin and fluoride and thiamin hydrochloride and vitamin A palmitate",
     "pharma": "A-S Medication Solutions LLC",
-    "price": "£29.14"
+    "price": 29.14
   }
 ]

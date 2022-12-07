@@ -1,7 +1,8 @@
 const { default: axios } = require('axios')
 const { comparePassword, signToken, hashPassword } = require('../helpers')
 const { User, Manga, WantToRead } = require('../models')
-const { XMAL_CLIENT_ID } = process.env
+const { XMAL_CLIENT_ID, Password_Nodemailer } = process.env
+const nodemailer = require('nodemailer')
 
 
 
@@ -61,7 +62,7 @@ class Controllers {
             if (!page) {
                 offset = 0
             } else {
-                offset = page *10 - 10
+                offset = page * 10 - 10
             }
 
             const { data } = await axios({
@@ -105,7 +106,7 @@ class Controllers {
             if (!page) {
                 offset = 0
             } else {
-                offset = page *10 - 10
+                offset = page * 10 - 10
             }
 
             const { id } = req.params
@@ -137,6 +138,50 @@ class Controllers {
         }
     }
 
+    static async mailWantToRead(req, res, next) {
+        try {
+            const list = await WantToRead.findAll({
+                where: {
+                    UserId: req.user.id
+                }
+            })
+
+            let sendList = "";
+            list.forEach(el=>{sendList += el.title + ", "})
+            sendList = sendList.slice(0,(sendList.length-2)) + " !!"
+
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                host: 'smtp.gmail.com',
+                port: 486,
+                auth: {
+                    user: 'syprymanao@gmail.com',
+                    pass: Password_Nodemailer,
+                },
+            });
+
+            const mailOptions = {
+                from: "syprymanao@gmail.com",
+                to: req.user.email,
+                subject: "Your Want To Read list of Mangas",
+                text: `Let's go read ${sendList}`,
+            };
+
+            transporter.sendMail(mailOptions, (err) => {
+                if (err) {
+                    return res.status(500).json({ message: "error sending mail" });
+                }
+            });
+
+            res.status(200).json(sendList)
+
+        } catch (error) {
+            next(error)
+        }
+    }
+
+
+
     static async createWantToRead(req, res, next) {
         try {
             const { MangaId, mainPicture, title } = req.body
@@ -157,8 +202,9 @@ class Controllers {
             })
 
             if (!created) {
-                throw { name: "required", message: "The manga is already on the want to read list" }
+                throw { name: "required", message:  `Manga ${title} is already on the want to read list` }
             }
+
 
             res.status(201).json(newList)
 
@@ -166,6 +212,8 @@ class Controllers {
             next(error)
         }
     }
+
+
 
     static async deleteWantToRead(req, res, next) {
         try {
@@ -182,17 +230,21 @@ class Controllers {
     static async updateStatusWantToRead(req, res, next) {
         try {
             const { id } = req.params
-            const { status } = req.body
-            if (status != "true" || status != "false") {
-                throw { name: "403status", message: "status can only be true or false" }
+            const { statusRead } = req.body
+            if (statusRead != "Finished" && statusRead != "Unfinished") {
+                throw { name: "403status", message: "status can only be Finished or Unfinished" }
             }
-            const list = await WantToRead.update({ where: { id } }, { status })
+            const list = await WantToRead.findByPk( id)
+            const old = list.statusRead
+            await list.update({statusRead})
 
-            res.status(200).json({ message: `Succeed at updating status manga ${list.title}` })
+            res.status(200).json({ message: `Succeed at updating status manga from ${old} to ${statusRead}` })
         } catch (error) {
             next(error)
         }
     }
+
+
 
 
 }

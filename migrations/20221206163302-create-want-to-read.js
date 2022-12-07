@@ -18,8 +18,8 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       statusRead: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
+        type: Sequelize.STRING,
+        defaultValue: "Unfinished"
       },
       createdAt: {
         allowNull: false,

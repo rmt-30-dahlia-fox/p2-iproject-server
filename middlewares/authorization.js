@@ -5,7 +5,7 @@ const authorization = async(req,res,next)=>{
         const {id} = req.params
         const list = await WantToRead.findByPk(id)
         if(!list){
-            throw {name: '404data not found' , message : 'Movie not found'}  
+            throw {name: '404data not found' , message : 'Manga not found'}  
         }
 
         if(req.user.id != list.UserId){

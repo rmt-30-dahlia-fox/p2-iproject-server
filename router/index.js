@@ -15,6 +15,7 @@ router.put("/doctors/:id", Controller.editDoctorProfile);
 router.post("/medicines", Controller.addMedicine);
 router.get("/medicines", Controller.showAllMedicine);
 router.get("/prescriptions", Controller.showAllPrescription);
+router.post("/prescriptions/:medicineId", Controller.addPrescription);
 
 router.use(errorHandler);
 module.exports = router;

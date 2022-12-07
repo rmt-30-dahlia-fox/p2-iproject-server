@@ -122,6 +122,40 @@ class Controller {
       next(err);
     }
   }
+  static async addPrescription(req, res, next) {
+    try {
+      const { medicineId } = req.params;
+      const {
+        patient_name,
+        patient_age,
+        patient_address,
+        use_description,
+        amount,
+        dose,
+      } = req.body;
+      const UserId = req.user.id;
+      const findMedicine = await Medicine.findOne({
+        where: { id: medicineId, dose },
+      });
+      if (!findMedicine) throw { name: "Medicine not found" };
+      if (findMedicine.amount - amount < 0) {
+        throw { name: "Medicine is not enough" };
+      }
+      if (!amount) throw { name: "Amount is required" };
+      await Medicine.decrement({ amount }, { where: { id: medicineId } });
+      const newPrescription = await Prescription.create({
+        patient_name,
+        patient_age,
+        patient_address,
+        use_description,
+        MedicineId: medicineId,
+        UserId,
+      });
+      res.status(201).json(newPrescription);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;

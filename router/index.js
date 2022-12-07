@@ -3,6 +3,8 @@ const Controller = require("../Controller/controller");
 const authentication = require("../middlewares/authentication");
 const errorHandler = require("../middlewares/errorHandler");
 const router = express.Router();
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 
 router.post("/login", Controller.login);
 router.post("/register", Controller.register);
@@ -16,6 +18,7 @@ router.post("/medicines", Controller.addMedicine);
 router.get("/medicines", Controller.showAllMedicine);
 router.get("/prescriptions", Controller.showAllPrescription);
 router.post("/prescriptions/:medicineId", Controller.addPrescription);
+router.post("/profile", upload.single("gambar"), Controller.uploadFile);
 
 router.use(errorHandler);
 module.exports = router;

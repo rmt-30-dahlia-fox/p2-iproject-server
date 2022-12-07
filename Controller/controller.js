@@ -156,6 +156,21 @@ class Controller {
       next(err);
     }
   }
+  static async uploadFile(req, res, next) {
+    console.log("Masuk");
+    console.log(req.file, ">>> INI REQ FILE");
+    console.log(req.body, ">>> INI REQ BODY");
+    try {
+      res.status(200).json({
+        data: {
+          file: req.file,
+          message: "Uploaded !",
+        },
+      });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;

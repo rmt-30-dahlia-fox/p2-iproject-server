@@ -1,6 +1,6 @@
 const { compareHash } = require('../helpers/bcrypt')
 const { createToken } = require('../helpers/jwt')
-const { User, Activity } = require('../models')
+const { User, Activity, Type, Difficulty } = require('../models')
 
 class Controller {
   static async userLogin(req, res, next) {
@@ -25,9 +25,26 @@ class Controller {
 
   static async showActivities(req, res, next) {
     try {
-      const activities = await Activity.findAll()
+      const activities = await Activity.findAll({
+        include: [ User, Type, Difficulty ]
+      })
 
-      res.status(200).json({ data: activities })
+      res.status(200).json({ activities })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async showActivity(req, res, next) {
+    try {
+      const { id } = req.params
+
+      const activity = await Activity.findByPk(id, {
+        include: [ User, Type, Difficulty ]
+      })
+      if(!activity) throw { message: 'Data is not found' }
+      
+      res.status(200).json({ activity })
     } catch (error) {
       next(error)
     }

@@ -53,6 +53,25 @@ class Controller {
             next(error)
         }
     }
+
+    static async postMember (req, res, next){
+        try {
+            let { name,gender,email,phone,point } = req.body
+            if (!point) point = 0;
+
+            let newMember = await Member.create({ name,gender,email,phone,point,cashierId: req.user.id })
+
+            let memberHistory = await History.create({
+                type: 'Member',
+                description: `${name} has been added as member`,
+                userId: req.user.id
+            })
+
+            res.status(201).json({message: `${name} has been added as member`})
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 module.exports = Controller

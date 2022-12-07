@@ -22,11 +22,12 @@ class AdminController {
 
       const admin = await Admin.findOne({ where: { email } });
       if (!admin) throw { name: "invalid_login" };
-      if (comparePw(admin.password) === false) throw { name: "invalid_login" };
-
+      const checkPw = comparePw(password, admin.password)
+      if (!checkPw) throw { name: "invalid_login" };
+      
       const access_token = signToken({ id: admin.id });
       res.status(200).json({ access_token });
-    } catch (error) {
+    } catch (err) {
       next(err);
     }
   }

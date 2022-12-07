@@ -5,9 +5,9 @@ const paymentRouter = require("./payment");
 const Controller = require("../controllers");
 const authentication = require("../middlewares/authentication");
 
-router.post("/social-login", Controller.socialLogin);
 router.post("/register", Controller.register);
 router.post("/login", Controller.login);
+router.post('/login/google', Controller.loginGoogle);
 
 router.use("/movies", movieRouter);
 

@@ -4,7 +4,7 @@
 
 List of available endpoints:
 
-- `POST /social-login`
+- `POST /login/google`
 - `POST /register`
 - `POST /login`
 - `POST /movies`
@@ -21,9 +21,21 @@ List of available endpoints:
 
 &nbsp;
 
-## 1. POST /social-login
+## 1. POST /login/google
+
+Description:
+
+- Login using google
 
 Request:
+
+- Headers
+
+```json
+{
+  "google_token": String
+}
+```
 
 - body:
 
@@ -40,7 +52,6 @@ _Response (200 - OK)_
 
 ```json
 {
-  "message": "string",
   "access_token": "string"
 }
 ```

@@ -61,11 +61,6 @@ class CustomerController {
 
   static async getUnitById(req, res, next) {
     try {
-      const id = req.params.id;
-      const unit = await Unit.findByPk(id, {
-        attributes: ["id", "model", "type", "price", "imageUrl"],
-      });
-      res.status(200).json({ unit });
     } catch (err) {
       next(err);
     }
@@ -129,6 +124,9 @@ class CustomerController {
       const status = "Pending";
       const UnitId = req.params.id;
 
+      const unit = await Unit.findByPk(UnitId)
+      if(!unit) throw
+
       const { pickupLocation, pickupDate, returnLocation, returnDate } =
         req.body;
 
@@ -142,8 +140,8 @@ class CustomerController {
       //   UnitId,
       //   CustomerId
       // });
-      const totalPrice = returnDate - pickupDate;
-      
+      // const totalPrice = (returnDate - pickupDate) * ;
+
       res.status(200).json({
         pickupLocation,
         pickupDate,

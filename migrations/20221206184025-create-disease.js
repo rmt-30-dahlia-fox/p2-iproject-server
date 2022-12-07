@@ -20,8 +20,7 @@ module.exports = {
       },
       DrugId: {
         type: Sequelize.INTEGER,
-        references: "Drugs",
-        key: "id",
+        references: { model: "Drugs", key: "id" },
       },
       createdAt: {
         allowNull: false,

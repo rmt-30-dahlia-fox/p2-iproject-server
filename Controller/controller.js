@@ -106,6 +106,14 @@ class Controller {
       next(err);
     }
   }
+  static async showAllMedicine(req, res, next) {
+    try {
+      const showMedicines = await Medicine.findAll();
+      res.status(200).json(showMedicines);
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;

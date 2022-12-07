@@ -13,6 +13,7 @@ router.get("/doctors/:id", Controller.getDoctorById);
 router.patch("/doctors/:id", Controller.changeDoctorStatus);
 router.put("/doctors/:id", Controller.editDoctorProfile);
 router.post("/medicines", Controller.addMedicine);
+router.get("/medicines", Controller.showAllMedicine);
 
 router.use(errorHandler);
 module.exports = router;

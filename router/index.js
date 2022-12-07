@@ -1,7 +1,10 @@
 const Controller = require('../controllers')
+const authentication = require('../middlewares/authentication')
 const router = require('express').Router()
 
 router.post('/login', Controller.userLogin)
+
+router.use(authentication)
 
 router.get('/activities', Controller.showActivities)
 router.get('/activities/:activityId', Controller.showActivity)

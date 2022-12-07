@@ -5,6 +5,8 @@ if (process.env.NODE_ENV !== "production") {
 const { User, Cart, OrderHistory } = require("../models");
 const { hashPassword, comparePassword } = require("../helpers/bcrypt");
 const { generateToken } = require("../helpers/jwt");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(process.env.CLIENT_ID);
 
 class Controller {
   static async register(req, res, next) {
@@ -34,6 +36,37 @@ class Controller {
       const payload = {
         id: user.id,
       };
+      const access_token = generateToken(payload);
+
+      res.status(200).json({ access_token, username: user.username });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async googleSignin(req, res, next) {
+    try {
+      const googleToken = req.headers["google-oauth-token"];
+      const ticket = await client.verifyIdToken({
+        idToken: googleToken,
+        audience: process.env.CLIENT_ID,
+      });
+
+      const { email, name } = ticket.getPayload();
+      const [user, created] = await User.findOrCreate({
+        where: { email },
+        defaults: {
+          username: name,
+          email,
+          password: "google",
+        },
+        hooks: false,
+      });
+
+      const payload = {
+        id: user.id,
+      };
+
       const access_token = generateToken(payload);
 
       res.status(200).json({ access_token, username: user.username });

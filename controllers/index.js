@@ -1,6 +1,8 @@
 const { default: axios } = require('axios')
 const { comparePassword, signToken, hashPassword } = require('../helpers')
 const { User, Manga, WantToRead } = require('../models')
+const { XMAL_CLIENT_ID } = process.env
+
 
 
 
@@ -29,8 +31,8 @@ class Controllers {
     static async register(req, res, next) {
         try {
             let { email, password } = req.body
-            if(!password){
-                throw {name:'data not found', message:"Password is required"}
+            if (!password) {
+                throw { name: 'data not found', message: "Password is required" }
             }
             password = hashPassword(password)
             const newUser = await User.create({ email, password })
@@ -51,14 +53,14 @@ class Controllers {
 
     static async showMangaList(req, res, next) {
         try {
-            const {data} = await axios({
+            const { data } = await axios({
                 method: 'get',
                 url: 'https://api.myanimelist.net/v2/manga/ranking?ranking_type=all&limit=40',
                 headers: {
-                    "X-MAL-CLIENT-ID": "aad45b6564954e88533f9ad51291a312"
+                    "X-MAL-CLIENT-ID": XMAL_CLIENT_ID
                 }
 
-            })           
+            })
 
             res.status(200).json(data)
         } catch (error) {
@@ -68,14 +70,15 @@ class Controllers {
 
     static async showMangaDetail(req, res, next) {
         try {
-            const{id} = req.params
-            const {data} = await axios({
+
+            const { id } = req.params
+            const { data } = await axios({
                 method: 'get',
                 url: `https://api.myanimelist.net/v2/manga/${id}?fields=id,title,main_picture,synopsis,mean`,
                 headers: {
-                    "X-MAL-CLIENT-ID": "aad45b6564954e88533f9ad51291a312"
+                    "X-MAL-CLIENT-ID": XMAL_CLIENT_ID
                 }
-            })           
+            })
 
             res.status(200).json(data)
         } catch (error) {

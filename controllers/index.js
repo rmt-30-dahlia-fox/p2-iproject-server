@@ -1,6 +1,9 @@
 const { compareHash, hashPass } = require('../helpers/bcrypt')
 const { createToken } = require('../helpers/jwt')
 const { User, Activity, Type, Difficulty, Like, Badge } = require('../models')
+const axios = require('axios')
+const rapidApiKey = process.env['X-RapidAPI-Key']
+const rapidApiHost = process.env['X-RapidAPI-Host']
 
 class Controller {
   static async userLogin(req, res, next) {
@@ -108,6 +111,43 @@ class Controller {
       await User.update(data, { where: { id: userId } })
       
       res.status(200).json({ message: `User ${userId} has been updated` })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async showExercises(req, res, next) {
+    try {
+      let options = {
+        headers: {
+          "X-RapidAPI-Key": rapidApiKey,
+          "X-RapidAPI-Host": rapidApiHost,
+        },
+        params: {
+          offset: 0
+        }
+      }
+
+      let { name, type, difficulty, page } = req.query
+
+      if(name) options.params.name = name
+      if(type) options.params.type = type
+      if(difficulty) options.params.difficulty = difficulty
+
+      if(!page) page = 1
+      options.params.offset = (page - 1) * 10
+
+      const { data } = await axios.get(
+        'https://exercises-by-api-ninjas.p.rapidapi.com/v1/exercises',
+        options
+      )
+
+      const response = {
+        currentPage: Number(page),
+        exercises: data
+      }
+      
+      res.status(200).json(response)
     } catch (error) {
       next(error)
     }

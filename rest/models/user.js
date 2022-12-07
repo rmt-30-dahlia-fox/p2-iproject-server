@@ -22,22 +22,14 @@ module.exports = (sequelize, DataTypes) => {
 	foreignKey: "UserId",
       });
 
-      User.hasMany(models.UserFriend, {
+      User.hasMany(models.Message, {
 	foreignKey: "UserId",
 	as: "users",
       });
 
-      User.hasMany(models.UserFriend, {
-	foreignKey: "FriendId",
-	as: "friends",
-      });
-
-      User.hasMany(models.ChannelUser, {
-	foreignKey: "UserId",
-      });
-
       User.hasMany(models.Message, {
-	foreignKey: "UserId",
+	foreignKey: "RecipientId",
+	as: "recipients",
       });
     }
   }

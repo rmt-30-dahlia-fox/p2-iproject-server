@@ -13,6 +13,10 @@ module.exports = {
         type: Sequelize.TEXT,
 	allowNull: false,
       },
+      type: {
+        type: Sequelize.STRING,
+	allowNull: false,
+      },
       UserId: {
         type: Sequelize.INTEGER,
 	allowNull: false,
@@ -21,11 +25,11 @@ module.exports = {
 	  key: "id",
 	},
       },
-      ChannelId: {
+      RecipientId: {
         type: Sequelize.INTEGER,
 	allowNull: false,
 	references: {
-	  model: "Channels",
+	  model: "Users",
 	  key: "id",
 	},
       },

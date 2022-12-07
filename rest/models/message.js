@@ -17,10 +17,12 @@ module.exports = (sequelize, DataTypes) => {
 
       Message.belongsTo(models.User, {
 	foreignKey: "UserId",
+	as: "users",
       });
 
-      Message.belongsTo(models.Channel, {
-	foreignKey: "ChannelId",
+      Message.belongsTo(models.User, {
+	foreignKey: "RecipientId",
+	as: "recipients",
       });
     }
   }
@@ -37,6 +39,10 @@ module.exports = (sequelize, DataTypes) => {
 	},
       }
     },
+    type: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     UserId: {
       type: DataTypes.INTEGER,
       allowNull: false,
@@ -45,11 +51,11 @@ module.exports = (sequelize, DataTypes) => {
 	key: "id",
       },
     },
-    ChannelId: {
+    RecipientId: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
-	model: "Channels",
+	model: "Users",
 	key: "id",
       },
     },

@@ -152,13 +152,6 @@ router.post('/avatars', upload.single('avatar'), async (req, res, next) => {
 
 router.post('/attachments', upload.single('attachment'), async (req, res, next) => {
   try {
-    const { filename, mimetype, fieldname } = req.file;
-
-    const media = await Media.create({
-      hash: filename,
-      type: fieldname,
-      format: mimetype,
-    });
 
     res.status(201).json(media);
   } catch (err) {
@@ -172,10 +165,47 @@ router.post("/chat/global", async (req, res, next) => {
       content,
     } = req.body;
 
+    let media;
     const data = {
       content,
       UserId: req.user.id,
       ChannelId: 1,
+    };
+
+    if (req.file) {
+      const { filename, mimetype, fieldname } = req.file;
+
+      media = await Media.create({
+	hash: filename,
+	type: fieldname,
+	format: mimetype,
+      });
+
+      data.AttachmentId = media.id;
+    }
+
+    const message = await Message.create(data);
+
+    if (media) data.Attachment = media;
+    // post ws
+    const res = await sendGlobal(data);
+
+    res.status(201).json(message);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/chat/:id", async (req, res, next) => {
+  let data;
+  try {
+    const {
+      content,
+    } = req.body;
+
+    data = {
+      content,
+      UserId: req.user.id,
     };
 
     data.createdAt = data.updatedAt = new Date();
@@ -187,15 +217,14 @@ router.post("/chat/global", async (req, res, next) => {
 
     res.status(201).json(message);
   } catch (err) {
+    if (err.response.data.message === "Unknown/offline recipient") {
+      const message = await Message.create(data);
+
+      res.status(201).json(message);
+      return res.status(201).json(message);
+    }
     next(err);
   }
-});
-
-router.post("/chat/:id", (req, res, next) => {
-
-if (err.response.data.message === "Unknown/offline recipient") {
-  return res.status(200).json(message);
-}
 });
 
 // error handler

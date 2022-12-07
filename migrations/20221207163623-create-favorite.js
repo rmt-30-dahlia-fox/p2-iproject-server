@@ -11,12 +11,14 @@ module.exports = {
       },
       title: {
         type: Sequelize.STRING,
-        unique: true,
       },
       description: {
         type: Sequelize.TEXT,
       },
       urlToImage: {
+        type: Sequelize.TEXT,
+      },
+      url: {
         type: Sequelize.TEXT,
       },
       UserId: {

@@ -9,19 +9,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER,
       },
-      UserId: {
+      PatientId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "Users",
-          key: "id",
-        },
+        references: { model: "Patients", key: "id" },
       },
       DiseaseId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "Diseases",
-          key: "id",
-        },
+        references: { model: "Diseases" },
       },
       drugPrice: {
         type: Sequelize.INTEGER,
@@ -29,19 +23,12 @@ module.exports = {
       consultationPrice: {
         type: Sequelize.INTEGER,
       },
-      AppointmentId: {
+      DoctorId: {
         type: Sequelize.INTEGER,
-        references: {
-          model: "Appointments",
-          key: "id",
-        },
+        references: { model: "Doctors" },
       },
-      SymptomeId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: "Symptomes",
-          key: "id",
-        },
+      symptome: {
+        type: Sequelize.STRING,
       },
       createdAt: {
         allowNull: false,

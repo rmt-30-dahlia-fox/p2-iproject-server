@@ -1,6 +1,6 @@
 const { compareHash } = require('../helpers/bcrypt')
 const { createToken } = require('../helpers/jwt')
-const { User } = require('../models')
+const { User, Activity } = require('../models')
 
 class Controller {
   static async userLogin(req, res, next) {
@@ -23,10 +23,11 @@ class Controller {
     }
   }
 
-  static async nama(req, res, next) {
+  static async showActivities(req, res, next) {
     try {
-      
-      res.status(200).json("ok")
+      const activities = await Activity.findAll()
+
+      res.status(200).json({ data: activities })
     } catch (error) {
       next(error)
     }

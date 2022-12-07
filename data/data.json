@@ -70,5 +70,61 @@
       "star": 0,
       "BadgeId": 1
     }
+  ],
+  "activities": [
+    {
+      "UserId": 1,
+      "name": "Rickshaw Carry",
+      "caption": "Happy fit day all!!",
+      "star": 10,
+      "TypeId": 7,
+      "DifficultyId": 1
+    },
+    {
+      "UserId": 2,
+      "name": "Clean from Blocks",
+      "caption": "Nyoba hal baru",
+      "star": 10,
+      "TypeId": 2,
+      "DifficultyId": 1
+    },
+    {
+      "UserId": 2,
+      "name": "Single-Leg Press",
+      "caption": "Makin susah ya",
+      "star": 25,
+      "TypeId": 5,
+      "DifficultyId": 2
+    },
+    {
+      "UserId": 1,
+      "name": "Power snatch-",
+      "caption": "Trying new thing",
+      "star": 50,
+      "TypeId": 2,
+      "DifficultyId": 3
+    }
+  ],
+  "likes": [
+    {
+      "UserId": 1,
+      "ActivityId": 1
+    },
+    {
+      "UserId": 1,
+      "ActivityId": 2
+    },
+    {
+      "UserId": 1,
+      "ActivityId": 3
+    },
+    {
+      "UserId": 2,
+      "ActivityId": 1
+    },
+    {
+      "UserId": 2,
+      "ActivityId": 4
+    }
   ]
 }

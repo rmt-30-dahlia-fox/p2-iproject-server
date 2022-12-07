@@ -12,6 +12,7 @@ router.post("/doctors", Controller.createDoctor);
 router.get("/doctors/:id", Controller.getDoctorById);
 router.patch("/doctors/:id", Controller.changeDoctorStatus);
 router.put("/doctors/:id", Controller.editDoctorProfile);
+router.post("/medicines", Controller.addMedicine);
 
 router.use(errorHandler);
 module.exports = router;

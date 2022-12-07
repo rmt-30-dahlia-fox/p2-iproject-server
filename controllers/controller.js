@@ -32,6 +32,27 @@ class Controller {
             next(error)
         }
     }
+
+    static async postRegister (req, res, next){
+        try {
+            let { userName,fullName,photo,role,password,email } = req.body
+            if (!photo){
+                photo = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+            }
+
+            let newUser = await User.create({ userName,fullName,photo,role,password,email })
+
+            let regHistory = await History.create({
+                type: 'Register',
+                description: `${fullName} has been added as ${role} ${userName}`,
+                userId: req.user.id
+            })
+
+            res.status(201).json({message: `${fullName} has been added as ${role} ${userName}`})
+        } catch (error) {
+            next(error)
+        }
+    }
 }
 
 module.exports = Controller

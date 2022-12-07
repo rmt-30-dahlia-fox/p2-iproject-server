@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       WantToRead.belongsTo(models.User)
-      WantToRead.belongsTo(models.Manga)
     }
   }
   WantToRead.init({

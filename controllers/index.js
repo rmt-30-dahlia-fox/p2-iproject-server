@@ -74,7 +74,7 @@ class Controllers {
             const { id } = req.params
             const { data } = await axios({
                 method: 'get',
-                url: `https://api.myanimelist.net/v2/manga/${id}?fields=id,title,main_picture,synopsis,mean`,
+                url: `https://api.myanimelist.net/v2/manga/${id}?fields=id,status,title,main_picture,synopsis,mean`,
                 headers: {
                     "X-MAL-CLIENT-ID": XMAL_CLIENT_ID
                 }

@@ -1,6 +1,6 @@
 const { hashPassword, verifyPassword } = require("../helpers/bycript");
 const { generateToken, verifyToken } = require("../helpers/jwt");
-const { User } = require("../models");
+const { User, Doctor } = require("../models");
 
 class Controller {
   static async login(req, res, next) {
@@ -27,6 +27,14 @@ class Controller {
       const { username, email, password, role } = req.body;
       const newUser = await User.create({ username, email, password, role });
       res.status(201).json(newUser);
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async showDoctors(req, res, next) {
+    try {
+      const showDoctors = await Doctor.findAll();
+      res.status(200).json(showDoctors);
     } catch (err) {
       next(err);
     }

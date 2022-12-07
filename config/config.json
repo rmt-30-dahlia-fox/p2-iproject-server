@@ -2,16 +2,16 @@
   "development": {
     "username": "postgres",
     "password": "postgres",
-    "database": "iproject-medical",
+    "database": "medicania",
     "host": "localhost",
     "dialect": "postgres"
   },
   "test": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "iproject-medical-test",
-    "host": "localhost",
-    "dialect": "postgres"
+    "username": "root",
+    "password": null,
+    "database": "database_test",
+    "host": "127.0.0.1",
+    "dialect": "mysql"
   },
   "production": {
     "username": "root",

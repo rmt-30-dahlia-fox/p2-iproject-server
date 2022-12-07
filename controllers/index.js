@@ -46,7 +46,27 @@ class Controller{
 
     static async getPlayers(req, res, next){
         try {
-            
+            const format = {
+                order: [['proposedMarketValue', 'ASC']],
+                limit: 9
+            }
+
+            let currentPage = 1
+            const {position, page} = req.query
+
+            if(page){
+                currentPage = page
+                format.offset = currentPage * 9 - 9
+            }
+
+            if(position){
+                format.where = {
+                    position: position
+                }
+            }
+
+            const players = await Player.findAll(format)
+            res.status(200).json(players)
         } catch (err) {
             next(err)
         }
@@ -54,7 +74,22 @@ class Controller{
 
     static async addTeam(req, res, next){
         try {
+            const {name, logo} = req.body
+            const oldTeam = await MyTeam.findAll({
+                where: {ManagerId: req.user.id}
+            })
+
+            if(oldTeam.length != 0){
+                throw {name: "ForbiddenDoubleTeam"}
+            }
+
+            const newTeam = await MyTeam.create({
+                name,
+                logo,
+                ManagerId: req.user.id
+            })
             
+            res.status(201).json(newTeam)
         } catch (err) {
             next(err)
         }
@@ -62,8 +97,10 @@ class Controller{
 
     static async getMyTeamById(req, res, next){
         try {
-            
-            
+            const {myteamId} = req.params
+            const myteam = await MyTeam.findByPk(myteamId)
+
+            res.status(200).json(myteam)
         } catch (err) {
             next(err)
         }
@@ -71,7 +108,26 @@ class Controller{
 
     static async updateTeam(req, res, next){
         try {
-            
+            const {myteamId} = req.params
+            const myteam = await MyTeam.findByPk(myteamId)
+            if(!myteam){
+                throw {name: "InvalidTeamId"}
+            }
+
+            if(myteam.ManagerId !== req.user.id){
+                throw {name: "Forbidden"}
+            }
+
+            const {name, logo} = req.body
+            await MyTeam.update({name, logo}, {
+                where: {
+                    id: myteamId
+                }
+            })
+
+            const updatedTeam = await MyTeam.findByPk(myteamId)
+
+            res.status(200).json(updatedTeam)
         } catch (err) {
             next(err)
         }

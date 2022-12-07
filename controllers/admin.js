@@ -1,6 +1,7 @@
 const { comparePw } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
 const { Admin, Unit, Order } = require("../models");
+const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET
 
 class AdminController {
   static async register(req, res, next) {
@@ -25,7 +26,7 @@ class AdminController {
       const checkPw = comparePw(password, admin.password);
       if (!checkPw) throw { name: "invalid_login" };
 
-      const access_token = signToken({ id: admin.id });
+      const access_token = signToken({ id: admin.id }, ADMIN_JWT_SECRET);
       res.status(200).json({ access_token });
     } catch (err) {
       next(err);

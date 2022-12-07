@@ -1,9 +1,12 @@
 const express = require("express");
 const AdminController = require("../controllers/admin");
 const router = express.Router();
+const Auth = require('../middlewares/authentication');
 
 router.post("/register", AdminController.register);
 router.post("/login", AdminController.login);
+
+router.use(Auth.admin)
 
 router.get("/units", AdminController.getAllUnits);
 router.post("/units", AdminController.addUnit);

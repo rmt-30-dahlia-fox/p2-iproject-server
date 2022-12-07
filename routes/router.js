@@ -9,5 +9,7 @@ router.post("/login", Controller.userLogin)
 router.use(userConsent)
 
 router.post("/favorites", Controller.addFavorites)
+router.get("/favorites", Controller.findFavorites)
+router.delete("/favorites", Controller.deleteFavorites)
 
 module.exports = router

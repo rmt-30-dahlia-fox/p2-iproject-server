@@ -58,6 +58,41 @@ class Controller {
     }
   }
 
+  static async findFavorites(req, res, next) {
+    try {
+      const { id } = req.user
+
+      const options = {}
+
+      options.where = {
+        UserId: id,
+      }
+      options.include = [
+        {
+          model: Food,
+        },
+      ]
+
+      const FavoritesList = await Favorites.findAll(options)
+      res.status(200).json({ FavoritesList: FavoritesList })
+    } catch (error) {
+      next(error)
+    }
+  }
+ static async deleteFavorites(req, res, next) {
+    try {
+      const { id } = req.params.id
+
+      const deleteFavorites = await Favorites.destroy({ where: { id: id } })
+
+      if (deleteFavorites === 0) throw { name: "Data not found", table: "Favorites" }
+
+      res.status(200).json({ message: "Successfully delete food from Favorites" })
+    } catch (error) {
+      next(error)
+    }
+  }
+
   /* Get Data from database */
 
   static async getCovidData(req, res, next) {

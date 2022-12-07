@@ -78,6 +78,20 @@ class Controller {
     }
   }
 
+  static async showUser(req, res, next) {
+    try {
+      const { userId } = req.params
+      
+      const user = await User.findByPk(userId, {
+        include: [ Badge ]
+      })
+
+      res.status(200).json(user)
+    } catch (error) {
+      next(error)
+    }
+  }
+
   static async updateUser(req, res, next) {
     try {
       const { userId } = req.params

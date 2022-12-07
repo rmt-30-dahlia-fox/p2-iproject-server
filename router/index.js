@@ -13,6 +13,7 @@ router.get('/activities/:activityId', Controller.showActivity)
 router.get('/activities/:userId/users', Authorization.authUser, Controller.showActivitiesPerUser)
 
 router.get('/users', Controller.showUsers)
+router.get('/users/:userId', Authorization.authUser, Controller.showUser)
 router.put('/users/:userId', Authorization.authUser, Controller.updateUser)
 
 module.exports = router

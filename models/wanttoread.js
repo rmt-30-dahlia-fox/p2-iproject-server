@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       }
     },
-    statusRead: DataTypes.BOOLEAN,
+    statusRead: DataTypes.STRING,
     mainPicture: {
       type :DataTypes.STRING,
       allowNull : false,

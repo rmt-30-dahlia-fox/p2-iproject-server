@@ -78,6 +78,20 @@ class Controller {
       next(err);
     }
   }
+  static async editDoctorProfile(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { name, sip_number, gender, photoUrl, specialization, status } =
+        req.body;
+      await Doctor.update(
+        { name, sip_number, gender, photoUrl, specialization, status },
+        { where: { id } }
+      );
+      res.status(200).json({ message: "Succes updated doctor" });
+    } catch (err) {
+      next(err);
+    }
+  }
 }
 
 module.exports = Controller;

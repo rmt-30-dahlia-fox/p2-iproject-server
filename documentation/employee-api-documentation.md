@@ -80,7 +80,9 @@ _400 - Bad Request_
       "name": "CarStore Braga",
       "address": "Jln. Braga No.2000",
       "city": "Bandung",
-      "phoneNumber": "0223399203"
+      "phoneNumber": "0223399203",
+      "latitude": -6.920451,
+      "longitude": 107.600774
     }
     ```
 #### Response
@@ -93,6 +95,8 @@ _201 - Created_
       "address": "Jln. Braga No.2000",
       "city": "Bandung",
       "phoneNumber": "0223399203",
+      "latitude": -6.920451,
+      "longitude": 107.600774,
       "updatedAt": "2022-12-03T09:53:09.474Z",
       "createdAt": "2022-12-03T09:53:09.474Z"
     }

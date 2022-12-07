@@ -156,8 +156,10 @@ _200 - OK_
         "address": "Jln. Sudirman no. 1000",
         "city": "Bandung",
         "phoneNumber": "(022)6000000",
-        "createdAt": "2022-12-03T11:28:18.763Z",
-        "updatedAt": "2022-12-03T11:28:18.763Z"
+        "latitude": -6.920451,
+        "longitude": 107.600774,
+        "createdAt": "2022-12-06T04:57:46.592Z",
+        "updatedAt": "2022-12-06T04:57:46.592Z"
       },
       ...
     ]

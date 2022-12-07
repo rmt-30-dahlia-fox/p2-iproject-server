@@ -14,9 +14,9 @@ class employeeController{
   }
   static async addDealer(req, res, next){
     try {
-      const {name, address, city, phoneNumber} = req.body;
+      const {name, address, city, phoneNumber, latitude, longitude} = req.body;
       const newDealer = await Dealer.create(
-        {name, address, city, phoneNumber}
+        {name, address, city, phoneNumber, latitude, longitude}
       )
       res.status(201).json(newDealer);
     } catch (error) {

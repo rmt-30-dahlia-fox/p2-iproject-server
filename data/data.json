@@ -13,7 +13,9 @@
       "name": "CarStore Sudirman",
       "address": "Jln. Sudirman no. 1000",
       "city": "Bandung",
-      "phoneNumber": "(022)6000000"
+      "phoneNumber": "(022)6000000",
+      "latitude": -6.920451,
+      "longitude": 107.600774
     }
   ],
   "car": [

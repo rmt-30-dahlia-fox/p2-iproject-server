@@ -62,6 +62,30 @@ module.exports = (sequelize, DataTypes) => {
           msg: 'Phone number is required'
         }
       }
+    },
+    latitude: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Latitude is required'
+        },
+        notEmpty: {
+          msg: 'Latitude is required'
+        }
+      }
+    },
+    longitude: {
+      type: DataTypes.DOUBLE,
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Longitude is required'
+        },
+        notEmpty: {
+          msg: 'Longitude is required'
+        }
+      }
     }
   }, {
     sequelize,

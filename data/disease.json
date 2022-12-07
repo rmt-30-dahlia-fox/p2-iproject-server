@@ -1,0 +1,62 @@
+[
+  {
+    "name": "massa quis",
+    "description": "dui maecenas tristique est et tempus semper est quam pharetra magna ac consequat metus sapien ut nunc vestibulum ante ipsum primis in faucibus orci luctus et",
+    "severity": 6,
+    "DrugId": 6
+  },
+  {
+    "name": "erat id",
+    "description": "erat nulla tempus vivamus in felis eu sapien cursus vestibulum proin eu mi",
+    "severity": 1,
+    "DrugId": 16
+  },
+  {
+    "name": "nec condimentum",
+    "description": "quam suspendisse potenti nullam porttitor lacus at turpis donec posuere metus vitae ipsum aliquam non mauris morbi non lectus aliquam sit amet diam in magna bibendum imperdiet nullam",
+    "severity": 6,
+    "DrugId": 18
+  },
+  {
+    "name": "quisque erat",
+    "description": "mauris morbi non lectus aliquam sit amet diam in magna bibendum imperdiet nullam orci pede venenatis non sodales sed tincidunt eu felis fusce posuere felis sed lacus",
+    "severity": 4,
+    "DrugId": 14
+  },
+  {
+    "name": "non velit",
+    "description": "lacus at turpis donec posuere metus vitae ipsum aliquam non mauris morbi non lectus aliquam sit",
+    "severity": 2,
+    "DrugId": 20
+  },
+  {
+    "name": "montes nascetur",
+    "description": "sed justo pellentesque viverra pede ac diam cras pellentesque volutpat dui maecenas",
+    "severity": 5,
+    "DrugId": 9
+  },
+  {
+    "name": "mauris vulputate",
+    "description": "nec nisi vulputate nonummy maecenas tincidunt lacus at velit vivamus vel nulla eget",
+    "severity": 1,
+    "DrugId": 6
+  },
+  {
+    "name": "elementum ligula",
+    "description": "erat curabitur gravida nisi at nibh in hac habitasse platea dictumst aliquam augue quam sollicitudin vitae consectetuer eget rutrum at lorem integer tincidunt ante vel",
+    "severity": 2,
+    "DrugId": 10
+  },
+  {
+    "name": "vulputate nonummy",
+    "description": "vestibulum rutrum rutrum neque aenean auctor gravida sem praesent id massa id nisl",
+    "severity": 2,
+    "DrugId": 7
+  },
+  {
+    "name": "vestibulum sit",
+    "description": "dui luctus rutrum nulla tellus in sagittis dui vel nisl duis ac nibh fusce lacus",
+    "severity": 5,
+    "DrugId": 18
+  }
+]

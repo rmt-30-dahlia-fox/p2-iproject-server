@@ -1,0 +1,102 @@
+[
+  {
+    "drugName": "Acetaminophen, Chlorpheniramine maleate, Pseudoephedrine HCl",
+    "pharma": "WALGREEN CO.",
+    "price": "£27.61"
+  },
+  {
+    "drugName": "Miconazole nitrate",
+    "pharma": "Topco Associates LLC",
+    "price": "£93.64"
+  },
+  {
+    "drugName": "Mupirocin",
+    "pharma": "Teva Pharmaceuticals USA Inc",
+    "price": "£79.36"
+  },
+  {
+    "drugName": "Phenylephrine HCl",
+    "pharma": "H E B",
+    "price": "£74.73"
+  },
+  {
+    "drugName": "OXYGEN",
+    "pharma": "O.E. Meyer Company",
+    "price": "£44.54"
+  },
+  {
+    "drugName": "Butalbital, Acetaminophen, and Caffeine",
+    "pharma": "STAT Rx USA LLC",
+    "price": "£66.51"
+  },
+  {
+    "drugName": "Prednisone",
+    "pharma": "Unit Dose Services",
+    "price": "£89.08"
+  },
+  {
+    "drugName": "CEFACLOR",
+    "pharma": "West-ward Pharmaceutical Corp",
+    "price": "£70.21"
+  },
+  {
+    "drugName": "TITANIUM DIOXIDE",
+    "pharma": "3LAB, Inc.",
+    "price": "£56.49"
+  },
+  {
+    "drugName": "Mirtazapine",
+    "pharma": "Physicians Total Care, Inc.",
+    "price": "£21.94"
+  },
+  {
+    "drugName": "Rhodotorula mucilaginosa",
+    "pharma": "Nelco Laboratories, Inc.",
+    "price": "£42.37"
+  },
+  {
+    "drugName": "amoxicillin",
+    "pharma": "Clinical Solutions Wholesale",
+    "price": "£21.96"
+  },
+  {
+    "drugName": "Calcium carbonate",
+    "pharma": "7-Eleven",
+    "price": "£66.15"
+  },
+  {
+    "drugName": "Sarsaparilla, Solidago Virgaurea, Uva Ursi, Apis Mellifica, Arsenicum Album, Cantharis",
+    "pharma": "BioActive Nutritional, Inc.",
+    "price": "£19.31"
+  },
+  {
+    "drugName": "Moexipril Hydrochloride and Hydrochlorothiazide",
+    "pharma": "Teva Pharmaceuticals USA Inc",
+    "price": "£57.91"
+  },
+  {
+    "drugName": "DOCUSATE SODIUM",
+    "pharma": "CVS Pharmacy",
+    "price": "£27.94"
+  },
+  {
+    "drugName": "Loratadine",
+    "pharma": "Valu Merchandisers Company",
+    "price": "£31.80"
+  },
+  {
+    "drugName": "HYDROQUINONE",
+    "pharma": "CEN BEAUTY LLC",
+    "price": "£27.23"
+  },
+  {
+    "drugName": "Meloxicam",
+    "pharma": "AvPAK",
+    "price": "£91.05"
+  },
+  {
+    "drugName": "dl-alpha-tocoheryl acetate and ascorbic acid and cholecalciferol and cyanocobalamin and niacinamide and pyridoxine hydrochloride and riboflavin and fluoride and thiamin hydrochloride and vitamin A palmitate",
+    "pharma": "A-S Medication Solutions LLC",
+    "price": "£29.14"
+  }
+]

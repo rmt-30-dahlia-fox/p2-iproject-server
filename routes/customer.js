@@ -1,8 +1,17 @@
 const express = require("express");
+const CustomerController = require("../controllers/customer");
 const router = express.Router();
 
-router.get("/", (req, res, next) => {
-  res.status(200).json({ message: "customer routes" });
-});
+router.post("/register", CustomerController.register);
+router.post("/login", CustomerController.login);
+
+// router.use(Auth.admin)
+
+router.get("/units", CustomerController.getAllUnits);
+router.get("/units/:id", CustomerController.getUnitById);
+
+router.get("/orders", CustomerController.getAllOrders);
+router.get("/orders/:id", CustomerController.getOrderById)
+router.delete("/orders/:id", CustomerController.deleteOrderById)
 
 module.exports = router;

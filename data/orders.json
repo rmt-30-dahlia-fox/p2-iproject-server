@@ -1,0 +1,12 @@
+[
+  {
+    "pickupLocation": "Ngurah Rai International Airport",
+    "pickupDate": "2022/02/02",
+    "returnLocation": "Ngurah Rai International Airport",
+    "returnDate": "2022/02/03",
+    "totalPrice": 50000,
+    "status": "Pending",
+    "CustomerId": 1,
+    "UnitId": 1
+  }
+]

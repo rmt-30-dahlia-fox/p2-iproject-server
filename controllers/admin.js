@@ -133,7 +133,7 @@ class AdminController {
           "UnitId",
         ],
       });
-      if (!order) throw { name: "order_not_found", unitId: id };
+      if (!order) throw { name: "order_not_found", orderId: id };
       res.status(200).json({ order });
     } catch (err) {
       next(err);
@@ -143,10 +143,10 @@ class AdminController {
   static async updateOrderStatus(req, res, next) {
     try {
       const id = req.params.id;
-      const newStatus = req.body;
+      const { status } = req.body;
       const order = await Order.findByPk(id);
       if (!order) throw { name: "order_not_found", orderId: id };
-      await Order.update({ status: newStatus }, { where: { id } });
+      await Order.update({ status }, { where: { id } });
       res.status(200).json({ message: `Order with id ${id} updated!` });
     } catch (err) {
       next(err);

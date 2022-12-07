@@ -39,7 +39,6 @@
 ## Order
 ```json
 {
-  
   "id": INTEGER,
   "pickupLocation": STRING,
   "pickupDate": DATE,

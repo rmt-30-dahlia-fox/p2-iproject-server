@@ -1,23 +1,13 @@
 const Controller = require("../controllers/controller")
-
+const { userConsent } = require("../middlewares/authentication")
 const router = require("express").Router()
 
-router.post("/register", Controller.register)
-router.post("/login", Controller.login)
-
 router.get("/covid-data", Controller.getCovidData)
-router.post("/userDetail", Controller.postUserDetail)
-// router.get("/userDetail", Controller.getUserDetail)
-// router.put("/userDetail", Controller.updateUserDetail)
+router.post("/register", Controller.userRegsiter)
+router.post("/login", Controller.userLogin)
 
-// router.get("/drugs", Controller.getDrugs)
-// router.post("/drugs", Controller.postDrugs)
-// router.put("/drugs", Controller.updateDrugs)
+router.use(userConsent)
 
-// router.post("/symptomes", Controller.postSymtomes)
+router.post("/favorites", Controller.addFavorites)
 
-// router.get("/diseases", Controller.getDiseases)
-// router.post("/diseases", Controller.postDiseases)
-// router.put("/diseases", Controller.updateDiseases)
-// router.patch("/diseases", Controller.patchDiseases)
 module.exports = router

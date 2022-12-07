@@ -1,23 +1,64 @@
 const axios = require("axios")
-const {User, Appointment ,Consultation ,Disease ,Drug ,Symptome ,UserDetail} = require("../models")
+const { comparePassword } = require("../helpers/bcyrpt")
+const { signToken } = require("../helpers/jwt")
+const { User, Favorite } = require("../models")
 
+/* Register & Login */
 class Controller {
-  static async register(req, res, next) {
+  static async userRegsiter(req, res, next) {
     try {
       const { email, password } = req.body
-      const user = await User.create({ email, password })
+      const User = await User.create({ email, password })
+
+      res.status(201).json(User)
     } catch (error) {
       next(error)
     }
   }
 
-  static async login(req, res, next) {
+  static async userLogin(req, res, next) {
     try {
       const { email, password } = req.body
+      if (!email || !password) throw { name: "invalidLogin" }
+
+      const findUser = await User.findOne({ where: { email } })
+
+      if (!findUser) throw { name: "invalidLogin" }
+
+      const validPassword = comparePassword(password, findUser.password)
+      if (!validPassword) throw { name: "invalidLogin" }
+
+      const payload = { id: findUser.id }
+
+      const access_token = signToken(payload)
+
+      res.status(200).json({ access_token, message: `Logged in as ${email}` })
     } catch (error) {
       next(error)
     }
   }
+
+  /* Add Favorites */
+  static async addFavorites(req, res, next) {
+    try {
+      const { title, description, urlToImage } = req.body
+      const UserId = req.user.id
+      const addFavorites = await Favorite.create({
+        title,
+        description,
+        urlToImage,
+        UserId,
+      })
+
+      res
+        .status(201)
+        .json({ message: `Success add Favorite to list ${addFavorites.title}` })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  /* Get Data from database */
 
   static async getCovidData(req, res, next) {
     try {
@@ -30,29 +71,7 @@ class Controller {
       console.log(error)
     }
   }
-
-  static async postUserDetail(req, res, next) {
-    try {
-      const { name, gender, birthday, telephone, height, weight, eyeColor, address } =
-        req.body
-      const UserId = req.user.id
-      const userData = await UserDetail.create({
-        name,
-        gender,
-        birthday,
-        telephone,
-        height,
-        weight,
-        eyeColor,
-        address,
-        UserId,
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
 }
-
-/* milih sandbox, development. */
+/* UserDetail */
 
 module.exports = Controller

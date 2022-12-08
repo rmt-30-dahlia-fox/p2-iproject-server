@@ -3,6 +3,8 @@ const axios = require('axios')
 const {priceFormat, heightFormat} = require('../helpers/formatters')
 const { comparePassword } = require('../helpers/bcrypt')
 const { encode } = require('../helpers/jwt')
+const NewsAPI = require('newsapi');
+const newsapi = new NewsAPI('434100e6a2a7438db4b87551b5b466e9');
 
 class Controller{
     static async register(req, res, next){
@@ -46,40 +48,40 @@ class Controller{
         }
     }
 
-    static async loginByGoogle(req, res, next){
-        try{
-            const googleToken = req.headers['google-oauth-token']
+    // static async loginByGoogle(req, res, next){
+    //     try{
+    //         const googleToken = req.headers['google-oauth-token']
 
-            const ticket = await client.verifyIdToken({
-                idToken: googleToken,
-                audience: CLIENT_ID
-            });
-            const {name, email} = ticket.getPayload();
+    //         const ticket = await client.verifyIdToken({
+    //             idToken: googleToken,
+    //             audience: CLIENT_ID
+    //         });
+    //         const {name, email} = ticket.getPayload();
 
-            const [user, created] = await User.findOrCreate({
-                where: { email },
-                defaults: {
-                    username: name,
-                    email,
-                    password: 'google'
-                },
-                hooks: false
-            });
+    //         const [user, created] = await User.findOrCreate({
+    //             where: { email },
+    //             defaults: {
+    //                 username: name,
+    //                 email,
+    //                 password: 'google'
+    //             },
+    //             hooks: false
+    //         });
 
-            const payload = {
-                id: user.id
-            }
+    //         const payload = {
+    //             id: user.id
+    //         }
 
-            res.status(200).json({
-                msg: `User ${user.email} found`,
-                access_token: generateToken(payload),
-                name: user.username
-            })
+    //         res.status(200).json({
+    //             msg: `User ${user.email} found`,
+    //             access_token: generateToken(payload),
+    //             name: user.username
+    //         })
            
-        } catch (err) {
-            next(err)
-        }
-    }
+    //     } catch (err) {
+    //         next(err)
+    //     }
+    // }
 
     static async getPlayers(req, res, next){
         try {
@@ -109,10 +111,18 @@ class Controller{
                 el.proposedMarketValue = priceFormat(el.proposedMarketValue)
                 return el
             })
+
+        
+               let news = await newsapi.v2.topHeadlines({
+                    q: 'soccer',
+                    category: 'sport',
+                    language: 'en',
+                })
             res.status(200).json({
                 totalItems: players.length,
                 players,
-                currentPage
+                currentPage,
+                news
             })
         } catch (err) {
             next(err)

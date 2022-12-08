@@ -68,9 +68,9 @@ const postHandler = (res, req, login) => {
 
       if (isLast) {
 	// process data
-	console.log(data);
+	// console.log(data);
 	const json = JSON.parse(data);
-	// console.log(json);
+	console.log(json);
 
 	if (login) {
 	  const { pass } = json;
@@ -112,6 +112,8 @@ const postHandler = (res, req, login) => {
 		message: "RecipientId is required",
 	      };
 	    }
+
+	    console.log(userSockets)
 
 	    const senderSocket = userSockets.get(Number(UserId));
 	    if (senderSocket) {

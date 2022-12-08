@@ -1,11 +1,11 @@
 "use strict";
 
 const { Router } = require("express");
-const { User, Media, MessageAttachment, Message } = require("../models");
+const { PostAttachment, User, Media, MessageAttachment, Message, Post } = require("../models");
 const { verifyToken, createToken } = require("../util/jwt");
 const { comparePass } = require("../util/crypto");
 const { upload } = require("../middlewares/upload.js");
-const { sendGlobal, sendDm } = require("../util/ws");
+const { sendGlobal, sendDm, sendTimeline } = require("../util/ws");
 const { Op } = require("sequelize");
 
 const router = Router();
@@ -153,6 +153,43 @@ router.use(async (req, res, next) => {
   }
 });
 
+router.get("/posts", async (req, res, next) => {
+  try {
+    res.status(200).json(await Post.findAll({
+      order: [["createdAt", "DESC"]],
+      include: [
+	{
+	  model: PostAttachment,
+	  include: [
+	    {
+	      model: Media,
+	    },
+	  ],
+	},
+	{
+	  model: User,
+	  as: "users",
+	  attributes: [
+	    "id",
+	    "email",
+	    "bio",
+	    "AvatarId",
+	    "username",
+	  ],
+	  include: [
+	    {
+	      model: Media,
+	      as: "Avatar",
+	    }
+	  ]
+	},
+      ],
+    }));
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.get("/users", async (req, res, next) => {
   try {
     res.status(200).json(await User.findAll({
@@ -182,7 +219,9 @@ router.get("/users", async (req, res, next) => {
 
 router.get("/messages/:id", async (req, res, next) => {
   try {
-    res.status(200).json(await Message.findAll({
+    let opt;
+    if (req.params.id !== "global") {
+      opt = {
       where: {
 	[Op.or]: [
 	  {
@@ -227,7 +266,44 @@ router.get("/messages/:id", async (req, res, next) => {
 	  ]
 	},
       ],
-    }));
+    };
+    }
+    else {
+      opt = {
+      where: {
+	type: "global",
+      },
+      order: [["createdAt", "ASC"]],
+      include: [
+	{
+	  model: MessageAttachment,
+	  include: [
+	    {
+	      model: Media,
+	    },
+	  ],
+	},
+	{
+	  model: User,
+	  as: "users",
+	  attributes: [
+	    "id",
+	    "email",
+	    "bio",
+	    "AvatarId",
+	    "username",
+	  ],
+	  include: [
+	    {
+	      model: Media,
+	      as: "Avatar",
+	    }
+	  ]
+	},
+      ],
+    };
+    }
+    res.status(200).json(await Message.findAll(opt));
   } catch (err) {
     next(err);
   }
@@ -281,6 +357,59 @@ router.put('/profile', upload.single('avatar'), async (req, res, next) => {
   }
 });
 
+router.post("/posts", upload.single('attachment'), async (req, res, next) => {
+  try {
+    const {
+      content,
+    } = req.body;
+
+    let media;
+    const data = {
+      content,
+      UserId: req.user.id,
+    };
+
+    if (req.file) {
+      const { filename, mimetype, fieldname } = req.file;
+
+      media = await Media.create({
+	hash: filename,
+	type: fieldname,
+	format: mimetype,
+      });
+    }
+
+    const post = await Post.create(data);
+    if (media) {
+      await PostAttachment.create({
+	PostId: post.id,
+	MediaId: media.id,
+      });
+    }
+
+    if (media) data.PostAttachments = [{
+      Medium: media,
+    }];
+    // post ws
+    data.users = {
+	id: req.user.id,
+	email: req.user.email,
+	bio: req.user.bio,
+	AvatarId: req.user.AvatarId,
+	Avatar: req.user.Avatar,
+	username: req.user.username,
+    };
+
+    data.likeCount = 0;
+    data.id = post.id;
+    const result = await sendTimeline(data);
+
+    res.status(201).json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post("/chat/global", upload.single('attachment'), async (req, res, next) => {
   try {
     const {
@@ -327,6 +456,25 @@ router.post("/chat/global", upload.single('attachment'), async (req, res, next) 
     const result = await sendGlobal(data);
 
     res.status(201).json(data);
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/posts/:id/like", async (req, res, next) => {
+  try {
+    const post = await Post.findByPk(req.params.id);
+    
+    if (!post) {
+      throw {
+	status: 404,
+	message: "Not Found",
+      };
+    }
+
+    await post.increment({ likeCount: 1 });
+
+    res.status(200).json();
   } catch (err) {
     next(err);
   }

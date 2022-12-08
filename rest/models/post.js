@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Post.belongsTo(models.User, {
 	foreignKey: "UserId",
+	as: "users"
       });
 
       Post.hasMany(models.PostAttachment, {

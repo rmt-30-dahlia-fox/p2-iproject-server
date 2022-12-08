@@ -67,8 +67,24 @@ const sendTimeline = async (data) => {
   return res;
 }
 
+const sendPostLike = async (data) => {
+  const json = {
+    op: "broadcast",
+    data,
+  };
+
+  const res = await ax.post("/timeline", json, {
+    headers: {
+      "access-token": access_token,
+    },
+  });
+
+  return res;
+}
+
 module.exports = {
   login,
   sendGlobal,
   sendDm,
+  sendTimeline,
 }

@@ -21,6 +21,9 @@ router.delete('/carts/:id', Controller.deleteCart)
 router.patch('/carts/:id', Controller.patchCart)
 router.get('/members', Controller.getMember)
 router.get('/refresh', Controller.refreshReport)
+router.post('/orders', Controller.postOrder)
+router.post('/reports/daily', Controller.callDailyReport)
+router.post('/reports/monthly', Controller.callMonthlyReport)
 
 
 module.exports = router

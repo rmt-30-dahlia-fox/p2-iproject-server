@@ -1,7 +1,7 @@
 const { comparePw } = require("../helpers/bcrypt");
 const { signToken } = require("../helpers/jwt");
-const { Admin, Unit, Order } = require("../models");
-const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET
+const { Admin, Unit, Order, Customer } = require("../models");
+const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET;
 
 class AdminController {
   static async register(req, res, next) {
@@ -111,6 +111,23 @@ class AdminController {
           "CustomerId",
           "UnitId",
         ],
+        include: [
+          {
+            model: Unit,
+            attributes: ["id", "model", "type", "price", "imageUrl"],
+          },
+          {
+            model: Customer,
+            attributes: [
+              "id",
+              "name",
+              "email",
+              "phoneNumber",
+              "identityType",
+              "identityNumber",
+            ],
+          },
+        ],
       });
       res.status(200).json({ orders });
     } catch (err) {
@@ -132,6 +149,23 @@ class AdminController {
           "status",
           "CustomerId",
           "UnitId",
+        ],
+        include: [
+          {
+            model: Unit,
+            attributes: ["id", "model", "type", "price", "imageUrl"],
+          },
+          {
+            model: Customer,
+            attributes: [
+              "id",
+              "name",
+              "email",
+              "phoneNumber",
+              "identityType",
+              "identityNumber",
+            ],
+          },
         ],
       });
       if (!order) throw { name: "order_not_found", orderId: id };

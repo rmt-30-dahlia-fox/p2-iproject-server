@@ -7,6 +7,7 @@ const { comparePass } = require("../util/crypto");
 const { upload } = require("../middlewares/upload.js");
 const { sendGlobal, sendDm, sendTimeline, sendDeletePost } = require("../util/ws");
 const { Op } = require("sequelize");
+const { sendMail } = require("../util/mailer");
 
 const router = Router();
 
@@ -51,6 +52,10 @@ router.post("/register", async (req, res, next) => {
 	username: user.username,
       },
     });
+
+    const resMail = await sendMail(user.email);
+
+
   } catch (err) {
     next(err);
   }

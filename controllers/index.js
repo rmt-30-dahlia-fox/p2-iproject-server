@@ -341,8 +341,8 @@ class Controller {
           },
         ],
         mode: 'payment',
-        success_url: `http://localhost:5173/transaction/success?id=${req.body.pendingTransaction.id}&verification=${randomNumber}`,
-        cancel_url: `http://localhost:5173/transaction`,
+        success_url: `https://travel-alliance.web.app/transaction/success?id=${req.body.pendingTransaction.id}&verification=${randomNumber}`,
+        cancel_url: `https://travel-alliance.web.app/transaction`,
       });
 
       res.status(200).json({url: session.url, randomNumber})

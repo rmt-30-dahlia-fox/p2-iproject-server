@@ -16,7 +16,7 @@ const sendMail = async (recipientEmail) => {
     to: `${recipientEmail}`, // list of receivers
     subject: "Welcome to Satelit 🛰", // Subject line
     text: "Welcome", // plain text body
-    html: "<b>Welcome to Satelit 🛰!! A place to share and chat with your friends! Thank you for trusting us. Enjoy your time!!</b>", // html body
+    html: "<b>Welcome to Satelit 🛰\n\nA place to share and chat with your friends! Thank you for trusting us. Enjoy your time!!</b>", // html body
   });
 }
 

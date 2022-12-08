@@ -7,7 +7,7 @@ class MidtransController {
   static async createHistory(req, res, next) {
     try {
       const { UserId, total_price } = req.body
-      console.log("------->", UserId, total_price);
+      // console.log("------->", UserId, total_price);
       const payment_detail = await Payment.create({ UserId, total_price, status: 'Paid off' })
       // console.log('SEBELUM user', UserId);
       const user = await User.findByPk(UserId)
@@ -44,6 +44,9 @@ class MidtransController {
         "phone": "08111222333"
       }
     };
+    const { UserId, total_price } = req.body
+    const payment_detail = await Payment.create({ UserId, total_price, status: 'Paid off' })
+    await User.update({ account: 'premium' }, { where: { id: UserId } })
 
     snap.createTransaction(parameter)
       .then((transaction) => {

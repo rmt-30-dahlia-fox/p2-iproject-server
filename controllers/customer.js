@@ -92,7 +92,7 @@ class CustomerController {
         include: {
           model: Unit,
           attributes: ["id", "model", "type", "price", "imageUrl"],
-        }
+        },
       });
       res.status(200).json({ orders });
     } catch (err) {
@@ -123,7 +123,7 @@ class CustomerController {
         include: {
           model: Unit,
           attributes: ["id", "model", "type", "price", "imageUrl"],
-        }
+        },
       });
       res.status(200).json({ order });
     } catch (err) {
@@ -143,13 +143,11 @@ class CustomerController {
         returnLocation,
         returnDate,
         returnTime,
-        UnitId
+        UnitId,
       } = req.body;
 
       const unit = await Unit.findByPk(UnitId);
       if (!unit) throw { name: "unit_not_found", unitId: id };
-
-      
 
       // let dateDifference = new Date(returnDate) - new Date(pickupDate);
 
@@ -181,7 +179,7 @@ class CustomerController {
   static async deleteOrderById(req, res, next) {
     try {
       const id = req.params.id;
-      await Order.destroy({ where: id });
+      await Order.destroy({ where: { id } });
       res.status(200).json({ message: "Order deleted successfully! " });
     } catch (err) {
       next(err);

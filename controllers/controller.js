@@ -79,7 +79,7 @@ class Controller {
     try {
       const { title, description, urlToImage, url } = req.body
       const UserId = req.user.id
-      console.log(UserId, "USER ID USER")
+      // console.log(UserId, "USER ID USER")
       const addFavorites = await Favorite.create({
         title,
         description,
@@ -87,7 +87,7 @@ class Controller {
         url,
         UserId,
       })
-      console.log(addFavorites)
+      // console.log(addFavorites)
       res
         .status(201)
         .json({ message: `Success add Favorite to list ${addFavorites.title}` })
@@ -135,7 +135,7 @@ class Controller {
       })
       res.status(200).json(data)
     } catch (error) {
-      console.log(error)
+      next(error)
     }
   }
 
@@ -146,6 +146,7 @@ class Controller {
 
       const findUserDetail = await UserDetail.findOne({ where: { UserId: id } })
 
+      if(!findUserDetail) throw{name : "User detail not found", table : "userdetail"}
       res.status(200).json(findUserDetail)
     } catch (error) {
       next(error)
@@ -177,7 +178,7 @@ class Controller {
       const findUserDetail = await UserDetail.findOne({ where: { UserId: id } })
       if (!findUserDetail) throw { name: "userNotFound" }
       const { fullName, gender, telephone, address } = req.body
-      console.log(req.file, req.body)
+      // console.log(req.file, req.body)
       await UserDetail.update(
         {
           fullName,

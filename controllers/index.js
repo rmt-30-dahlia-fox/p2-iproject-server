@@ -3,8 +3,8 @@ const { createToken } = require("../helpers/jwt");
 const { User, Activity, Type, Difficulty, Like, Badge } = require("../models");
 const axios = require("axios");
 const { transporter } = require("../helpers/nodemailer");
-const rapidApiKey = process.env["X-RapidAPI-Key"];
-const rapidApiHost = process.env["X-RapidAPI-Host"];
+const rapidApiKey = process.env["X_RapidAPI_Key"];
+const rapidApiHost = process.env["X_RapidAPI_Host"];
 
 class Controller {
   static async register(req, res, next) {
@@ -56,7 +56,14 @@ class Controller {
     try {
       const activities = await Activity.findAll({
         order: [["createdAt", 'DESC']],
-        include: [User, Type, Difficulty, Like],
+        include: [
+          { model: User,
+            attributes: { exclude: ['password'] }
+          },
+          Type,
+          Difficulty,
+          Like
+        ],
       });
 
       res.status(200).json({ data: activities });
@@ -76,7 +83,12 @@ class Controller {
       const user = await User.findByPk(UserId)
       const updatedStar = user.star + star
 
-      await User.update({ star: updatedStar }, {
+      let BadgeId = user.BadgeId
+      if((updatedStar/100) > user.BadgeId ) {
+        BadgeId++
+      }
+
+      await User.update({ star: updatedStar, BadgeId }, {
         where: { id: UserId }
       })
 
@@ -99,14 +111,14 @@ class Controller {
 
       let mailDetails = {
         from: "hackfit@yopmail.com",
-        to: "tinycalicocat1208@gmail.com",
+        to: user.email,
         subject: "You are success to add an activity!",
         text: `You are being active today with ${name} activities. Keep going! - HackFit -`
       }
 
       let info = await transporter.sendMail(mailDetails)
 
-      res.status(200).json({ message: "Activity created", activity });
+      res.status(200).json({ message: "Activity created" });
     } catch (error) {
       next(error);
     }
@@ -117,7 +129,14 @@ class Controller {
       const { activityId } = req.params;
 
       const activity = await Activity.findByPk(activityId, {
-        include: [User, Type, Difficulty, Like],
+        include: [
+          { model: User,
+            attributes: { exclude: ['password'] }
+          },
+          Type,
+          Difficulty,
+          Like
+        ],
       });
       if (!activity) throw { message: "Data is not found" };
 
@@ -131,6 +150,7 @@ class Controller {
     try {
       const users = await User.findAll({
         order: [["star", "DESC"]],
+        attributes: { exclude: ['password'] },
         include: Badge,
       });
 

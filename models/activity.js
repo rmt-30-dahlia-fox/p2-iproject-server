@@ -45,11 +45,27 @@ module.exports = (sequelize, DataTypes) => {
     },
     TypeId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Type is required'
+        },
+        notEmpty: {
+          msg: 'Type is required'
+        }
+      }
     },
     DifficultyId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      validate: {
+        notNull: {
+          msg: 'Difficulty is required'
+        },
+        notEmpty: {
+          msg: 'Difficulty is required'
+        }
+      }
     }
   }, {
     sequelize,

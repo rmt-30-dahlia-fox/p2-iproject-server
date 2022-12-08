@@ -127,10 +127,6 @@ class CustomerController {
     try {
       const CustomerId = req.user.id;
       const status = "Pending";
-      const UnitId = req.params.unitId;
-
-      const unit = await Unit.findByPk(UnitId);
-      if (!unit) throw { name: "unit_not_found", unitId: id };
 
       const {
         pickupLocation,
@@ -139,7 +135,13 @@ class CustomerController {
         returnLocation,
         returnDate,
         returnTime,
+        UnitId
       } = req.body;
+
+      const unit = await Unit.findByPk(UnitId);
+      if (!unit) throw { name: "unit_not_found", unitId: id };
+
+      
 
       // let dateDifference = new Date(returnDate) - new Date(pickupDate);
 

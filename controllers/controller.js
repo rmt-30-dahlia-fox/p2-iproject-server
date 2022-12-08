@@ -2,6 +2,8 @@ const { Cart, Category, History, Member, Order, Product, Report, Transaction, Us
 const Password = require('../helpers/bcrypt')
 const Token = require('../helpers/jwt')
 const { Op } = require('sequelize')
+const { automailer, mailDetails } = require('../helpers/automailer')
+const MailFormatter = require('../helpers/mailFormatter')
 
 class Controller {
     static async postLogin (req, res, next){
@@ -22,6 +24,7 @@ class Controller {
             let {id, userName, fullName, photo, email, role} = calledUser
             req.user = {id, userName, email, role}
 
+            
             await History.create({
                 type: 'Login',
                 description: `${role} ${userName} has logged in`,
@@ -40,13 +43,17 @@ class Controller {
                 photo = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
             }
 
-            await User.create({ userName,fullName,photo,role,password,email })
+            let newUser = await User.create({ userName,fullName,photo,role,password,email })
 
             await History.create({
                 type: 'Register',
                 description: `${fullName} has been added as ${role} ${userName}`,
                 userId: req.user.id
             })
+
+            mailDetails.text = MailFormatter.userMail(newUser)
+            mailDetails.to = email
+            await automailer.sendMail(mailDetails)
 
             res.status(201).json({message: `${fullName} has been added as ${role} ${userName}`})
         } catch (error) {
@@ -59,13 +66,17 @@ class Controller {
             let { name,gender,email,phone,point } = req.body
             if (!point) point = 0;
 
-            await Member.create({ name,gender,email,phone,point,cashierId: req.user.id })
+            let newMember = await Member.create({ name,gender,email,phone,point,cashierId: req.user.id })
 
             await History.create({
                 type: 'Member',
                 description: `${name} has been added as member`,
                 userId: req.user.id
             })
+
+            mailDetails.text = MailFormatter.memberMail(newMember)
+            mailDetails.to = email
+            await automailer.sendMail(mailDetails)
 
             res.status(201).json({message: `${name} has been added as member`})
         } catch (error) {

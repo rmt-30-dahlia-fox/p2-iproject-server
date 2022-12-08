@@ -56,7 +56,14 @@ class Controller {
     try {
       const activities = await Activity.findAll({
         order: [["createdAt", 'DESC']],
-        include: [User, Type, Difficulty, Like],
+        include: [
+          { model: User,
+            attributes: { exclude: ['password'] }
+          },
+          Type,
+          Difficulty,
+          Like
+        ],
       });
 
       res.status(200).json({ data: activities });
@@ -106,7 +113,7 @@ class Controller {
 
       let info = await transporter.sendMail(mailDetails)
 
-      res.status(200).json({ message: "Activity created", activity });
+      res.status(200).json({ message: "Activity created" });
     } catch (error) {
       next(error);
     }
@@ -117,7 +124,14 @@ class Controller {
       const { activityId } = req.params;
 
       const activity = await Activity.findByPk(activityId, {
-        include: [User, Type, Difficulty, Like],
+        include: [
+          { model: User,
+            attributes: { exclude: ['password'] }
+          },
+          Type,
+          Difficulty,
+          Like
+        ],
       });
       if (!activity) throw { message: "Data is not found" };
 
@@ -131,6 +145,7 @@ class Controller {
     try {
       const users = await User.findAll({
         order: [["star", "DESC"]],
+        attributes: { exclude: ['password'] },
         include: Badge,
       });
 

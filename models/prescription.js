@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      Prescription.belongsTo(models.Medicine);
+      Prescription.belongsTo(models.User);
     }
   }
   Prescription.init(
@@ -85,11 +87,15 @@ module.exports = (sequelize, DataTypes) => {
           },
         },
       },
+      status: DataTypes.STRING,
     },
     {
       sequelize,
       modelName: "Prescription",
     }
   );
+  Prescription.beforeCreate((prescriptions, options) => {
+    prescriptions.status = "unclaimed";
+  });
   return Prescription;
 };

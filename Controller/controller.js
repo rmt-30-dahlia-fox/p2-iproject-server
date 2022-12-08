@@ -1,6 +1,9 @@
 const { hashPassword, verifyPassword } = require("../helpers/bycript");
 const { generateToken, verifyToken } = require("../helpers/jwt");
 const { User, Doctor, Medicine, Prescription } = require("../models");
+const { OAuth2Client } = require("google-auth-library");
+const CLIENT_ID = process.env["CLIENT_ID"];
+const client = new OAuth2Client(CLIENT_ID);
 
 class Controller {
   static async login(req, res, next) {
@@ -17,7 +20,7 @@ class Controller {
         email: findUser.email,
       };
       const access_token = generateToken(payload);
-      res.status(200).json({ access_token });
+      res.status(200).json({ access_token, role: findUser.role });
     } catch (err) {
       next(err);
     }
@@ -116,7 +119,44 @@ class Controller {
   }
   static async showAllPrescription(req, res, next) {
     try {
-      const showPrescription = await Prescription.findAll();
+      const showPrescription = await Prescription.findAll({
+        include: [
+          Medicine,
+          {
+            model: User,
+            include: Doctor,
+          },
+        ],
+      });
+      res.status(200).json(showPrescription);
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async showPrescriptionById(req, res, next) {
+    try {
+      const { id } = req.params;
+      const showPrescription = await Prescription.findByPk(id, {
+        include: [
+          Medicine,
+          {
+            model: User,
+            include: Doctor,
+          },
+        ],
+      });
+      res.status(200).json(showPrescription);
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async showPrescriptionToDoctor(req, res, next) {
+    try {
+      const UserId = req.user.id;
+      const showPrescription = await Prescription.findAll({
+        where: { UserId },
+        include: Medicine,
+      });
       res.status(200).json(showPrescription);
     } catch (err) {
       next(err);
@@ -124,6 +164,7 @@ class Controller {
   }
   static async addPrescription(req, res, next) {
     try {
+      console.log({ masuk: "masuk" });
       const { medicineId } = req.params;
       const {
         patient_name,
@@ -150,8 +191,19 @@ class Controller {
         use_description,
         MedicineId: medicineId,
         UserId,
+        status: "unclaimed",
       });
       res.status(201).json(newPrescription);
+    } catch (err) {
+      next(err);
+    }
+  }
+  static async changePrescriptionStatus(req, res, next) {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      await Prescription.update({ status }, { where: { id } });
+      res.status(200).json({ message: "Succes updated prescription status" });
     } catch (err) {
       next(err);
     }
@@ -169,6 +221,40 @@ class Controller {
       });
     } catch (err) {
       next(err);
+    }
+  }
+  static async handleGoogleSignIn(req, res, next) {
+    try {
+      console.log("masuk");
+      const googleToken = req.headers.google_oauth_token;
+      const ticket = await client.verifyIdToken({
+        idToken: googleToken,
+        audience: CLIENT_ID,
+      });
+      const payload = ticket.getPayload();
+      const { email, name } = payload;
+      const [user, created] = await User.findOrCreate({
+        where: { email },
+        defaults: {
+          username: name.split(" ").join("_"),
+          email,
+          password: "google",
+          role: "staff",
+        },
+        hooks: false,
+      });
+      console.log({
+        message: `User ${email} found`,
+        access_token: generateToken({ id: user.id }),
+        user: { name },
+      });
+      res.status(200).json({
+        message: `User ${email} found`,
+        access_token: generateToken({ id: user.id }),
+        user: { name },
+      });
+    } catch (error) {
+      next();
     }
   }
 }

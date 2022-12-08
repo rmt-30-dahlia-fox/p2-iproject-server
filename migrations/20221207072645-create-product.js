@@ -31,7 +31,12 @@ module.exports = {
         type: Sequelize.STRING
       },
       categoryId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Categories",
+          key: "id"
+        }
       },
       createdAt: {
         allowNull: false,

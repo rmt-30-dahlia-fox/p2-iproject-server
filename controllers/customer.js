@@ -161,7 +161,7 @@ class CustomerController {
         totalPrice,
         status,
         UnitId,
-        CustomerId
+        CustomerId,
       });
 
       res.status(200).json({ order });
@@ -172,6 +172,9 @@ class CustomerController {
 
   static async deleteOrderById(req, res, next) {
     try {
+      const id = req.params.id;
+      await Order.destroy({ where: id });
+      res.status(200).json({ message: "Order deleted successfully! " });
     } catch (err) {
       next(err);
     }

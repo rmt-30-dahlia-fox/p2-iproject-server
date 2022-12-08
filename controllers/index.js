@@ -83,7 +83,12 @@ class Controller {
       const user = await User.findByPk(UserId)
       const updatedStar = user.star + star
 
-      await User.update({ star: updatedStar }, {
+      let BadgeId = user.BadgeId
+      if((updatedStar/100) > user.BadgeId ) {
+        BadgeId++
+      }
+
+      await User.update({ star: updatedStar, BadgeId }, {
         where: { id: UserId }
       })
 
@@ -106,7 +111,7 @@ class Controller {
 
       let mailDetails = {
         from: "hackfit@yopmail.com",
-        to: "tinycalicocat1208@gmail.com",
+        to: user.email,
         subject: "You are success to add an activity!",
         text: `You are being active today with ${name} activities. Keep going! - HackFit -`
       }

@@ -105,12 +105,12 @@ class Controllers {
             if (!page) {
                 offset = 0
             } else {
-                offset = page * 10 - 10
+                offset = page * 20 - 20
             }
 
             const { data } = await axios({
                 method: 'get',
-                url: `https://api.myanimelist.net/v2/manga/ranking?ranking_type=${type}&limit=10&offset=${offset}`,
+                url: `https://api.myanimelist.net/v2/manga/ranking?ranking_type=${type}&limit=12&offset=${offset}`,
                 headers: {
                     "X-MAL-CLIENT-ID": XMAL_CLIENT_ID
                 }
@@ -143,19 +143,25 @@ class Controllers {
 
     static async findManga(req, res, next) {
         try {
-            const { search } = req.body
+            let { search } = req.body
             const { page } = req.query
             let offset;
             if (!page) {
                 offset = 0
             } else {
-                offset = page * 10 - 10
+                offset = page * 20 - 20
             }
+
+            if(search.length<3){
+                throw {name : "400status", message : "Minimum 3 character to search"}
+            }
+
+            console.log('>>>>',search);
 
             const { id } = req.params
             const { data } = await axios({
                 method: 'get',
-                url: `https://api.myanimelist.net/v2/manga?q=${search}&limit=10&offset=${offset}`,
+                url: `https://api.myanimelist.net/v2/manga?q=${search}&limit=20&offset=${offset}`,
                 headers: {
                     "X-MAL-CLIENT-ID": XMAL_CLIENT_ID
                 }
@@ -284,7 +290,7 @@ class Controllers {
             const old = list.statusRead
             await list.update({statusRead})
 
-            res.status(200).json({ message: `Succeed at updating status manga from ${old} to ${statusRead}` })
+            res.status(200).json({ message: `Succeed at updating status manga ${list.title} from ${old} to ${statusRead}` })
         } catch (error) {
             next(error)
         }

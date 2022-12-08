@@ -74,6 +74,87 @@ class Controller {
       next(error);
     }
   }
+
+  static async cart(req, res, next) {
+    try {
+      const cards = await Cart.findAll({
+        order: [["id", "ASC"]],
+        include: [User],
+        where: {
+          UserId: req.user.id,
+        },
+      });
+      res.status(200).json({ cards });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async addCart(req, res, next) {
+    try {
+      const { name, img, level, price } = req.body;
+
+      await Cart.create({
+        UserId: req.user.id,
+        name,
+        img,
+        level,
+        price,
+      });
+
+      res.status(200).json({ message: `Card successfully add to Shopping Cart` });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async deleteCart(req, res, next) {
+    try {
+      const { id } = req.params;
+      await Cart.destroy({
+        where: {
+          UserId: req.user.id,
+          id,
+        },
+      });
+
+      res.status(200).json({ message: `Card successfully remove from Shopping Cart` });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async orderHistory(req, res, next) {
+    try {
+      const orders = await OrderHistory.findAll({
+        order: [["id", "ASC"]],
+        include: [User],
+        where: {
+          UserId: req.user.id,
+        },
+      });
+      res.status(200).json({ orders });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async pay(req, res, next) {
+    try {
+      const { name, img, level, price } = req.body;
+
+      await Cart.create({
+        UserId: req.user.id,
+        name,
+        img,
+        level,
+        price,
+      });
+      res.status(200).json({ message: `Payment Success` });
+    } catch (error) {
+      next(error);
+    }
+  }
 }
 
 module.exports = Controller;

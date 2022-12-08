@@ -8,7 +8,7 @@ const router = require('express').Router()
 router.post('/login', Controllers.login)
 router.post('/register', Controllers.register )
 router.get('/mangas', Controllers.showMangaList)
-router.get('/findManga', Controllers.findManga)
+router.post('/findManga', Controllers.findManga)
 router.get('/mangas/:id', Controllers.showMangaDetail)
 router.post('/google-sign-in', Controllers.handleGoogleSignIn)
 

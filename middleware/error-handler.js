@@ -16,10 +16,6 @@ const catchError = (err, req, res, next) => {
   if (err.name === "Invalid Login") [code, msg] = [401, 'Error invalid email or password']
 
 
-  /*------------ handle error from Controllers ---------------*/
-  if (['Genre Not Found', 'Movie Not Found'].includes(err.name)) [code, msg] = [404, err.name]
-
-
   /*------------ handle error from Controllers with FAILED sequelize ---------------*/
   if (err.name === "SequelizeValidationError" || err.name === "SequelizeUniqueConstraintError") {
     code = 400

@@ -1,0 +1,26 @@
+[
+    {
+        "username": "usman_yousaf",
+        "email": "usman@mail.com",
+        "password": "12345",
+        "role":"doctor"
+    },
+    {
+        "username": "humberto_chavez",
+        "email": "humberto@mail.com",
+        "password": "12345",
+        "role":"doctor"
+    },
+    {
+        "username": "bruno_rodriguez",
+        "email": "bruno@mail.com",
+        "password": "12345",
+        "role":"doctor"
+    },
+    {
+        "username": "carly_van",
+        "email": "carly@mail.com",
+        "password": "12345",
+        "role":"admin"
+    }
+]

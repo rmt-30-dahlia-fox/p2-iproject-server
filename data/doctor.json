@@ -1,0 +1,32 @@
+[
+    {
+        "name": "Dr Usman Yousaf",
+        "sip_number": "3223",
+        "gender": "male",
+        "photoUrl":"https://img.freepik.com/free-photo/happy-doctor-wearing-glasses-presenting-something_329181-616.jpg?w=740&t=st=1670343422~exp=1670344022~hmac=9e7f69b31a3fd2bc9f19612e08c145c5d4259ede97d34ff2c22ebf23c64fa8c3",
+        "specialization":"Medical Coat",
+        "gender":"male",
+        "status":"active",
+        "UserId":1
+    },
+    {
+        "name": "Dr Humberto Chavez",
+        "sip_number": "3553",
+        "gender": "female",
+        "photoUrl":"https://img.freepik.com/free-photo/happy-doctor-wearing-glasses-presenting-something_329181-616.jpg?w=740&t=st=1670343422~exp=1670344022~hmac=9e7f69b31a3fd2bc9f19612e08c145c5d4259ede97d34ff2c22ebf23c64fa8c3",
+        "specialization":"Medical Heart",
+        "gender":"male",
+        "status":"active",
+        "UserId":2
+    },
+    {
+        "name": "Dr Bruno Rodriguez",
+        "sip_number": "3003",
+        "gender": "male",
+        "photoUrl":"https://img.freepik.com/free-photo/happy-doctor-wearing-glasses-presenting-something_329181-616.jpg?w=740&t=st=1670343422~exp=1670344022~hmac=9e7f69b31a3fd2bc9f19612e08c145c5d4259ede97d34ff2c22ebf23c64fa8c3",
+        "specialization":"Pediatric Dentist",
+        "gender":"male",
+        "status":"active",
+        "UserId":3
+    }
+]

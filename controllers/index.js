@@ -3,8 +3,8 @@ const { createToken } = require("../helpers/jwt");
 const { User, Activity, Type, Difficulty, Like, Badge } = require("../models");
 const axios = require("axios");
 const { transporter } = require("../helpers/nodemailer");
-const rapidApiKey = process.env["X-RapidAPI-Key"];
-const rapidApiHost = process.env["X-RapidAPI-Host"];
+const rapidApiKey = process.env["X_RapidAPI_Key"];
+const rapidApiHost = process.env["X_RapidAPI_Host"];
 
 class Controller {
   static async register(req, res, next) {

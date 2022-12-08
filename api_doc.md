@@ -102,6 +102,23 @@ OR
 }
 ```
 
+## 4. POST /payment
+
+- body:
+
+```json
+{
+  "UserId": "integer",
+  "total_price": "integer"
+}
+```
+
+_Response (400)_
+
+```json
+on progress
+```
+
 ## Global Error
 
 _Response (401 - Unauthorized)_

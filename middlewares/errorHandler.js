@@ -25,9 +25,15 @@ function errorHandler(err, req, res, next) {
   } else if (err.name === "order_not_found") {
     code = 404;
     message = `Order with id ${err.orderId} not found!`;
-  } else if (err.name === 'invalid_token' || err.name === 'JsonWebTokenError') {
-    code = 401
-    message = "Invalid token"
+  } else if (err.name === "invalid_token" || err.name === "JsonWebTokenError") {
+    code = 401;
+    message = "Invalid token";
+  } else if (err.name === "order_not_found") {
+    code = 404;
+    message = "Order not found!";
+  } else if (err.name === "forbidden") {
+    code = 403;
+    message = "Forbidden";
   }
 
   res.status(code).json({ message });

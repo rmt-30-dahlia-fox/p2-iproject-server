@@ -10,7 +10,7 @@ module.exports = class Authz {
       if (!order) throw { name: "order_not_found" };
       if (order.UserId !== UserId) throw { name: "forbidden" };
 
-      next()
+      next();
     } catch (err) {
       next(err);
     }

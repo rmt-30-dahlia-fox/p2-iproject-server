@@ -11,12 +11,12 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      MyPlayer.belongsTo(models.MyTeam, {foreignKey: 'TeamId', as: 'Team'})
+      MyPlayer.belongsTo(models.User)
       MyPlayer.belongsTo(models.Player)
     }
   }
   MyPlayer.init({
-    TeamId: DataTypes.INTEGER,
+    UserId: DataTypes.INTEGER,
     PlayerId: DataTypes.INTEGER,
     status: DataTypes.STRING
   }, {

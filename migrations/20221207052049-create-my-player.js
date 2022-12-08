@@ -9,11 +9,11 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      TeamId: {
+      UserId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {
-          model: 'MyTeams',
+          model: 'Users',
           key: 'id'
         },
         onDelete: 'CASCADE',

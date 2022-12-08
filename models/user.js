@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      User.hasOne(models.MyTeam, {foreignKey: 'ManagerId'})
+      User.hasMany(models.MyPlayer)
     }
   }
   User.init({

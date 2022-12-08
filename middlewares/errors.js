@@ -23,6 +23,9 @@ const errorHandler = (err, req, res, next) => {
     } else if(err.name === 'InvalidTeamId'){
         code = 404;
         message = 'Team not found';
+    } else if(err.name === "YourTeamNotFound"){
+        code = 404;
+        message = 'Team not found, you must make team first';
     } else if(err.name === 'Forbidden'){
         code = 403;
         message = 'Forbidden'

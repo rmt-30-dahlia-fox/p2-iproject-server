@@ -1,15 +1,16 @@
 const nodemailer = require('nodemailer');
+const PASSWORD_NODEMAILER = process.env.PASSWORD_NODEMAILER;
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: "josh.natanael9@gmail.com",
-    pass: "qumgtqxorxuotfvi"
+    user: "carstoreproject@gmail.com",
+    pass: PASSWORD_NODEMAILER
   }
 })
 
 const email = {
-  from: "josh.natanael9@gmail.com",
+  from: "carstoreproject@gmail.com",
   subject: "Invoice CarStore"
 }
 

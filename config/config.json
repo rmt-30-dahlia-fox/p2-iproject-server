@@ -2,22 +2,22 @@
   "development": {
     "username": "postgres",
     "password": "postgres",
-    "database": "iproject-medical",
+    "database": "individual-project",
     "host": "localhost",
     "dialect": "postgres"
   },
   "test": {
-    "username": "postgres",
-    "password": "postgres",
-    "database": "iproject-medical-test",
-    "host": "localhost",
-    "dialect": "postgres"
-  },
-  "production": {
     "username": "root",
     "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "database": "database_test",
+    "host": "localhost",
     "dialect": "mysql"
+  },
+  "production": {
+    "username": "postgres",
+    "password": "!Aa432486954",
+    "database": "postgres",
+    "host": "db.czgfctxzdfsqivapcdek.supabase.co",
+    "dialect": "postgres"
   }
 }

@@ -1,7 +1,7 @@
 const axios = require("axios")
 const { comparePassword } = require("../helpers/bcyrpt")
 const { signToken } = require("../helpers/jwt")
-const { User, Favorite } = require("../models")
+const { User, Favorite, UserDetail } = require("../models")
 
 /* Register & Login */
 class Controller {
@@ -63,7 +63,6 @@ class Controller {
   static async findFavorites(req, res, next) {
     try {
       const { id } = req.user
-
       const options = {}
 
       options.where = {
@@ -103,7 +102,66 @@ class Controller {
       console.log(error)
     }
   }
+
+  /* UserDetail */
+  static async getUserDetail(req, res, next) {
+    try {
+      const { id } = req.user
+
+      const findUserDetail = await UserDetail.findOne({ where: { UserId: id } })
+
+      res.status(200).json(findUserDetail)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async postUserDetail(req, res, next) {
+    try {
+      const { id } = req.user
+      const { fullName, gender, telephone, address, UserId = id } = req.body
+      await UserDetail.create({
+        fullName,
+        gender,
+        telephone,
+        address,
+        UserId,
+      })
+      res
+        .status(201)
+        .json({ message: `Successfully add user detail for User : ${fullName}` })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async putUserDetail(req, res, next) {
+    try {
+      const { id } = req.user
+      const findUserDetail = await UserDetail.findOne({ where: { UserId: id } })
+      if (!findUserDetail) throw { name: "userNotFound" }
+      const { fullName, gender, telephone, address } = req.body
+      console.log(req.file, req.body)
+      await UserDetail.update(
+        {
+          fullName,
+          gender,
+          telephone,
+          address,
+          profilePict: req.file?.filename,
+        },
+        { where: { UserId: id } }
+      )
+
+      res
+        .status(201)
+        .json({
+          message: `Successfully update user detail for User : ${findUserDetail.fullName}`,
+        })
+    } catch (error) {
+      next(error)
+    }
+  }
 }
-/* UserDetail */
 
 module.exports = Controller

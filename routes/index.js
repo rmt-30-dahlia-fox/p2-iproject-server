@@ -11,5 +11,14 @@ router.use(Authentication)
 router.post('/register', Authorization.register, Controller.postRegister)
 router.post('/members', Controller.postMember)
 
+router.get('/transactions', Controller.openTransaction)
+router.post('/carts', Controller.postCart)
+router.get('/carts/:transactionId', Controller.getCarts)
+router.patch('/carts/:id', Controller.patchCart)
+router.delete('/carts/:id', Controller.deleteCart)
+router.get('/members', Controller.getMember)
+router.post('/transactions', Controller.closeTransaction)
+router.get('/refresh', Controller.refreshReport)
+
 
 module.exports = router

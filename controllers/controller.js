@@ -2,6 +2,9 @@ const axios = require("axios")
 const { comparePassword } = require("../helpers/bcyrpt")
 const { signToken } = require("../helpers/jwt")
 const { User, Favorite, UserDetail } = require("../models")
+const { OAuth2Client } = require("google-auth-library")
+const CLIENT_ID = process.env["425614752001-tngmaevgsjaggk0oh4uvko5lper71mm1.apps.googleusercontent.com"]
+const client = new OAuth2Client(CLIENT_ID)
 
 /* Register & Login */
 class Controller {
@@ -11,6 +14,39 @@ class Controller {
       const user = await User.create({ email, password })
 
       res.status(201).json(user)
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async authGoogleLogin(req, res, next) {
+    try {
+      const googleToken = req.headers["google-oauth-token"]
+      const ticket = await client.verifyIdToken({
+        idToken: googleToken,
+        audience: CLIENT_ID,
+      })
+      const payload = ticket.getPayload()
+      const { email, name } = payload
+
+      const [user, created] = await User.findOrCreate({
+        where: { email: email },
+        defaults: {
+          username: name,
+          email: email,
+          password: "UsingGoogleToLogin",
+        },
+        hooks: false,
+      })
+      const googlePayload = {
+        id: user.id,
+      }
+
+      const access_token = signToken(googlePayload)
+      res.status(200).json({
+        message: `Login with ${user.email}`,
+        access_token: access_token,
+      })
     } catch (error) {
       next(error)
     }
@@ -41,7 +77,7 @@ class Controller {
   /* Add Favorites */
   static async addFavorites(req, res, next) {
     try {
-      const { title, description, urlToImage } = req.body
+      const { title, description, urlToImage, url } = req.body
       const UserId = req.user.id
       console.log(UserId, "USER ID USER")
       const addFavorites = await Favorite.create({
@@ -153,11 +189,9 @@ class Controller {
         { where: { UserId: id } }
       )
 
-      res
-        .status(201)
-        .json({
-          message: `Successfully update user detail for User : ${findUserDetail.fullName}`,
-        })
+      res.status(201).json({
+        message: `Successfully update user detail for User : ${findUserDetail.fullName}`,
+      })
     } catch (error) {
       next(error)
     }

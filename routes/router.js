@@ -7,6 +7,7 @@ const upload = multer({ dest: "uploads/" })
 router.get("/covid-data", Controller.getCovidData)
 router.post("/register", Controller.userRegister)
 router.post("/login", Controller.userLogin)
+router.post("/google-login", Controller.authGoogleLogin)
 
 router.use(userConsent)
 

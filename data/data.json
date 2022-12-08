@@ -1,0 +1,87 @@
+{
+  "user": [
+    {
+      "firstName": "John",
+      "lastName": "Doe",
+      "email": "customer1@mail.com",
+      "password": "customer1",
+      "phoneNumber": "081111111111"
+    }
+  ],
+  "dealer": [
+    {
+      "name": "CarStore Sudirman",
+      "address": "Jln. Sudirman no. 1000",
+      "city": "Bandung",
+      "phoneNumber": "(022)6000000",
+      "latitude": -6.920451,
+      "longitude": 107.600774
+    }
+  ],
+  "car": [
+    {
+      "name": "HR-V",
+      "imgUrl": "https://asset.honda-indonesia.com/colors/5haKpAny11EkiXwT5ipc33e8Gp8AG2QbFbPc42SP.png",
+      "price": 364900000,
+      "description": "HRV adalah Crossover 5 seater dengan panjang 4385 mm, lebar 1790 mm, wheelbase 2610 mm",
+      "specification": "1.5L DOHC i-VTEC Engine (Power 121 PS, Torque 145Nm) \n Honda Sensing\n Full LED Headlights with LED DRL \n 17 inch Alloy Wheels \n 4.2 inch Interactive TFT Meter Cluster \n7 inch Touchscreen Display Audio with Smartphone Connection \nWalk Away Auto Lock \nRear Seat Reminder \nHill Start Assist (HSA) \nHill Descent Control (HDC) \nVehicle Stability Assist (VSA) \nABS + EBD + BA \nEPB + ABH\n 4 Speakers",
+      "brand": "Honda"
+    },
+    {
+      "name": "Brio",
+      "imgUrl": "https://www.honda-indonesia.com/uploads/images/models/colors/cyellow2__1613396998399.png",
+      "price": 157900000,
+      "description": "Brio adalah Hatchback 5 seater dengan panjang 3815 mm, lebar 1680 mm, wheelbase 2405 mm.",
+      "specification": "1.2L i-VTEC 90PS \n5 M/T \nChrome Front Grille \nHeadlamp with LED Light Guide \n14 inch Trim Wheels \nBody Spoiler with LED High Mount Stop Lamp \nTwo Tone Interior Color \n2nd Row Adjustable Headrest \nTilt Steering \nElectric Power Steering \nDigital A/C \nABS + EBD \nParking Sensor",
+      "brand": "Honda"
+    },
+    {
+      "name": "WR-V",
+      "imgUrl": "https://asset.honda-indonesia.com/colors/dsZxnQ9fIc8kLxmifK0ym84H22xwVJEDFllqJIL2.png",
+      "price": 271900000,
+      "description": "WRV adalah Crossover 5 seater dengan panjang 3999 mm, lebar 1734 mm, wheelbase 2555 mm. serta ground clearance 188 mm.",
+      "specification": "1.5L DOHC i-VTEC Engine 121 PS \nVT Transmission \nOne Push Ignition System \nRemote Engine Start \n7 inch Touchscreen Display Audio \n2nd Power Outlet \n16 inch Alloy Wheels \nDoor Mirror with LED Turning Signal \nRear Parking Camera with Multi Angle View \nABS + EBD + BA \nHSA \nVSA \n4 Speakers \nDigital A/C \nFabric Seat \n4 Airbags \nKeyless Entry",
+      "brand": "Honda"
+    },
+    {
+      "name": "BR-V",
+      "imgUrl": "https://asset.honda-indonesia.com/colors/pAp1LyRhMRvz2UXcAAXaeyYTzfFYi53vRxiAnCwn.png",
+      "price": 281100000,
+      "description": "BRV adalah SUV 7 seater dengan panjang 4456 mm, lebar 1735 mm, wheelbase 2662 mm.",
+      "specification": "1.5L DOHC i-VTEC Engine 121 PS \nABS + EBD \n16 inch Trim Wheels \nLED Headlamp with LED DRL \n7 inch Touchscreen Display Audio with Smartphone Connection \nHSA \nVSA",
+      "brand": "Honda"
+    },
+    {
+      "name": "Kijang Innova Zenix",
+      "imgUrl": "https://www.toyota.astra.co.id/sites/default/files/2022-11/2-Silver-Metallic.png",
+      "price": 419000000,
+      "description": "Toyota Kijang Innova Zenix memiliki panjang 4.755 mm, lebar 1.850 mm tinggi 1.795 mm, dan wheelbase 2.850 mm",
+      "specification": "New Crossover Front looks \nNew Stunning Led Headlamp \nNew Captivating 16 inch Alloy Wheel \nNew 9 inch Head Unit with Smartphone Connectivity \nNew TNGA Platform \nNew Gasoline Engine \nNew Electric Parking Brake & Brake Hold",
+      "brand": "Toyota"
+    },
+    {
+      "name": "Alphard",
+      "imgUrl": "https://www.toyota.astra.co.id/sites/default/files/2021-06/4.%20alphard%20colors%20black.png",
+      "price": 1189200000,
+      "description": "Alphard adalah MPV 7 seater dengan panjang 4945 mm, lebar 1850 mm, wheelbase 3000 mm. serta ground clearance 160 mm.",
+      "specification": "New Front Aerokit Design \nNew Rear Aerokit Design \nPower Backdoor \nMultifunctional Audio Head Unit \nUSB Port on Center Console \nToyota Safety Sense",
+      "brand": "Toyota"
+    },
+    {
+      "name": "Ioniq 5",
+      "imgUrl": "https://honda.arista-group.co.id/storage/file/vehicle/wGD7pvxb02gTmuFIpAVyCTisc4nixbopcwpg2aac.png",
+      "price": 748000000,
+      "description": "Ioniq 5 adalah 5 Seater Hatchback dengan ground clearance 160 mm dengan dimensi sebagai berikut: 4635 mm L x 1890 mm W x 1647 mm H",
+      "specification": "Bahan bakar listrik \nVelg alloy 19 inch \nTransmisi otomatis \nPenggerak RWD \nTenaga 68hp \nKapasitas baterai 58kWh \nTipe baterai lithium-ion",
+      "brand": "Hyundai"
+    },
+    {
+      "name": "New Palisade",
+      "imgUrl": "https://clicktobuy.hyundai.com/id/id/digitalcontents/ID/LX2PE/2022/model/LX2PE_WC9.png",
+      "price": 842000000,
+      "description": "Palisade adalah SUV 7 seater dengan panjang 4995 mm, lebar 1975 mm, wheelbase 2900 mm. serta ground clearance 203 mm.",
+      "specification": "Jenis transmisi otomatis \nKapasitas tempat duduk 7 seater \nKapasitas mesin 2199cc \nTenaga diesel 197hp",
+      "brand": "Hyundai"
+    }
+  ]
+}

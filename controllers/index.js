@@ -7,6 +7,9 @@ const { hashPassword, comparePassword } = require("../helpers/bcrypt");
 const { generateToken } = require("../helpers/jwt");
 const { OAuth2Client } = require("google-auth-library");
 const client = new OAuth2Client(process.env.CLIENT_ID);
+const axios = require("axios");
+const retry = require("async-retry");
+const midtransClient = require("midtrans-client");
 
 class Controller {
   static async register(req, res, next) {
@@ -141,16 +144,92 @@ class Controller {
 
   static async pay(req, res, next) {
     try {
-      const { name, img, level, price } = req.body;
-
-      await Cart.create({
-        UserId: req.user.id,
-        name,
-        img,
-        level,
-        price,
+      const cards = await Cart.findAll({
+        order: [["id", "ASC"]],
+        include: [User],
+        where: {
+          UserId: req.user.id,
+        },
       });
+
+      for (let i = 0; i < cards.length; i++) {
+        await OrderHistory.create({
+          UserId: req.user.id,
+          name: cards[i].name,
+          img: cards[i].img,
+          level: cards[i].level,
+          price: cards[i].price,
+        });
+      }
+
+      await Cart.destroy({
+        where: {},
+        truncate: true,
+      });
+
       res.status(200).json({ message: `Payment Success` });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async convert(req, res, next) {
+    try {
+      const { amount } = req.body;
+      const response = await retry(
+        async () => {
+          // if anything throws, we retry
+          const res = await axios.get(
+            `https://api.apilayer.com/exchangerates_data/convert?to=IDR&from=USD&amount=${amount}`,
+            {
+              headers: { apikey: process.env.API_CONVERT },
+            }
+          );
+
+          return res.data;
+        },
+        {
+          retries: 2,
+        }
+      );
+
+      res.status(200).json(response);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  static async midtrans(req, res, next) {
+    try {
+      const { amount } = req.body;
+      const { id } = req.user;
+
+      const snap = new midtransClient.Snap({
+        isProduction: false,
+        serverKey: process.env.YOUR_SERVER_KEY,
+        clientKey: process.env.YOUR_CLIENT_KEY,
+      });
+
+      const user = await User.findByPk(id);
+
+      const parameter = {
+        transaction_details: {
+          order_id: "order-id-" + Math.round(new Date().getTime() / 1000) + "-" + Math.round(Math.random() * 100),
+          gross_amount: amount,
+        },
+
+        credit_card: {
+          secure: true,
+        },
+        customer_details: {
+          email: user.email,
+        },
+      };
+
+      const transaction = await snap.createTransaction(parameter);
+      const transactionToken = transaction.token;
+
+      res.status(200).json({ transactionToken });
     } catch (error) {
       next(error);
     }

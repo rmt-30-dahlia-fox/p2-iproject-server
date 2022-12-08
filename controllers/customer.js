@@ -89,6 +89,10 @@ class CustomerController {
           "CustomerId",
           "UnitId",
         ],
+        include: {
+          model: Unit,
+          attributes: ["id", "model", "type", "price", "imageUrl"],
+        }
       });
       res.status(200).json({ orders });
     } catch (err) {
@@ -116,6 +120,10 @@ class CustomerController {
           "CustomerId",
           "UnitId",
         ],
+        include: {
+          model: Unit,
+          attributes: ["id", "model", "type", "price", "imageUrl"],
+        }
       });
       res.status(200).json({ order });
     } catch (err) {

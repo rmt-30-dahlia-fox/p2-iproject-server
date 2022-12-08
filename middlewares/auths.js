@@ -13,6 +13,7 @@ const authentication = async(req, res, next) => {
 
         req.userInfo = {
             id: theSearchedUser.id,
+            email: theSearchedUser.email
         }
         
         next()
@@ -26,13 +27,14 @@ const authentication = async(req, res, next) => {
 const transactionAuthorization = async (req, res, next) => {
     try {
         
-        const {transcationId} = req.params
-        
-        const theSearchedTransaction = await Transaction.findByPk(transcationId)
+        const {transactionId} = req.params
+
+        const theSearchedTransaction = await Transaction.findByPk(transactionId)
         if(!theSearchedTransaction) throw ('Data not found')
         
 
         if(theSearchedTransaction.UserId !== req.userInfo.id) throw ('Forbidden')
+
         next()
 
     } catch (err) {

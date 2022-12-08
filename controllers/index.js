@@ -5,6 +5,10 @@ const {signToken} = require('../helpers/jwt')
 const { Op } = require("sequelize");
 const {OAuth2Client} = require('google-auth-library')
 const client = new OAuth2Client(process.env.CLIENT_ID)
+const StripeSecretKey = process.env.STRIPE_SECRET_KEY
+const StripePublicKey = process.env.STRIPE_PUBLIC_KEY
+const stripe = require('stripe')(StripeSecretKey);
+const nodemailer = require("nodemailer");
 
 class Controller {
 
@@ -39,7 +43,7 @@ class Controller {
               id: theSearchedUser.id
           }
 
-          const access_token = generateToken(payload)
+          const access_token = signToken(payload)
 
           res.status(200).json({access_token})
 
@@ -66,6 +70,8 @@ class Controller {
                 username: name,
                 email,
                 password: 'google',
+                phoneNumber: '1111',
+                address: 'address'
               },
               hooks: false
           });
@@ -88,7 +94,6 @@ class Controller {
 
       const {
         name,
-        paidStatus,
         quantity,
         totalPrice,
         star,
@@ -102,12 +107,13 @@ class Controller {
         freeCancelPolicy,
         city,
         dateCheckIn,
-        dateCheckout,
-      } = req.body
+        dateCheckOut,
+      } = req.body.obj
 
       await Transaction.create({
+        UserId: req.userInfo.id,
         name,
-        paidStatus,
+        paidStatus: false,
         quantity,
         totalPrice,
         star,
@@ -121,9 +127,10 @@ class Controller {
         freeCancelPolicy,
         city,
         dateCheckIn,
-        dateCheckout,
+        dateCheckOut,
       })
 
+      
       res.status(201).json(`${name} has been added to your transaction list`)
     } catch(err) {
       next(err)
@@ -151,16 +158,82 @@ class Controller {
     }
   }
 
-  // Transaction - get transactions
-  static async getTransactionsByUserId (req, res, next) {
+  
+
+  // Transaction - get pending transactions
+  static async getPendingTransactionsByUserId (req, res, next) {
     try {
       const transactions = await Transaction.findAll({
         where: {
-          UserId: req.userInfo.id
+          [Op.and]: [{ UserId: req.userInfo.id }, { paidStatus: false }]
+        }
+      })
+      res.status(200).json(transactions)
+    } catch(err) {
+      next(err)
+    }
+  }
+
+   // Transaction - get paid transactions
+   static async getPaidTransactionsByUserId (req, res, next) {
+    try {
+      const transactions = await Transaction.findAll({
+        where: {
+          [Op.and]: [{ UserId: req.userInfo.id }, { paidStatus: true }]
         }
       })
 
       res.status(200).json(transactions)
+    } catch(err) {
+      next(err)
+    }
+  }
+
+   // Transaction - change payment status
+   static async changePaymentStatus (req, res, next) {
+    try {
+      const {transactionId} = req.params
+
+      const theSearchedTransaction = Transaction.findByPk(transactionId)
+      if(!transactionId) throw ('Data not found')
+
+      await Transaction.update({
+        paidStatus: true
+      }, {
+        where: {
+          id: transactionId
+        }
+      })
+
+      // node mailer
+
+      // create reusable transporter object using the default SMTP transport
+      let transporter = nodemailer.createTransport({
+        host: "smtp.outlook.com",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+          user: process.env.OUTLOOK_USERNAME, // generated ethereal user
+          pass: process.env.OUTLOOK_PASSWORD, // generated ethereal password
+        },
+      });
+
+      let info = await transporter.sendMail({
+        from: 'Travel Alliance', // sender address
+        to: req.userInfo.email, // list of receivers
+        subject: "Success Payment", // Subject line
+        text: `Your order on ${Transaction.name} has been paid. Enjoy your stay!`, // plain text body
+      });
+
+      console.log("Message sent: %s", info.messageId);
+    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
+
+    // Preview only available when sending through an Ethereal account
+    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
+
+
+      res.status(200).json(`You have succesfully paid for your stay in ${theSearchedTransaction.name}`)
     } catch(err) {
       next(err)
     }
@@ -241,18 +314,57 @@ class Controller {
     }
   }
 
+  
 
   // payment - stripe
   static async paymentWithStripe (req, res, next) {
     try {
-      const {stripeTokenId, items} = req.body
+
+      const product = await stripe.products.create({
+        name: req.body.pendingTransaction.name,
+        default_price_data: {
+          unit_amount: Math.floor(req.body.pendingTransaction.totalPrice * 100),
+          currency: 'usd',
+        },
+        expand: ['default_price'],
+      });
+
+      const randomNumber = Math.random()
+
+
+      const session = await stripe.checkout.sessions.create({
+        line_items: [
+          {
+            // Provide the exact Price ID (for example, pr_1234) of the product you want to sell
+            price: product.default_price.id,
+            quantity: 1,
+          },
+        ],
+        mode: 'payment',
+        success_url: `http://localhost:5173/transaction/success?id=${req.body.pendingTransaction.id}&verification=${randomNumber}`,
+        cancel_url: `http://localhost:5173/transaction`,
+      });
+
+      res.status(200).json({url: session.url, randomNumber})
+
     } catch (err) {
       next(err)
     }
   } 
   
   // city - get cities
-  static async fetchCitiesData (req, res, next) {
+  static async fetchCitiesData (req, res, next) {let testAccount = await nodemailer.createTestAccount();
+
+    // create reusable transporter object using the default SMTP transport
+    let transporter = nodemailer.createTransport({
+      host: "smtp.ethereal.email",
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: testAccount.user, // generated ethereal user
+        pass: testAccount.pass, // generated ethereal password
+      },
+    });
     try {
 
 
@@ -294,8 +406,8 @@ class Controller {
               url: 'https://priceline-com-provider.p.rapidapi.com/v1/hotels/locations',
               params: {name: city, search_type: 'CITY'},
               headers: {
-                'X-RapidAPI-Key': '9ed40945d0msh1e9f5455b127c43p106fb0jsnc9347ce3026a',
-                'X-RapidAPI-Host': 'priceline-com-provider.p.rapidapi.com'
+                'X-RapidAPI-Key': process.env.RAPID_API_KEY,
+                'X-RapidAPI-Host': process.env.RAPID_API_HOST
               }
             };            
             const {data} = await axios(optionsLocation) // fetch location id
@@ -312,8 +424,8 @@ class Controller {
                 date_checkin,
               },
               headers: {
-                'X-RapidAPI-Key': '9ed40945d0msh1e9f5455b127c43p106fb0jsnc9347ce3026a',
-                'X-RapidAPI-Host': 'priceline-com-provider.p.rapidapi.com',
+                'X-RapidAPI-Key': process.env.RAPID_API_KEY,
+                'X-RapidAPI-Host': process.env.RAPID_API_HOST,
                 'Accept-Encoding': 'application/json'
               }
             };
@@ -343,10 +455,10 @@ class Controller {
                   freeCancelPolicy: el.ratesSummary.freeCancelableRateAvail,
                   city,
                   dateCheckIn: date_checkin,
-                  dateCheckout: date_checkout
+                  dateCheckOut: date_checkout
                 }
               })
-              console.log(page, processedData.length)
+
               const finalData = processedData.slice(page*10-10, page*10)
 
               res.status(200).json({finalData, length: processedData.length})
@@ -355,7 +467,7 @@ class Controller {
             }
             
         } catch (err) {
-          console.log(err)
+          next(err)
         }
   }
 

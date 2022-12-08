@@ -215,15 +215,17 @@ class Controller {
     }
   }
   static async uploadFile(req, res, next) {
-    const { patientName } = req.body;
-    const image = `data:image/png;base64,${req.file.buffer.toString("base64")}`;
-    if (!image) throw { name: "Image is required" };
-    const newMedicalRecord = await MedicalRecord.create({
-      patient_name: patientName,
-      image,
-    });
     try {
-      res.status(200).json({
+      const { patientName } = req.body;
+      const image = `data:image/png;base64,${req.file.buffer.toString(
+        "base64"
+      )}`;
+      if (!image) throw { name: "Image is required" };
+      const newMedicalRecord = await MedicalRecord.create({
+        patient_name: patientName,
+        image,
+      });
+      res.status(201).json({
         data: {
           file: newMedicalRecord,
           message: "Uploaded !",

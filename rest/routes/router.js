@@ -5,7 +5,7 @@ const { PostAttachment, User, Media, MessageAttachment, Message, Post } = requir
 const { verifyToken, createToken } = require("../util/jwt");
 const { comparePass } = require("../util/crypto");
 const { upload } = require("../middlewares/upload.js");
-const { sendGlobal, sendDm, sendTimeline } = require("../util/ws");
+const { sendGlobal, sendDm, sendTimeline, sendDeletePost } = require("../util/ws");
 const { Op } = require("sequelize");
 
 const router = Router();
@@ -220,6 +220,7 @@ router.get("/users", async (req, res, next) => {
 router.get("/messages/:id", async (req, res, next) => {
   try {
     let opt;
+    console.log(req.params);
     if (req.params.id !== "global") {
       opt = {
       where: {
@@ -303,6 +304,7 @@ router.get("/messages/:id", async (req, res, next) => {
       ],
     };
     }
+    console.log(opt);
     res.status(200).json(await Message.findAll(opt));
   } catch (err) {
     next(err);
@@ -473,6 +475,37 @@ router.post("/posts/:id/like", async (req, res, next) => {
     }
 
     await post.increment({ likeCount: 1 });
+
+    res.status(200).json();
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.delete("/posts/:id", async (req, res, next) => {
+  try {
+    const post = await Post.findByPk(req.params.id);
+    
+    if (!post) {
+      throw {
+	status: 404,
+	message: "Not Found",
+      };
+    }
+
+    if (post.UserId !== req.user.id) {
+      throw {
+	status: 403,
+	message: "Forbidden",
+      };
+    }
+
+    await post.destroy();
+
+    await sendDeletePost({
+      op: "delete",
+      id: post.id,
+    });
 
     res.status(200).json();
   } catch (err) {

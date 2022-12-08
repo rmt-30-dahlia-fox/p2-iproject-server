@@ -16,6 +16,7 @@ module.exports = {
 	  model: "Posts",
 	  key: "id",
 	},
+	onDelete: "CASCADE",
       },
       MediaId: {
         type: Sequelize.INTEGER,

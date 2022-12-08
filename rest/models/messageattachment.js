@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       MessageAttachment.belongsTo(models.Message, {
 	foreignKey: "MessageId",
+	onDelete: "CASCADE",
       });
 
       MessageAttachment.belongsTo(models.Media, {
@@ -28,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
 	  model: "Messages",
 	  key: "id",
 	},
+	onDelete: "CASCADE",
       },
       MediaId: {
         type: DataTypes.INTEGER,

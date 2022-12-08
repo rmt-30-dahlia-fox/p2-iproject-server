@@ -10,19 +10,32 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       stock: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       orderPrice: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       reportId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER, 
+        references: {
+          model: "Reports",
+          key: "id"
+        }
       },
       productId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Products",
+          key: "id"
+        }
       },
       createdAt: {
         allowNull: false,

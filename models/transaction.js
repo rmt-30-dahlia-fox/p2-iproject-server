@@ -21,7 +21,8 @@ module.exports = (sequelize, DataTypes) => {
     cashierId: DataTypes.INTEGER,
     value: DataTypes.INTEGER,
     payment: DataTypes.STRING,
-    point: DataTypes.INTEGER
+    point: DataTypes.INTEGER,
+    status: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Transaction',

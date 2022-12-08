@@ -10,19 +10,35 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       reportId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER, 
+        references: {
+          model: "Reports",
+          key: "id"
+        }
       },
       cashierId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id"
+        }
       },
       value: {
+        allowNull: false,
         type: Sequelize.INTEGER
       },
       payment: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       point: {
         type: Sequelize.INTEGER
+      },
+      status: {
+        allowNull: false,
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,

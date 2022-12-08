@@ -25,7 +25,12 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       cashierId: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        references: {
+          model: "Users",
+          key: "id"
+        }
       },
       createdAt: {
         allowNull: false,

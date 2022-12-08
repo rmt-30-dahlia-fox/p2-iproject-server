@@ -10,6 +10,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       code: {
+        allowNull: false,
         type: Sequelize.STRING
       },
       creditValue: {

@@ -125,7 +125,7 @@ class Controller {
                 }
             })
 
-            let newTransaction = await Transaction.create({
+            let calledTransaction = await Transaction.create({
                 reportId: calledReport.id,
                 cashierId: req.user.id,
                 value: 0,
@@ -144,11 +144,11 @@ class Controller {
 
             let transactionHistory = await History.create({
                 type: 'Transaction',
-                description: `Transaction ${newTransaction.id} has been created and is Open`,
+                description: `Transaction ${calledTransaction.id} has been created and is Open`,
                 userId: req.user.id
             })
 
-            res.status(201).json({transactionId: newTransaction.id})
+            res.status(201).json(calledTransaction)
         } catch (error) {
             next(error)
         }
@@ -165,7 +165,7 @@ class Controller {
             if (calledProduct.stock == 0) throw({name: "InvalidProductStock"})
             if (calledProduct.stock < amount) throw({name: "InvalidProductAmount"})
 
-            let value = (100 - discount) * (price * amount)
+            let value = ((100 - discount)/100) * (price * amount)
 
             let newCart = await Cart.create({ transactionId, productId, amount, price, discount, value })
             

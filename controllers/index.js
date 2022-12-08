@@ -286,14 +286,27 @@ class Controller {
       let message
       if(!created) {
         code = 200
-        message = `You already like this activity`
+        message = `User id ${id} already like this activity`
       } 
       else if (created) {
         code = 201
-        message = `User id ${id} like activity id ${activityId} with id ${like.id}`
+        message = `User ${id} like activity with id ${activityId}`
       }
 
       res.status(201).json({ message })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async deleteLike(req, res, next) {
+    try {
+      const { activityId } = req.params
+      const { id } = req.user
+
+      await Like.destroy({ where: { UserId: id, ActivityId: activityId } })
+
+      res.status(200).json({ message: `User ${id} unlike activity with id ${activityId}` })
     } catch (error) {
       next(error)
     }

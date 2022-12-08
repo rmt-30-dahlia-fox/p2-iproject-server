@@ -268,6 +268,49 @@ class Controller {
       next(error);
     }
   }
+
+  static async addLike(req, res, next) {
+    try {
+      const { activityId } = req.params
+      const { id } = req.user
+
+      const activity = await Activity.findByPk(activityId)
+      if(!activity) throw { message: 'Data is not found' }
+
+      const [like, created] = await Like.findOrCreate({
+        where: { UserId: id, ActivityId: activityId },
+        defaults: { UserId: id, ActivityId: activityId }
+      })
+
+      let code
+      let message
+      if(!created) {
+        code = 200
+        message = `User id ${id} already like this activity`
+      } 
+      else if (created) {
+        code = 201
+        message = `User ${id} like activity with id ${activityId}`
+      }
+
+      res.status(201).json({ message })
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  static async deleteLike(req, res, next) {
+    try {
+      const { activityId } = req.params
+      const { id } = req.user
+
+      await Like.destroy({ where: { UserId: id, ActivityId: activityId } })
+
+      res.status(200).json({ message: `User ${id} unlike activity with id ${activityId}` })
+    } catch (error) {
+      next(error)
+    }
+  }
 }
 
 module.exports = Controller;

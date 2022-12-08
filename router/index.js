@@ -24,4 +24,7 @@ router.get('/exercises', Controller.showExercises)
 router.get('/types', Controller.showTypes)
 router.get('/difficulties', Controller.showDifficulties)
 
+router.post('/likes/:activityId', Controller.addLike)
+router.delete('/likes/:activityId', Authorization.authUnlike, Controller.deleteLike)
+
 module.exports = router

@@ -16,6 +16,8 @@ List of available endpoints:
 10. `GET /exercises`
 11. `GET /types`
 12. `GET /difficulties`
+13. `POST /likes/:activityId`
+14. `DELETE /likes/:activityId`
 
 &nbsp;
 
@@ -647,6 +649,98 @@ _Response (200 - OK)_
   },
   ...
 ]
+```
+
+&nbsp;
+
+## 12. POST /likes/:activityId
+
+Description:
+
+- Like the activity by user
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string"
+}
+```
+
+- params:
+
+```json
+{
+  "activityId": "integer"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "User id <UserId> already like this activity"
+}
+```
+
+_Response (201 - Created)_
+
+```json
+{
+  "message": "User <UserId> like activity with id <ActivityId>"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Data is not found"
+}
+```
+
+&nbsp;
+
+## 13. DELETE /likes/:activityId
+
+Description:
+
+- Unlike the activity by user
+
+Request:
+
+- headers:
+
+```json
+{
+  "access_token": "string"
+}
+```
+
+- params:
+
+```json
+{
+  "activityId": "integer"
+}
+```
+
+_Response (200 - OK)_
+
+```json
+{
+  "message": "User <UserId> unlike activity with id <ActivityId>"
+}
+```
+
+_Response (404 - Not Found)_
+
+```json
+{
+  "message": "Data is not found"
+}
 ```
 
 &nbsp;

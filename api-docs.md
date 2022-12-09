@@ -56,12 +56,12 @@
 # Admin
 
 ## Endpoint List
-- POST `/login` : log into system as admin.
-- GET `/units` : retrieve all unit data from DB.
-- POST `/units` : post new unit to DB.
-- GET `/units/:id` : retrieve unit data by id from DB.
-- GET `/orders` : retrive all orders data from DB.
-- PATCH `/orders/:id` : update order status by id.
+- POST `/admin/login` : log into system as admin.
+- GET `/admin/units` : retrieve all unit data from DB.
+- POST `/admin/units` : post new unit to DB.
+- GET `/admin/units/:id` : retrieve unit data by id from DB.
+- GET `/admin/orders` : retrive all orders data from DB.
+- PATCH `/admin/orders/:id` : update order status by id.
 
 <br>
 
@@ -255,14 +255,14 @@ OR
 
 
 # Customer
-- POST `/cust/register` : register into system as customer.
-- POST `/cust/login` : log into system as customer.
-- GET `/cust/orders` : get all orders of current customer.
-- POST `/cust/orders` : add new order as customer.
+- POST `/customer/register` : register into system as customer.
+- POST `/customer/login` : log into system as customer.
+- GET `/customer/orders` : get all orders of current customer.
+- POST `/customer/orders` : add new order as customer.
 
 <br>
 
-## POST `/cust/register`
+## POST `/customer/register`
 ### - Body:
 ```json
 {
@@ -307,11 +307,164 @@ OR
 
 <br>
 
-## POST `/cust/login`
+## POST `/customer/login`
+- ### body:
+```json
+{
+  "email": STRING, // required
+  "password": STRING // required
+}
+```
 <br>
 
-## GET `/cust/orders`
+- ### response 200 - OK
+```json
+{
+  "access_token": STRING
+}
+```
+
 <br>
 
-## POST `/cust/orders`
+- ### response 400 - Bad Request
+```json
+{
+  "message": "Email is required"
+}
+OR
+{
+  "message": "Invalid email format"
+}
+OR
+{
+  "message": "Email must be unique"
+}
+OR
+{
+  "message": "Password is required"
+}
+```
+
 <br>
+
+## GET `/customer/orders`
+headers:
+```json
+{
+  "access_token": STRING
+}
+```
+
+### response 200 - OK
+
+```json
+{
+	"orders": [
+		{
+			"id": 1,
+			"pickupLocation": "Ngurah Rai International Airport",
+			"pickupDate": "2022-02-02T00:00:00.000Z",
+			"returnLocation": "Ngurah Rai International Airport",
+			"returnDate": "2022-02-03T00:00:00.000Z",
+			"totalPrice": 50000,
+			"status": "Returned",
+			"CustomerId": 1,
+			"UnitId": 1,
+			"Unit": {
+				"id": 1,
+				"model": "Honda Vario 125",
+				"type": "Matic",
+				"price": 50000,
+				"imageUrl": "https://ik.imagekit.io/zlt25mb52fx/ahmcdn/tr:w-550,f-auto/uploads/product/thumbnail/fa-thumbnail-400x300pxl-ys-6-26092022-105457.png"
+			}
+		},
+		{
+			"id": 7,
+			"pickupLocation": "SanurPort",
+			"pickupDate": "2022-12-09T00:00:00.000Z",
+			"returnLocation": "SanurPort",
+			"returnDate": "2022-12-17T00:00:00.000Z",
+			"totalPrice": 400000,
+			"status": "Ongoing",
+			"CustomerId": 1,
+			"UnitId": 1,
+			"Unit": {
+				"id": 1,
+				"model": "Honda Vario 125",
+				"type": "Matic",
+				"price": 50000,
+				"imageUrl": "https://ik.imagekit.io/zlt25mb52fx/ahmcdn/tr:w-550,f-auto/uploads/product/thumbnail/fa-thumbnail-400x300pxl-ys-6-26092022-105457.png"
+			}
+		}
+	]
+}
+```
+
+<br>
+
+## POST `/customer/orders`
+headers:
+```json
+{
+  "access_token": STRING
+}
+```
+
+body:
+```json
+{
+  "pickupLocation": STRING
+  "pickupDate": DATE
+  "returnLocation": STRING
+  "returnDate": DATE
+  "pickupTime": TIME
+  "returnTime": TIME
+  "UnitId": STRING
+}
+```
+params:
+```json
+{
+  "id": INTEGER
+}
+```
+
+### response 201 - Created
+```json
+{
+  "pickupLocation": STRING,
+  "pickupDate": STRING,
+  "pickupTime": STRING,
+  "returnLocation": STRING,
+  "returnDate": STRING,
+  "returnTime": STRING,
+  "totalPrice": STRING,
+  "status": STRING,
+  "UnitId": INTEGER,
+  "CustomerId": INTEGER,
+}
+```
+<br>
+
+## Global Error
+
+### response 500 - Internal Server Error
+```json
+{
+  "message": "Internal Server Error"
+}
+```
+
+### response 403 - Forbidden
+```json
+{
+  "message": "Forbidden"
+}
+```
+
+### response 401
+```json
+{
+  "message": "Invalid token"
+}
+```

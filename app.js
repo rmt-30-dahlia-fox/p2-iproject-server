@@ -7,7 +7,6 @@ const router = require("./router");
 const app = express();
 const port = process.env.PORT || 3000;
 const cors = require("cors");
-const midtransClient = require("midtrans-client");
 
 app.use(cors());
 app.use(express.urlencoded({ extended: false }));

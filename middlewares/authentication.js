@@ -8,9 +8,10 @@ const authentication = async (req, res, next) => {
     const checkToken = verifyToken(access_token);
     const findUser = await User.findByPk(checkToken.id);
     if (!findUser) throw { name: "Invalid Token" };
+    console.log({ checkToken });
     req.user = {
-      id: findUser.id,
-      email: findUser.email,
+      id: checkToken.id,
+      email: checkToken.email,
     };
     next();
   } catch (err) {

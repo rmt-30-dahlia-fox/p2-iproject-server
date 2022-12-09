@@ -3,16 +3,49 @@ const axios = require('axios')
 const {priceFormat, heightFormat} = require('../helpers/formatters')
 const { comparePassword } = require('../helpers/bcrypt')
 const { encode } = require('../helpers/jwt')
+const CLIENT_ID = process.env.CLIENT_ID;
+const {OAuth2Client} = require('google-auth-library');
+const client = new OAuth2Client(CLIENT_ID);
 const NewsAPI = require('newsapi');
-const newsapi = new NewsAPI('434100e6a2a7438db4b87551b5b466e9');
+const newsapi = new NewsAPI(process.env.NEWSAPI_KEY);
+const Mailjet = require('node-mailjet')
+const mailjet = new Mailjet.apiConnect(process.env.API_KEY_MAILJET, process.env.SECRET_KEY_MAILJET)
 
 class Controller{
     static async register(req, res, next){
         try {
             const {username, email, password} = req.body
             const newUser = await User.create({username, email, password})
-            
+
+            const request = await mailjet
+            .post("send", {'version': 'v3.1'})
+            .request({
+            "Messages":[
+                {
+                "From": {
+                    "Email": "erissusanto997@gmail.com",
+                    "Name": "Eris"
+                },
+                "To": [
+                    {
+                    "Email": email,
+                    "Name": username
+                    }
+                ],
+                "Subject": "Greetings from Football Player Transfer Market.",
+                "TextPart": "My first Mailjet email",
+                "HTMLPart": `<h3>Dear Mr. ${username}, welcome to <a href='https://footballcontract.web.app/'>Football Player Transfer Market</a>!</h3><br />Hope you get the right players!`,
+                "CustomID": "AppGettingStartedTest"
+                }
+            ]
+            })
+
             res.status(201).json({
+                id: newUser.id,
+                username: newUser.username,
+                email: newUser.email
+            })
+            res.status(200).json({
                 id: newUser.id,
                 username: newUser.username,
                 email: newUser.email
@@ -48,40 +81,40 @@ class Controller{
         }
     }
 
-    // static async loginByGoogle(req, res, next){
-    //     try{
-    //         const googleToken = req.headers['google-oauth-token']
+    static async loginByGoogle(req, res, next){
+        try{
+            const googleToken = req.headers['google-oauth-token']
 
-    //         const ticket = await client.verifyIdToken({
-    //             idToken: googleToken,
-    //             audience: CLIENT_ID
-    //         });
-    //         const {name, email} = ticket.getPayload();
+            const ticket = await client.verifyIdToken({
+                idToken: googleToken,
+                audience: CLIENT_ID
+            });
+            const {name, email} = ticket.getPayload();
 
-    //         const [user, created] = await User.findOrCreate({
-    //             where: { email },
-    //             defaults: {
-    //                 username: name,
-    //                 email,
-    //                 password: 'google'
-    //             },
-    //             hooks: false
-    //         });
+            const [user, created] = await User.findOrCreate({
+                where: { email },
+                defaults: {
+                    username: name,
+                    email,
+                    password: 'google'
+                },
+                hooks: false
+            });
 
-    //         const payload = {
-    //             id: user.id
-    //         }
+            const payload = {
+                id: user.id
+            }
 
-    //         res.status(200).json({
-    //             msg: `User ${user.email} found`,
-    //             access_token: generateToken(payload),
-    //             name: user.username
-    //         })
+            res.status(200).json({
+                msg: `User ${user.email} found`,
+                access_token: encode(payload),
+                name: user.username
+            })
            
-    //     } catch (err) {
-    //         next(err)
-    //     }
-    // }
+        } catch (err) {
+            next(err)
+        }
+    }
 
     static async getPlayers(req, res, next){
         try {
@@ -113,11 +146,12 @@ class Controller{
             })
 
         
-               let news = await newsapi.v2.topHeadlines({
-                    q: 'soccer',
-                    category: 'sport',
-                    language: 'en',
-                })
+            let news = await newsapi.v2.topHeadlines({
+                q: 'soccer',
+                category: 'sport',
+                language: 'en',
+            })
+
             res.status(200).json({
                 totalItems: players.length,
                 players,
@@ -169,7 +203,20 @@ class Controller{
             if(!myPlayer){
                 throw {name: "InvalidId"}
             }
-            res.status(200).json(myPlayer)
+
+            // console.log(myPlayer.Player.footApi);
+            const playerAttributesFootAPI = await axios({
+                method: 'GET',
+                url: `https://footapi7.p.rapidapi.com/api/player/${myPlayer.Player.footApi}/attribute`,
+                headers: {
+                    'X-RapidAPI-Key': 'cac728165dmsh6972b6acff9e936p10ac85jsn408d4f3bcf48',
+                    'X-RapidAPI-Host': 'footapi7.p.rapidapi.com'
+                }
+            })
+            // console.log(playerAttributesFootAPI.data);
+            const attributes = playerAttributesFootAPI.data.averageAttributeOverviews[0]
+
+            res.status(200).json({myPlayer: myPlayer.Player, attributes})
         } catch (err) {
             next(err)
         }

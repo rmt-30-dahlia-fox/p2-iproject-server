@@ -23,7 +23,8 @@ module.exports = (sequelize, DataTypes) => {
     nation: DataTypes.STRING,
     proposedMarketValue: DataTypes.INTEGER,
     team: DataTypes.STRING,
-    profile: DataTypes.STRING
+    profile: DataTypes.STRING,
+    footApi: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Player',

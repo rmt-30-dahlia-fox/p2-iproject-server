@@ -4,6 +4,7 @@ const auth  = require('../middlewares/auth')
 
 router.post('/register', Controller.register)
 router.post('/login', Controller.login)
+router.post('/google-sign-in', Controller.loginByGoogle)
 
 router.use(auth)
 

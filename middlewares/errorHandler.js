@@ -34,6 +34,9 @@ const errorHandler = (err, req, res, next) => {
   } else if (err.name === "Medicine is not enough") {
     code = 400;
     message = err.name;
+  } else if (err.name === "Prescription is claimed") {
+    code = 400;
+    message = err.name;
   }
 
   res.status(code).json({ message });

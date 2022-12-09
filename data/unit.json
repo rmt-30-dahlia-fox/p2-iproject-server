@@ -1,0 +1,20 @@
+[
+  {
+    "model": "Honda Vario 125",
+    "type": "Matic",
+    "price": "50000",
+    "imageUrl": "https://ik.imagekit.io/zlt25mb52fx/ahmcdn/tr:w-550,f-auto/uploads/product/thumbnail/fa-thumbnail-400x300pxl-ys-6-26092022-105457.png"
+  },
+  {
+    "model": "Honda Vario 160",
+    "type": "Matic",
+    "price": "50000",
+    "imageUrl": "https://ik.imagekit.io/zlt25mb52fx/ahmcdn/tr:w-550,f-auto/uploads/product/thumbnail/product-thmbnail-17-04022022-110721.png"
+  },
+  {
+    "model": "Honda Scoopy",
+    "type": "Matic",
+    "price": "50000",
+    "imageUrl": "https://ik.imagekit.io/zlt25mb52fx/ahmcdn/tr:w-550,f-auto/uploads/product/thumbnail/thumbnail-product-1-02112022-042907.png"
+  }
+]

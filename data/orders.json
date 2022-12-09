@@ -1,0 +1,26 @@
+[
+  {
+    "pickupLocation": "Ngurah Rai International Airport",
+    "pickupDate": "2022/02/02",
+    "pickupTime": "13:00",
+    "returnLocation": "Ngurah Rai International Airport",
+    "returnDate": "2022/02/03",
+    "returnTime": "13:00",
+    "totalPrice": 50000,
+    "status": "Pending",
+    "CustomerId": 1,
+    "UnitId": 1
+  },
+  {
+    "pickupLocation": "Ngurah Rai International Airport",
+    "pickupDate": "2022/02/03",
+    "pickupTime": "13:00",
+    "returnLocation": "Ngurah Rai International Airport",
+    "returnDate": "2022/02/05",
+    "returnTime": "13:00",
+    "totalPrice": 100000,
+    "status": "Pending",
+    "CustomerId": 2,
+    "UnitId": 1
+  }
+]

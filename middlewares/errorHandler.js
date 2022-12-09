@@ -33,6 +33,10 @@ function errorHandler (err, req, res, next) {
     code = 400;
     message = err;
   }
+  else if(err.name === "MidtransError"){
+    code = 400;
+    message = err.ApiResponse.error_messages[0]
+  }
   res.status(code).json({message});
 }
 

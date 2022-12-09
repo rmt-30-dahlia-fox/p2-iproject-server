@@ -303,7 +303,7 @@ Carstore
         Accept: "application/json",
         Authorization:
           "Basic " +
-          Buffer.from("SB-Mid-server-GwUP_WGbJPXsDzsNEBRs8IYA").toString("base64")
+          Buffer.from(process.env.SERVERID_MIDTRANS).toString("base64")
         // Above is API server key for the Midtrans account, encoded to base64
       },
       data:

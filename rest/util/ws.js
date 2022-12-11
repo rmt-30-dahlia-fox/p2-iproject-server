@@ -1,15 +1,6 @@
 "use strict";
-require("dotenv").config();
-const axios = require("axios");
 const { Server } = require("socket.io");
-const { WS_PASS, WS_URI, CLIENT_URI } = process.env;
-
-// const ax = axios.create({
-//   baseURL: WS_URI,
-// });
-
-// "http://localhost:8080" ||
-// let access_token;
+const { CLIENT_URI } = process.env;
 
 /**
  * @type {Map<number, import("socket.io").Socket>}
@@ -25,6 +16,9 @@ const createServer = (httpServer) => {
   });
 }
 
+/**
+ * @type {import("socket.io").Socket}
+ */
 let io;
 
 const loadSocketListeners = (_io) => {
@@ -35,8 +29,7 @@ const loadSocketListeners = (_io) => {
       const json = JSON.parse(msg);
       const { user_id } = json.data;
 
-      // check if user actually exist
-      
+      // cache socker id of the user
       userSockets.set(Number(user_id), socket.id);
     });
 
@@ -54,30 +47,13 @@ const loadSocketListeners = (_io) => {
   });
 }
 
-// const login = async () => {
-//   const json = {
-//     pass: WS_PASS,
-//   };
-// 
-//   const res = await ax.post("/login", json);
-//   access_token = res.data["access-token"];
-// 
-//   return res;
-// }
-
 const sendGlobal = async (data) => {
   const json = {
     op: "broadcast",
     data,
   };
 
-  // const res = await ax.post("/chat", json, {
-  //   headers: {
-  //     "access-token": access_token,
-  //   },
-  // });
-
-  for (const [id, socket] of userSockets) {
+  for (const [_, socket] of userSockets) {
     io.to(socket).emit("broadcast", JSON.stringify(json.data));
   }
 }
@@ -100,12 +76,6 @@ const sendDm = async (data) => {
   if (socketRecipient) {
     io.to(socketRecipient).emit("single", jsonStr);
   }
-
-  // const res = await ax.post("/chat", json, {
-  //   headers: {
-  //     "access-token": access_token,
-  //   },
-  // });
 }
 
 // currently the same as sendGlobal but who knows there will be some change in the future
@@ -126,38 +96,13 @@ const sendTimeline = async (data) => {
 
 const sendPostLike = async (data) => {
   sendGlobal(data);
-  // const json = {
-  //   op: "broadcast",
-  //   data,
-  // };
-
-  // const res = await ax.post("/timeline", json, {
-  //   headers: {
-  //     "access-token": access_token,
-  //   },
-  // });
-
-  // return res;
 }
 
 const sendDeletePost = async (data) => {
   sendGlobal(data);
-  // const json = {
-  //   op: "broadcast",
-  //   data,
-  // };
-
-  // const res = await ax.post("/timeline", json, {
-  //   headers: {
-  //     "access-token": access_token,
-  //   },
-  // });
-
-  // return res;
 }
 
 module.exports = {
-  // login,
   sendGlobal,
   sendDm,
   sendTimeline,

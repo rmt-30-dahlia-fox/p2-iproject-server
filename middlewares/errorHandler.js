@@ -15,7 +15,12 @@ const errorHandler = (err, req, res, next) => {
     } else if(err === 'Invalid token' || err.name === 'JsonWebTokenError') {
         code = 401
         message = 'Invalid token'
-    } else if(err === 'Data not found') {
+    } 
+    else if (err === 'Verification number is not valid!') {
+        code = 401
+        message = err
+    }
+    else if(err === 'Data not found') {
         code = 404
         message = err
     } else if (err === 'Forbidden') {

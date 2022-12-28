@@ -20,6 +20,9 @@ module.exports = {
         type: Sequelize.BOOLEAN,
         allowNull: false
       },
+      verificationNumber: {
+        type: Sequelize.STRING,
+      },
       quantity: {
         type: Sequelize.INTEGER
       },

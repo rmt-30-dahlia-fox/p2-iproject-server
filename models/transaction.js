@@ -31,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true,
       }
     },
+    verificationNumber: DataTypes.STRING,
     quantity: {
       type: DataTypes.INTEGER,
       allowNull: false,

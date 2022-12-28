@@ -8,7 +8,7 @@ const client = new OAuth2Client(process.env.CLIENT_ID)
 const StripeSecretKey = process.env.STRIPE_SECRET_KEY
 const StripePublicKey = process.env.STRIPE_PUBLIC_KEY
 const stripe = require('stripe')(StripeSecretKey);
-const nodemailer = require("nodemailer");
+const BASE_URL_LOCAL = require('../baseUrl')
 
 class Controller {
 
@@ -193,9 +193,11 @@ class Controller {
    static async changePaymentStatus (req, res, next) {
     try {
       const {transactionId} = req.params
+      const {randomNumber} = req.body
 
-      const theSearchedTransaction = Transaction.findByPk(transactionId)
-      if(!transactionId) throw ('Data not found')
+      const theSearchedTransaction = await Transaction.findByPk(transactionId)
+      if(!theSearchedTransaction) throw ('Data not found')
+      if(theSearchedTransaction.verificationNumber !== randomNumber) throw ('Verification number is not valid!')
 
       await Transaction.update({
         paidStatus: true
@@ -205,34 +207,7 @@ class Controller {
         }
       })
 
-      // node mailer
-
-      // create reusable transporter object using the default SMTP transport
-      let transporter = nodemailer.createTransport({
-        host: "smtp.outlook.com",
-        port: 587,
-        secure: false, // true for 465, false for other ports
-        auth: {
-          user: process.env.OUTLOOK_USERNAME, // generated ethereal user
-          pass: process.env.OUTLOOK_PASSWORD, // generated ethereal password
-        },
-      });
-
-      let info = await transporter.sendMail({
-        from: 'Travel Alliance', // sender address
-        to: req.userInfo.email, // list of receivers
-        subject: "Success Payment", // Subject line
-        text: `Your order on ${Transaction.name} has been paid. Enjoy your stay!`, // plain text body
-      });
-
-      console.log("Message sent: %s", info.messageId);
-    // Message sent: <b658f8ca-6296-ccf4-8306-87d57a0b4321@example.com>
-
-    // Preview only available when sending through an Ethereal account
-    console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
-    // Preview URL: https://ethereal.email/message/WaQKMgKddxQDoou...
-
-
+     
       res.status(200).json(`You have succesfully paid for your stay in ${theSearchedTransaction.name}`)
     } catch(err) {
       next(err)
@@ -341,11 +316,17 @@ class Controller {
           },
         ],
         mode: 'payment',
-        success_url: `https://travel-alliance.web.app/transaction/success?id=${req.body.pendingTransaction.id}&verification=${randomNumber}`,
-        cancel_url: `https://travel-alliance.web.app/transaction`,
+        success_url: `${BASE_URL_LOCAL}/transaction/success?id=${req.body.pendingTransaction.id}&verification=${randomNumber}`,
+        cancel_url: `${BASE_URL_LOCAL}/transaction`,
       });
 
-      res.status(200).json({url: session.url, randomNumber})
+      await Transaction.update({ verificationNumber: randomNumber }, {
+        where: {
+          id: req.body.pendingTransaction.id
+        }
+      })
+
+      res.status(200).json({url: session.url})
 
     } catch (err) {
       next(err)
@@ -353,21 +334,9 @@ class Controller {
   } 
   
   // city - get cities
-  static async fetchCitiesData (req, res, next) {let testAccount = await nodemailer.createTestAccount();
+  static async fetchCitiesData (req, res, next) {
 
-    // create reusable transporter object using the default SMTP transport
-    let transporter = nodemailer.createTransport({
-      host: "smtp.ethereal.email",
-      port: 587,
-      secure: false, // true for 465, false for other ports
-      auth: {
-        user: testAccount.user, // generated ethereal user
-        pass: testAccount.pass, // generated ethereal password
-      },
-    });
     try {
-
-
       const cities = await City.findAll({
         order: [['name']]
       })

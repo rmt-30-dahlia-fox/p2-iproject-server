@@ -1,7 +1,7 @@
 const { default: axios } = require('axios')
 const { comparePassword, signToken, hashPassword } = require('../helpers')
 const { User, WantToRead } = require('../models')
-const { XMAL_CLIENT_ID,CLIENT_ID, Password_Nodemailer } = process.env
+const { XMAL_CLIENT_ID, CLIENT_ID, Password_Nodemailer } = process.env
 const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(CLIENT_ID);
 const nodemailer = require('nodemailer')
@@ -14,11 +14,11 @@ class Controllers {
     static async login(req, res, next) {
         try {
             const { email, password } = req.body
-            if(!email){
-                throw {name : 'required', message : "Email is  required" }
+            if (!email) {
+                throw { name: 'required', message: "Email is  required" }
             }
-            if(!password){
-                throw {name : 'required', message : "Password is  required" }
+            if (!password) {
+                throw { name: 'required', message: "Password is  required" }
             }
             const user = await User.findOne({ where: { email } })
             if (!user) throw { name: 'data not found', message: 'invalid email or password' }
@@ -129,7 +129,7 @@ class Controllers {
             const { id } = req.params
             const { data } = await axios({
                 method: 'get',
-                url: `https://api.myanimelist.net/v2/manga/${id}?fields=id,status,title,main_picture,synopsis,mean`,
+                url: `https://api.myanimelist.net/v2/manga/${id}?fields=id,status,pictures,popularity,title,main_picture,synopsis,nsfw,mean,start_date,background,authors{first_name,last_name},recommendations,serialization{name}`,
                 headers: {
                     "X-MAL-CLIENT-ID": XMAL_CLIENT_ID
                 }
@@ -152,11 +152,11 @@ class Controllers {
                 offset = page * 20 - 20
             }
 
-            if(search.length<3){
-                throw {name : "400status", message : "Minimum 3 character to search"}
+            if (search.length < 3) {
+                throw { name: "400status", message: "Minimum 3 character to search" }
             }
 
-            console.log('>>>>',search);
+            console.log('>>>>', search);
 
             const { id } = req.params
             const { data } = await axios({
@@ -194,13 +194,13 @@ class Controllers {
                     UserId: req.user.id
                 }
             })
-            if(!list){
-                throw {name : "400status", message : "There is no manga in your want to read list"}
+            if (!list) {
+                throw { name: "400status", message: "There is no manga in your want to read list" }
             }
 
             let sendList = "";
-            list.forEach(el=>{sendList += el.title + ", "})
-            sendList = sendList.slice(0,(sendList.length-2)) + " !!"
+            list.forEach(el => { sendList += el.title + ", " })
+            sendList = sendList.slice(0, (sendList.length - 2)) + " !!"
 
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
@@ -225,7 +225,7 @@ class Controllers {
                 }
             });
 
-            res.status(200).json({message : "An email with the wanttoread list in it has been sent to you"})
+            res.status(200).json({ message: "An email with the wanttoread list in it has been sent to you" })
 
         } catch (error) {
             next(error)
@@ -254,7 +254,7 @@ class Controllers {
             })
 
             if (!created) {
-                throw { name: "required", message:  `Manga ${title} is already on the want to read list` }
+                throw { name: "required", message: `Manga ${title} is already on the want to read list` }
             }
 
 
@@ -286,9 +286,9 @@ class Controllers {
             if (statusRead != "Finished" && statusRead != "Unfinished") {
                 throw { name: "400status", message: "status can only be Finished or Unfinished" }
             }
-            const list = await WantToRead.findByPk( id)
+            const list = await WantToRead.findByPk(id)
             const old = list.statusRead
-            await list.update({statusRead})
+            await list.update({ statusRead })
 
             res.status(200).json({ message: `Succeed at updating status manga ${list.title} from ${old} to ${statusRead}` })
         } catch (error) {

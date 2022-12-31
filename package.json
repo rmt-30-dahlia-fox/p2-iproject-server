@@ -10,5 +10,25 @@
     "nodemailer": "^6.8.0",
     "pg": "^8.8.0",
     "sequelize": "^6.26.0"
-  }
+  },
+  "name": "server",
+  "description": "Individual Project - Server",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "start" : "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sipri17/p2-iproject-server.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sipri17/p2-iproject-server/issues"
+  },
+  "homepage": "https://github.com/sipri17/p2-iproject-server#readme"
 }
